@@ -1,0 +1,27 @@
+services:
+  postgres:
+    container_name: chat-postgres
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - /data/app-pg/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: chat
+      POSTGRES_PASSWORD: chat
+      POSTGRES_DB: chat
+
+  pgadmin:
+    container_name: chat-pgadmin
+    image: dpage/pgadmin4
+    user: root
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+
+    volumes:
+      - /data/pgadmin:/var/lib/pgadmin
+
+    ports:
+      - 80:80
