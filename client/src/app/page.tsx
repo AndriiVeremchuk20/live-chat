@@ -2,8 +2,7 @@ import Header from '@/components/Header'
 import Image from 'next/image'
 
 export default function Home() {
-  return <div>
-	<Header/>
+  return <div className="">
 	<div>Text</div>
 	</div>
 }
