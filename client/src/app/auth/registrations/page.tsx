@@ -1,6 +1,16 @@
-import React from "react";
+"use client"
+
+import React, {useEffect} from "react";
 
 const Registrations = () => {
+  
+  useEffect(() => {
+    window.scrollTo({
+      top: 100,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <div className="h-screen flex flex-row items-center justify-end bg-[url(/auth-bg.jpg)] bg-cover ">
       <div className="w-1/2 h-screen flex flex-col justify-center items-center bg-violet-400 bg-opacity-20">
@@ -20,7 +30,7 @@ const Registrations = () => {
               id="first_name"
               placeholder="John"
               autoFocus
-			  className="w-full px-2 py-1 text-xl rounded-lg focus:outline-none border border-neutral-300 focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg focus:outline-none border border-neutral-300 focus:ring focus:border-blue-500 focus:shadow-lg"
             />
           </div>
 
