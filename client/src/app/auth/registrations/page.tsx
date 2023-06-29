@@ -30,7 +30,7 @@ const Registrations = () => {
               id="first_name"
               placeholder="John"
               autoFocus
-              className="w-full px-2 py-1 text-xl rounded-lg focus:outline-none border border-neutral-300 focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg focus:outline-none border border-neutral-300 focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
 
@@ -42,7 +42,7 @@ const Registrations = () => {
               type="text"
               id="last_name"
               placeholder="Doe"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
 
@@ -54,7 +54,7 @@ const Registrations = () => {
               type="email"
               id="first_name"
               placeholder="example@mail.com"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
           <div className="flex flex-col mb-2">
@@ -65,7 +65,7 @@ const Registrations = () => {
               type="password"
               id="passowrd"
               placeholder="Your strong password"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
           <div className="flex flex-col mb-2">
@@ -76,7 +76,7 @@ const Registrations = () => {
               type="text"
               id="rep_password"
               placeholder="Confirm passowrd"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
           <button

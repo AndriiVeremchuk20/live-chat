@@ -28,8 +28,9 @@ const Login = () => {
             <input
               type="email"
               id="first_name"
+			  autoFocus
               placeholder="example@mail.com"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
           <div className="flex flex-col mb-2">
@@ -40,7 +41,7 @@ const Login = () => {
               type="password"
               id="passowrd"
               placeholder="Your strong password"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg"
+              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
             />
           </div>
           <button
