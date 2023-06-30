@@ -1,5 +1,7 @@
 "use client";
 
+import routes from "@/config/appRoutes";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -142,6 +144,18 @@ const Registrations = () => {
                 {errors.password.message}
               </div>
             ) : null}
+          </div>
+          <div className="flex flex-col text-lg">
+            <span>Do you have account?</span>
+            <span>
+              Please{" "}
+              <Link
+                href={routes.auth.login}
+                className="text-blue-600 underline hover:text-blue-300"
+              >
+                Login
+              </Link>
+            </span>
           </div>
         </form>
       </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import routes from "@/config/appRoutes";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import { useForm, Resolver, SubmitHandler } from "react-hook-form";
 
@@ -15,9 +17,9 @@ const Login = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-const onSubmit: SubmitHandler<FormValues> = (data) => {
-	console.log(data)
-}
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
 
   useEffect(() => {
     window.scrollTo({
@@ -32,7 +34,7 @@ const onSubmit: SubmitHandler<FormValues> = (data) => {
         <form
           className="flex flex-col w-[400px] gap-3 px-2 text-xl bg-neutral-100 rounded-lg border-violet-300 border-[2px] shadow-md"
           autoComplete="off"
-		  onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <span className="text-2xl font-bold text-center py-2 px-1 border-b-2 border-violet-300">
             Sign in
@@ -67,7 +69,10 @@ const onSubmit: SubmitHandler<FormValues> = (data) => {
               id="passowrd"
               placeholder="Your strong password"
               className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
-              {...register("password", { required: "Password required", minLength: {value: 6, message:"Min length 6chr"}})}
+              {...register("password", {
+                required: "Password required",
+                minLength: { value: 6, message: "Min length 6chr" },
+              })}
             />
           </div>
           <button
@@ -80,10 +85,26 @@ const onSubmit: SubmitHandler<FormValues> = (data) => {
           <div>Google</div>
           <div className="">
             {errors?.email ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">{errors.email.message}</div>
+              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
+                {errors.email.message}
+              </div>
             ) : errors?.password ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">{errors.password.message}</div>
+              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
+                {errors.password.message}
+              </div>
             ) : null}
+          </div>
+          <div className="flex flex-col text-lg">
+            <span>You don't have an account?</span>
+            <span>
+              Please{" "}
+              <Link
+                href={routes.auth.registrations}
+                className="text-blue-600 underline hover:text-blue-300"
+              >
+                Register
+              </Link>
+            </span>
           </div>
         </form>
       </div>
