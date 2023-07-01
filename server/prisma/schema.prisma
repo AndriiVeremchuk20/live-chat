@@ -22,7 +22,6 @@ model User {
  last_name		String
  email			String		@unique
  password		String
- avatar_path	String?
  created_at		DateTime	@default(now())
 }
 
