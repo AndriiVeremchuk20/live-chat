@@ -36,7 +36,7 @@ const Login = () => {
 
   return (
     <div className="h-screen flex flex-row items-center justify-end bg-[url(/auth-bg.jpg)] bg-cover ">
-      <div className="w-1/2 h-screen flex flex-col justify-center items-center bg-violet-400 bg-opacity-20">
+      <div className="desktop:w-1/2 phone:w-full h-screen flex flex-col justify-center items-center bg-violet-400 bg-opacity-20">
         <form
           className="flex flex-col w-[400px] gap-3 px-2 text-xl bg-neutral-100 rounded-lg border-violet-300 border-[2px] shadow-md"
           autoComplete="off"
