@@ -1,5 +1,6 @@
 "use client";
 
+import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
@@ -120,6 +121,7 @@ const Login = () => {
               </Link>
             </span>
           </div>
+          <GoogleButton />
         </form>
       </div>
     </div>

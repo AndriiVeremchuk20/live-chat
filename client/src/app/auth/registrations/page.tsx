@@ -1,6 +1,7 @@
 "use client";
 
 import registrations from "@/api/auth/registrations";
+import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
@@ -191,6 +192,7 @@ const registrationsMutation = useMutation(registrations, {
               </Link>
             </span>
           </div>
+		  <GoogleButton/>
         </form>
       </div>
     </div>
