@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import prisma from "../../../prisma";
+import checkSimilarEmails from "../../middleware/checkEmail";
 
 const route = Router();
 
@@ -9,7 +10,7 @@ route.get("/test", (req, res) => {
   res.status(200).send("done");
 });
 
-route.post("/registration", async (req, res, next) => {
+route.post("/registration", checkSimilarEmails, async (req, res, next) => {
   //get fields from request body
   const { first_name, last_name, email, password } = req.body;
 
@@ -23,9 +24,9 @@ route.post("/registration", async (req, res, next) => {
     },
   });
 
-  console.log(`!!! CREATED A NEW USER ${createdUser}`);
+  console.info(`[!!!] CREATED A NEW USER ${createdUser}`);
 
-  res.status(204).send(`REGISTRATION SUCCESSFUL`);
+  res.status(201).send({status: "success", message: `REGISTRATION SUCCESSFUL`});
 });
 
 export default route;

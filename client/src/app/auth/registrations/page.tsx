@@ -1,10 +1,12 @@
 "use client";
 
+import registrations from "@/api/auth/registrations";
 import routes from "@/config/appRoutes";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
+import {useMutation} from "react-query";
 
 type FormValues = {
   first_name: string;
@@ -24,11 +26,21 @@ const Registrations = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
+	registrationsMutation.mutate(data);
   };
 
   const onChangePassvordVisibly = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
+
+const registrationsMutation = useMutation(registrations, {
+	onSuccess:(data)=>{
+		console.log(data)
+	},
+	onError:(err)=>{
+		console.error(err)
+	}
+})
 
   useEffect(() => {
     window.scrollTo({
