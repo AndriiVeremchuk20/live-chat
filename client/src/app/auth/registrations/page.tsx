@@ -3,6 +3,7 @@
 import registrations from "@/api/auth/registrations";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
+import {getAuth, createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -18,6 +19,7 @@ type FormValues = {
 };
 
 const Registrations = () => {
+  const auth = getAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
     register,
@@ -25,8 +27,19 @@ const Registrations = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async(data) => {
     console.log(data);
+	const credentials = await createUserWithEmailAndPassword(auth, data.email, data.password);
+	
+	if(credentials && auth.currentUser){
+		try{
+			sendEmailVerification(auth.currentUser);
+			alert("Check your email");
+		}
+		catch(e){
+			console.log(e);
+		}
+	}
 	registrationsMutation.mutate(data);
   };
 
