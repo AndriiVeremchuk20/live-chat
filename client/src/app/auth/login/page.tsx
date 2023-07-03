@@ -96,8 +96,6 @@ const Login = () => {
           >
             Create account
           </button>
-
-          <div>Google</div>
           <div className="">
             {errors?.email ? (
               <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">

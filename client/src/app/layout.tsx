@@ -3,22 +3,37 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import { QueryClient, QueryClientProvider } from "react-query";
+import firebaseConfig from "@/firebase";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
-const queryClient = new QueryClient();
+// Initialize Firebase App
+export const firebaseApp = initializeApp(firebaseConfig);
+export const googleAuthProvider = new GoogleAuthProvider();
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const AppWrapper = (props: any) => {
+  return <QueryClientProvider client={new QueryClient()} {...props} />;
+};
+
+const AppInner = (props: any) => {
+  //const auth = getAuth();
   return (
-    <QueryClientProvider client={queryClient}>
+    <body
+      className="min-h-screen max-h-fit bg-gradient-to-r from-indigo-700 via-purple-900 to-pink-700"
+      {...props}
+    ></body>
+  );
+};
+
+export default function App({ children }: { children: React.ReactNode }) {
+  return (
+    <AppWrapper>
       <html lang="en">
-        <body className="min-h-screen max-h-fit bg-gradient-to-r from-indigo-700 via-purple-900 to-pink-700">
+        <AppInner>
           <Header />
           {children}
-        </body>
+        </AppInner>
       </html>
-    </QueryClientProvider>
+    </AppWrapper>
   );
 }
