@@ -3,7 +3,7 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import { QueryClient, QueryClientProvider } from "react-query";
-import firebaseConfig from "@/firebase";
+import firebaseConfig from "@/config/firebase";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 

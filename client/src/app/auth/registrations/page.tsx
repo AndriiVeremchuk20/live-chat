@@ -55,7 +55,7 @@ const Registrations = () => {
           first_name: data.first_name,
           last_name: data.last_name,
           email: data.email,
-          uid: credentials.user.uid,
+          uid: auth.currentUser.uid,
         });
       }
     }

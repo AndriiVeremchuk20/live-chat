@@ -10,6 +10,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const decodedToken = await fireAuth.verifyIdToken(idToken); // verifyToken
       console.log(decodedToken);
+	  req.user = decodedToken;
     } catch (error) {
       console.log(error);
     }

@@ -2,7 +2,9 @@
 
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm, Resolver, SubmitHandler } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
@@ -13,15 +15,32 @@ type FormValues = {
 };
 
 const Login = () => {
+  const auth = getAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+	
+	const router = useRouter();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
+    try {
+      const credential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+	  if(!auth.currentUser?.emailVerified){
+			router.push(routes.info.verifyemail);
+	  }
+	  console.log(credential);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChangeVisiblyPasswordClick = useCallback(() => {
@@ -94,7 +113,7 @@ const Login = () => {
             className=" mb-2 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
             type="submit"
           >
-            Create account
+            Sign in
           </button>
           <div className="">
             {errors?.email ? (

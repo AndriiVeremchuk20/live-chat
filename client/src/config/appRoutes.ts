@@ -3,6 +3,9 @@ const routes = {
 	auth :{
 		login: "/auth/login",
 		registrations: "/auth/registrations"
+	},
+	info: {
+		verifyemail: "/info/verify-email",
 	}
 
 }
