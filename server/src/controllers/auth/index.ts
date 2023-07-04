@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import prisma from "../../../prisma";
 import checkSimilarEmails from "../../middleware/checkEmail";
@@ -12,7 +11,7 @@ route.get("/test", (req, res) => {
 
 route.post("/registration", checkSimilarEmails, async (req, res, next) => {
   //get fields from request body
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name, email, uid } = req.body;
 
   //try add a new user into bd
   const createdUser = await prisma.user.create({
@@ -20,7 +19,7 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
       first_name,
       last_name,
       email,
-      password,
+	  uid
     },
   });
 

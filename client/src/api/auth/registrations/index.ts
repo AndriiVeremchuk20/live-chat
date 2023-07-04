@@ -3,8 +3,8 @@ import RegistrationsRequestBody from "./registrations.type";
 
 const URL = "/auth/registration"
 
-const registrations = async (body: RegistrationsRequestBody) => {
-	const response = await client.post(URL, body);
+const registrations = async (payload: RegistrationsRequestBody) => {
+	const response = await client.post(URL, payload);
 	return response;
 }
 

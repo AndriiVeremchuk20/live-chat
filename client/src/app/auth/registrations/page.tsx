@@ -3,12 +3,16 @@
 import registrations from "@/api/auth/registrations";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
-import {getAuth, createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
-import {useMutation} from "react-query";
+import { useMutation } from "react-query";
 
 type FormValues = {
   first_name: string;
@@ -27,34 +31,49 @@ const Registrations = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async(data) => {
-    console.log(data);
-	const credentials = await createUserWithEmailAndPassword(auth, data.email, data.password);
-	
-	if(credentials && auth.currentUser){
-		try{
-			sendEmailVerification(auth.currentUser);
-			alert("Check your email");
-		}
-		catch(e){
-			console.log(e);
-		}
-	}
-	registrationsMutation.mutate(data);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    //console.log(data);
+
+    if (data.password === data.confirm_password) {
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+      if (credentials && auth.currentUser) {
+        try {
+          // virification user email
+          sendEmailVerification(auth.currentUser);
+          alert("Check your email");
+        } catch (e) {
+          console.log(e);
+        }
+
+		//send user data to the server
+        registrationsMutation.mutate({
+          first_name: data.first_name,
+          last_name: data.last_name,
+          email: data.email,
+          uid: credentials.user.uid,
+        });
+      }
+    }
+    // creating a new user with email and password (firebase)
   };
 
   const onChangePassvordVisibly = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
 
-const registrationsMutation = useMutation(registrations, {
-	onSuccess:(data)=>{
-		console.log(data)
-	},
-	onError:(err)=>{
-		console.error(err)
-	}
-})
+  const registrationsMutation = useMutation(registrations, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {
+      console.error(err);
+    },
+  });
 
   useEffect(() => {
     window.scrollTo({
@@ -205,7 +224,7 @@ const registrationsMutation = useMutation(registrations, {
               </Link>
             </span>
           </div>
-		  <GoogleButton/>
+          <GoogleButton />
         </form>
       </div>
     </div>
