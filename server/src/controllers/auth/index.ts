@@ -35,11 +35,19 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
 
 route.get("/auth", verifyToken, (req, res) => {
   const { user } = req;
-  if(user){
-	const foundUser = prisma.user.findFirst({where: {uid: user.uid}});
-	res.status(201).send({status: "", message: "", data: {...foundUser}})
+  if (user) {
+    const foundUser = prisma.user.findFirst({ where: { uid: user.uid } });
+    res
+      .status(201)
+      .send({
+        status: "success",
+        message: "auth success",
+        data: { ...foundUser },
+      });
   }
-  return res.status(401).send({status: "", message: ""});
+  return res
+    .status(401)
+    .send({ status: "error", message: "permission denied" });
 });
 
 export default route;
