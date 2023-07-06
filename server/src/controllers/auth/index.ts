@@ -33,17 +33,21 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
     .send({ status: "success", message: `REGISTRATION SUCCESSFUL` });
 });
 
-route.get("/auth", verifyToken, (req, res) => {
+route.get("/auth", verifyToken, async(req, res) => {
   const { user } = req;
+  console.log(user);
   if (user) {
-    const foundUser = prisma.user.findFirst({ where: { uid: user.uid } });
-    res
-      .status(201)
-      .send({
+    try {
+      const foundUser = await prisma.user.findFirstOrThrow({ where: { uid: user.uid } });
+      return res.status(200).send({
         status: "success",
         message: "auth success",
         data: { ...foundUser },
       });
+    } catch (error) {
+      console.log(error);
+	  return res.status(404).send({status: "error", message: "user not found, try later"})
+    }
   }
   return res
     .status(401)

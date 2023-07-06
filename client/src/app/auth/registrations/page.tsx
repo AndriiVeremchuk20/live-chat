@@ -1,6 +1,6 @@
 "use client";
 
-import registrations from "@/api/auth/registrations";
+import { authApi } from "@/api/auth";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import {
@@ -30,6 +30,15 @@ const Registrations = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+  
+  const registrationsMutation = useMutation(authApi.registrations, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {
+      console.error(err);
+    },
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     //console.log(data);
@@ -66,14 +75,6 @@ const Registrations = () => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const registrationsMutation = useMutation(registrations, {
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (err) => {
-      console.error(err);
-    },
-  });
 
   useEffect(() => {
     window.scrollTo({
