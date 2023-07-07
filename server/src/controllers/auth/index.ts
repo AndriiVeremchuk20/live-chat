@@ -35,7 +35,7 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
 
 route.get("/auth", verifyToken, async(req, res) => {
   const { user } = req;
-  console.log(user);
+  //console.log(user);
   if (user) {
     try {
       const foundUser = await prisma.user.findFirstOrThrow({ where: { uid: user.uid } });

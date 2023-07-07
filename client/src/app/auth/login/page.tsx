@@ -1,13 +1,18 @@
 "use client";
 
+import { authApi } from "@/api/auth";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import useAppStore from "@/store";
+import AppUser from "@/types/user.type";
+
+import { getAuth, signInWithEmailAndPassword, User } from "firebase/auth";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm, Resolver, SubmitHandler } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
+import { useMutation } from "react-query";
 
 type FormValues = {
   email: string;
@@ -16,14 +21,18 @@ type FormValues = {
 
 const Login = () => {
   const auth = getAuth();
+  const {setUser} = useAppStore();
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-	
-	const router = useRouter();
+
+  const router = useRouter();
+
+  const authMutation = useMutation(authApi.auth, {onSuccess(data){console.log(data), setUser(data.data as AppUser)}, onError(error){console.log(error)}});
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
@@ -34,10 +43,14 @@ const Login = () => {
         data.password
       );
 
-	  if(!auth.currentUser?.emailVerified){
-			router.push(routes.info.verifyemail);
+      if (!auth.currentUser?.emailVerified) {
+        router.push(routes.info.verifyemail);
+      }
+	  else{
+		authMutation.mutate();  
+        router.push(routes.home);
 	  }
-	  console.log(credential);
+      console.log(credential);
     } catch (error) {
       console.log(error);
     }
