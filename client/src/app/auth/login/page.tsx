@@ -35,7 +35,7 @@ const Login = () => {
   const authMutation = useMutation(authApi.auth, {
     onSuccess(responseData) {
       console.log(responseData);
-	  setUser(responseData.data);
+      setUser(responseData.data);
     },
     onError(error) {
       console.log(error);
