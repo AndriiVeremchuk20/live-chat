@@ -1,6 +1,7 @@
 "use client";
 
 import { authApi } from "@/api/auth";
+import Alert from "@/components/Alert";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
@@ -136,10 +137,8 @@ const Login = () => {
             Sign in
           </button>
           <div className="">
-            {errors?.email ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.email.message}
-              </div>
+            {errors?.email?.message ? (
+             <Alert type="warning" message={errors.email.message}/>
             ) : errors?.password ? (
               <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
                 {errors.password.message}
