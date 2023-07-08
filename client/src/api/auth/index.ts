@@ -11,8 +11,8 @@ const registrations = async (payload: RegistrationsPayload) => {
 };
 
 const auth = async () => {
-  const response = await client.get(URLs.auth);
-  return response;
+  const response = await client.get<BaseResponse<AppUser>>(URLs.auth);
+  return response.data;
 };
 
 export const authApi = {

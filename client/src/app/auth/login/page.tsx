@@ -21,7 +21,7 @@ type FormValues = {
 
 const Login = () => {
   const auth = getAuth();
-  const {setUser} = useAppStore();
+  const { setUser } = useAppStore();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
@@ -32,7 +32,15 @@ const Login = () => {
 
   const router = useRouter();
 
-  const authMutation = useMutation(authApi.auth, {onSuccess(data){console.log(data), setUser(data.data as AppUser)}, onError(error){console.log(error)}});
+  const authMutation = useMutation(authApi.auth, {
+    onSuccess(responseData) {
+      console.log(responseData);
+	  setUser(responseData.data);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
@@ -45,11 +53,10 @@ const Login = () => {
 
       if (!auth.currentUser?.emailVerified) {
         router.push(routes.info.verifyemail);
-      }
-	  else{
-		authMutation.mutate();  
+      } else {
+        authMutation.mutate();
         router.push(routes.home);
-	  }
+      }
       console.log(credential);
     } catch (error) {
       console.log(error);

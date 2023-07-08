@@ -28,9 +28,9 @@ const AppInner = (props: any) => {
   const { setUser } = useAppStore();
 
   const authMutation = useMutation(authApi.auth, {
-    onSuccess(data) {
-      console.log(data);
-      setUser(data.data.data as AppUser);
+    onSuccess(responseData) {
+      console.log(responseData);
+      setUser(responseData.data);
     },
     onError(err) {
       console.log(err);
