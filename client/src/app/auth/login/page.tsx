@@ -6,6 +6,7 @@ import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
 import AppUser from "@/types/user.type";
+import { FirebaseError } from "firebase/app";
 
 import { getAuth, signInWithEmailAndPassword, User } from "firebase/auth";
 import Link from "next/link";
@@ -26,6 +27,7 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
+    setError,
     register,
     handleSubmit,
     formState: { errors },
@@ -40,6 +42,10 @@ const Login = () => {
     },
     onError(error) {
       console.log(error);
+      setError("root.serverError", {
+        type: "server",
+        message: "Something wrong, try again.",
+      });
     },
   });
 
@@ -60,7 +66,22 @@ const Login = () => {
       }
       console.log(credential);
     } catch (error) {
-      console.log(error);
+      if (error instanceof FirebaseError) {
+        if (error.code === "auth/user-not-found")
+          setError("root.firebaseError", {
+            type: "firebase",
+            message: `User with email ${data.email} not found`,
+          });
+
+		else if(error.code === "auth/wrong-password"){
+          setError("root.firebaseError", {
+            type: "firebase",
+            message: `Wrong password`,
+          });
+		}
+      }
+
+      console.error(error);
     }
   };
 
@@ -138,11 +159,13 @@ const Login = () => {
           </button>
           <div className="">
             {errors?.email?.message ? (
-             <Alert type="warning" message={errors.email.message}/>
-            ) : errors?.password ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.password.message}
-              </div>
+              <Alert type="error" message={errors.email.message} />
+            ) : errors?.password?.message ? (
+              <Alert type="error" message={errors.password.message} />
+            ) : errors.root?.serverError?.message ? (
+              <Alert type="error" message={errors.root.serverError.message} />
+            ) : errors.root?.firebaseError?.message ? (
+              <Alert type="error" message={errors.root.firebaseError.message} />
             ) : null}
           </div>
           <div className="flex flex-col text-lg">
