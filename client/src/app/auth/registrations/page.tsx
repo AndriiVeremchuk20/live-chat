@@ -1,12 +1,15 @@
 "use client";
 
 import { authApi } from "@/api/auth";
+import Alert from "@/components/Alert";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
+import { FirebaseError } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  deleteUser,
 } from "firebase/auth";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
@@ -28,53 +31,73 @@ const Registrations = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormValues>();
-  
+
   const registrationsMutation = useMutation(authApi.registrations, {
     onSuccess: (data) => {
       console.log(data);
     },
     onError: (err) => {
       console.error(err);
+      setError("root.serverError", {
+        type: "ServerError",
+        message: "Somethint wrong try again.",
+      });
+
+      // delete user accoutn if mutation throw error
+      if (auth.currentUser) {
+        deleteUser(auth.currentUser);
+      }
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     //console.log(data);
+    if (formData.password !== formData.confirm_password) {
+      return setError("confirm_password", {
+        message: "Passwords did not match",
+      });
+    }
 
-    if (data.password === data.confirm_password) {
+    try {
       const credentials = await createUserWithEmailAndPassword(
         auth,
-        data.email,
-        data.password
+        formData.email,
+        formData.password
       );
 
       if (credentials && auth.currentUser) {
-        try {
-          // virification user email
-          sendEmailVerification(auth.currentUser);
-          alert("Check your email");
-        } catch (e) {
-          console.log(e);
-        }
+        // virification user email
+        await sendEmailVerification(auth.currentUser);
+        alert("Check your email");
 
-		//send user data to the server
+        //send user data to the server
         registrationsMutation.mutate({
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          email: formData.email,
           uid: auth.currentUser.uid,
         });
       }
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setError("root.firebaseErrror", {
+              type: "FirebaseError",
+              message: `Email ${formData} alredy exists.`,
+            });
+        }
+        console.log(error);
+      }
     }
-    // creating a new user with email and password (firebase)
   };
 
   const onChangePassvordVisibly = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
-
 
   useEffect(() => {
     window.scrollTo({
@@ -129,7 +152,7 @@ const Registrations = () => {
             </label>
             <input
               type="email"
-              id="first_name"
+              id="email"
               placeholder="example@mail.com"
               className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
               {...register("email", {
@@ -195,22 +218,20 @@ const Registrations = () => {
             Create account
           </button>
           <div className="">
-            {errors?.first_name ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.first_name.message}
-              </div>
-            ) : errors?.last_name ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.last_name.message}
-              </div>
-            ) : errors?.email ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.email.message}
-              </div>
-            ) : errors?.password ? (
-              <div className="bg-red-500 flex justify-center text-neutral-200 font-bold rounded-t p-2 ">
-                {errors.password.message}
-              </div>
+            {errors?.first_name?.message ? (
+              <Alert type="error" message={errors.first_name.message} />
+			) : errors?.last_name?.message ? (
+              <Alert type="error" message={errors.last_name.message} />
+			) : errors?.email?.message ? (
+              <Alert type="error" message={errors.email.message} />
+			) : errors?.password?.message ? (
+              <Alert type="error" message={errors.password.message} />
+			) : errors.confirm_password?.message ? (
+              <Alert type="error" message={errors.confirm_password.message} />
+            ) : errors?.root?.serverError?.message ? (
+              <Alert type="error" message={errors.root.serverError.message} />
+            ) : errors?.root?.firebaseError?.message ? (
+              <Alert type="error" message={errors.root.firebaseError.message} />
             ) : null}
           </div>
           <div className="flex flex-col text-lg">
