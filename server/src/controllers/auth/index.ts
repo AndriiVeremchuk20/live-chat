@@ -33,12 +33,14 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
     .send({ status: "success", message: `REGISTRATION SUCCESSFUL` });
 });
 
-route.get("/auth", verifyToken, async(req, res) => {
+route.get("/auth", verifyToken, async (req, res) => {
   const { user } = req;
   //console.log(user);
   if (user) {
     try {
-      const foundUser = await prisma.user.findFirstOrThrow({ where: { uid: user.uid } });
+      const foundUser = await prisma.user.findFirstOrThrow({
+        where: { uid: user.uid },
+      });
       return res.status(200).send({
         status: "success",
         message: "auth success",
@@ -46,12 +48,51 @@ route.get("/auth", verifyToken, async(req, res) => {
       });
     } catch (error) {
       console.log(error);
-	  return res.status(404).send({status: "error", message: "user not found, try later"})
+      return res
+        .status(404)
+        .send({ status: "error", message: "user not found, try later" });
     }
   }
   return res
     .status(401)
     .send({ status: "error", message: "permission denied" });
+});
+
+route.get("/google-auth", verifyToken, async (req, res) => {
+  const { user } = req;
+
+  if (user) {
+    const checkUser = await prisma.user.findFirst({
+      where: { uid: user?.uid },
+    });
+
+    if (checkUser) {
+      // user auth
+      return res.status(200).send({
+        status: "success",
+        message: "auth with google success",
+        data: { ...checkUser },
+      });
+    } else {
+      // create a new user
+      const newUser = await prisma.user.create({
+        data: {
+          first_name: user?.name.split(" ")[0] as string,
+          last_name: user?.name.split(" ")[1] as string,
+          email: user?.email as string,
+          uid: user?.uid as string,
+        },
+      });
+
+      return res.status(200).send({
+        status: "success",
+        message: "auth with google success",
+        data: { ...newUser },
+      });
+    }
+  } else {
+    res.status(400).send({ status: "error", message: "auth error, try later" });
+  }
 });
 
 export default route;
