@@ -12,6 +12,7 @@ import {
   deleteUser,
 } from "firebase/auth";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
@@ -34,10 +35,12 @@ const Registrations = () => {
     setError,
     formState: { errors },
   } = useForm<FormValues>();
+	const router = useRouter();
 
   const registrationsMutation = useMutation(authApi.registrations, {
     onSuccess: (data) => {
       console.log(data);
+	  router.push(routes.info.verifyemail)
     },
     onError: (err) => {
       console.error(err);
@@ -71,7 +74,7 @@ const Registrations = () => {
       if (credentials && auth.currentUser) {
         // virification user email
         await sendEmailVerification(auth.currentUser);
-        alert("Check your email");
+        //alert("Check your email");
 
         //send user data to the server
         registrationsMutation.mutate({

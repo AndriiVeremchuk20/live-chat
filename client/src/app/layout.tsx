@@ -9,6 +9,8 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { authApi } from "@/api/auth";
 import { useEffect } from "react";
 import useAppStore from "@/store";
+import { useRouter } from "next/navigation";
+import routes from "@/config/appRoutes";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -25,11 +27,13 @@ const AppWrapper = (props: any) => {
 const AppInner = (props: any) => {
   const auth = getAuth();
   const { setUser } = useAppStore();
+  const router = useRouter();
 
   const authMutation = useMutation(authApi.auth, {
     onSuccess(responseData) {
       console.log(responseData);
       setUser(responseData.data);
+      //router.replace(routes.home);
     },
     onError(err) {
       console.log(err);
@@ -39,8 +43,11 @@ const AppInner = (props: any) => {
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((mbUser) => {
       if (mbUser) {
-        console.log(mbUser);
-        return authMutation.mutate();
+        //console.log(mbUser);
+        if (!mbUser.emailVerified) {
+          return router.push(routes.info.verifyemail);
+        }
+      return authMutation.mutate();
       }
     });
 
