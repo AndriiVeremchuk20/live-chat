@@ -5,18 +5,20 @@ import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
 
 const withAuth = (Component: any) => {
+  
+
   const Auth = (props: any) => {
-    const { user } = useAppStore();
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+ //   const { user } = useAppStore();
+ //   const router = useRouter();
+  //  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-    useEffect(() => {
-      setIsAuthenticated(!!user);
-    }, [user]);
+   // useEffect(() => {
+   //   setIsAuthenticated(!!user);
+   // }, [user]);
 
-    if (isAuthenticated) {
-      return router.replace(routes.auth.login);
-    }
+    //if (isAuthenticated) {
+    //  return router.replace(routes.auth.login);
+   // }
 
     return <Component {...props} />;
   };

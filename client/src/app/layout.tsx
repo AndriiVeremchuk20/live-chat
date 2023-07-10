@@ -56,7 +56,7 @@ const AppInner = (props: any) => {
 
   return (
     <body
-      className="min-h-screen max-h-fit bg-gradient-to-r from-indigo-700 via-purple-900 to-pink-700"
+      className="min-h-screen max-h-fit bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
       {...props}
     ></body>
   );
