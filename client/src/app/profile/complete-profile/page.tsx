@@ -1,10 +1,12 @@
 "use client";
 
 import withAuth from "@/hooks/withAuth";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { countries, getEmojiFlag } from "countries-list";
 import getCounryList from "@/utils/getCountryList";
 import useAppStore from "@/store";
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type FormValues = {
   first_name: string;
@@ -18,13 +20,41 @@ type FormValues = {
 };
 
 const CompleteProfile = () => {
-  const { register } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    setValue,
+    setFocus,
+  } = useForm<FormValues>();
   const { user } = useAppStore();
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
+  const onCancelClick = useCallback(() => {
+    router.back();
+  }, []);
+
+  useEffect(() => {
+    if (user?.first_name) {
+      setValue("first_name", user.first_name);
+    }
+    if (user?.last_name) {
+      setValue("last_name", user.last_name);
+    }
+  }, [user]);
 
   return (
     <div>
       <div className="flex justify-center">
-        <form className="my-10 mx-1 desktop:w-1/2  phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="my-10 mx-1 desktop:w-1/2  phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50"
+        >
           <div className="text-2xl flex justify-center items-center border-b-2 border-violet-200 mb-3">
             <span>Complete Your Profile</span>
           </div>
@@ -37,9 +67,13 @@ const CompleteProfile = () => {
               <input
                 type="text"
                 id="first_name"
-                value={user?.first_name ? user.first_name : ""}
-                autoFocus
-                placeholder="Your name :)"
+                placeholder={"Your name"}
+                autoFocus={!!user?.first_name}
+                title={
+                  user?.first_name
+                    ? "if you want to change the name, enter a new name"
+                    : "Enter a name"
+                }
                 className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
                 {...register("first_name", {
                   required: "First name is required",
@@ -53,9 +87,13 @@ const CompleteProfile = () => {
               <input
                 type="text"
                 id="last_name"
-                value={user?.last_name ? user.last_name : ""}
-                autoFocus
-                placeholder="Your last name :)"
+                placeholder={"Your last name"}
+                title={
+                  user?.first_name
+                    ? "if you want to change the last name, enter a new last name"
+                    : "Enter last name"
+                }
+                autoFocus={!!user?.last_name}
                 className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
                 {...register("last_name", {
                   required: "Last name is required",
@@ -75,49 +113,51 @@ const CompleteProfile = () => {
               className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
               {...register("age", {
                 required: "Age is required",
+                min: { value: 18, message: "Min age for registration 18!" },
+                max: { value: 140, message: "You're very old." },
               })}
             />
           </div>
 
-<div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
-          <div className="w-full flex flex-col mb-2">
-            <label htmlFor="gender" className="text-lg">
-              Gender:
-            </label>
-            <select
-              id="gender"
-              autoFocus
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
-              {...register("gender", {
-                required: "Sex is required",
-              })}
-            >
-              <option hidden>Choose your gender ⚥</option>
-              <option value={1}>Male</option>
-              <option value={0}>Female</option>
-              <option value={2}>Gender binary</option>
-            </select>
-          </div>
+          <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
+            <div className="w-full flex flex-col mb-2">
+              <label htmlFor="gender" className="text-lg">
+                Gender:
+              </label>
+              <select
+                id="gender"
+                autoFocus
+                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                {...register("gender", {
+                  required: "Gender is required",
+                })}
+              >
+                <option hidden>Choose your gender ⚥</option>
+                <option value={1}>Male</option>
+                <option value={0}>Female</option>
+                <option value={2}>Gender binary</option>
+              </select>
+            </div>
 
-          <div className="w-full flex flex-col mb-2">
-            <label htmlFor="partner_gender" className="text-lg">
-              Partner gender:
-            </label>
-            <select
-              id="partner_gender"
-              autoFocus
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
-              {...register("partner_gender", {
-                required: "Partner gender is required",
-              })}
-            >
-              <option hidden>Choose partner gender ⚥</option>
-              <option value={1}>Male</option>
-              <option value={0}>Female</option>
-              <option value={2}>Gender binary</option>
-            </select>
+            <div className="w-full flex flex-col mb-2">
+              <label htmlFor="partner_gender" className="text-lg">
+                Partner gender:
+              </label>
+              <select
+                id="partner_gender"
+                autoFocus
+                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                {...register("partner_gender", {
+                  required: "Partner gender is required",
+                })}
+              >
+                <option hidden>Choose partner gender ⚥</option>
+                <option value={1}>Male</option>
+                <option value={0}>Female</option>
+                <option value={2}>Gender binary</option>
+              </select>
+            </div>
           </div>
-</div>
           <div>
             <div className="flex flex-col mb-2">
               <label htmlFor="country" className="text-lg">
@@ -128,7 +168,7 @@ const CompleteProfile = () => {
                 placeholder="Your name :)"
                 className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
                 {...register("country", {
-                  required: "Country name is required",
+                  required: "Country is required",
                 })}
               >
                 <option>Select your country 🌐 </option>
@@ -151,7 +191,12 @@ const CompleteProfile = () => {
                 placeholder="Write 2-3 sentences about yourself"
                 className="w-full resize-none h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
                 {...register("about_self", {
-                  required: "First name is required",
+                  required: "Tell about self is required",
+                  minLength: { value: 50, message: "Please write longer text" },
+                  maxLength: {
+                    value: 150,
+                    message: "Please write shorted text",
+                  },
                 })}
               />
             </div>
@@ -167,12 +212,18 @@ const CompleteProfile = () => {
                 className="w-full resize-none h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
                 {...register("about_partner", {
                   required: "About partner is required",
+                  minLength: { value: 50, message: "Please write tonger text" },
+                  maxLength: {
+                    value: 150,
+                    message: "Please write shorted text",
+                  },
                 })}
               />
             </div>
           </div>
           <div className="w-full flex justify-end gap-3">
             <button
+              onClick={onCancelClick}
               className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-neutral-400 hover:bg-neutral-600 active:bg-neutral-700 focus:outline-none focus:ring focus:ring-slate-300"
               type="button"
             >
