@@ -2,11 +2,11 @@
 
 import withAuth from "@/hooks/withAuth";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { countries, getEmojiFlag } from "countries-list";
 import getCounryList from "@/utils/getCountryList";
 import useAppStore from "@/store";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import UserAvatar from "@/components/UserAvatar";
 
 type FormValues = {
   first_name: string;
@@ -53,12 +53,20 @@ const CompleteProfile = () => {
       <div className="flex justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="my-10 mx-1 desktop:w-1/2  phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50"
+          className="my-10 mx-1 desktop:w-1/2 phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50"
         >
           <div className="text-2xl flex justify-center items-center border-b-2 border-violet-200 mb-3">
             <span>Complete Your Profile</span>
           </div>
-          <div>{/*add upload avatar form*/}</div>
+          <div className="w-full flex flex-col justify-center items-center gap-3 my-4">
+            <UserAvatar size={140} />
+            <button
+              className="flex justify-center items-center px-3 py-1 border border-black rounded-md hover:bg-violet-100 hover:duration-200 focus:ring-2 focus:ring-neutral-200"
+              type="button"
+            >
+              <span className="font-semibold tracking-widest">Change avatar</span>
+            </button>
+          </div>
           <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
             <div className="w-full flex flex-col mb-2">
               <label htmlFor="first_name" className="text-lg">
@@ -224,13 +232,13 @@ const CompleteProfile = () => {
           <div className="w-full flex justify-end gap-3">
             <button
               onClick={onCancelClick}
-              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-neutral-400 hover:bg-neutral-600 active:bg-neutral-700 focus:outline-none focus:ring focus:ring-slate-300"
+              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-neutral-400 hover:bg-neutral-600 active:bg-neutral-700 focus:outline-none focus:ring focus:ring-slate-300"
               type="button"
             >
               Cancel
             </button>
             <button
-              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
               type="submit"
             >
               Save
