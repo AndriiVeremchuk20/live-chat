@@ -33,8 +33,9 @@ const CompleteProfile = () => {
   const { user } = useAppStore();
   const router = useRouter();
 
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const inputFileRef = useRef<HTMLInputElement | null>(null); // ref to connect button "change avatar" and input type="file" tags
   const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null);
+  const [isFile, setIsFile] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -44,14 +45,12 @@ const CompleteProfile = () => {
     inputFileRef.current?.click();
   }, []);
 
-  const onAvatarChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
-        return setValue("avatar", event.target.files[0]);
-      }
-    },
-    []
-  );
+  const onAvatarChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setValue("avatar", event.target.files[0]);
+      setIsFile((prew) => !prew);
+    }
+  }, []);
 
   const onCancelClick = useCallback(() => {
     router.back();
@@ -61,8 +60,8 @@ const CompleteProfile = () => {
     const avatar = getValues("avatar");
     if (!avatar) {
       setPreviewAvatarSrc(null);
-		return;
-	}
+      return;
+    }
     const avatarUrl = URL.createObjectURL(avatar);
     setPreviewAvatarSrc(avatarUrl);
 
