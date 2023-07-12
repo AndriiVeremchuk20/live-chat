@@ -2,6 +2,7 @@ import { Router } from "express";
 import prisma from "../../../prisma";
 import checkSimilarEmails from "../../middleware/checkEmail";
 import verifyToken from "../../middleware/verifyToken";
+import { StatusCodes } from "http-status-codes";
 
 const route = Router();
 
@@ -29,7 +30,7 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
   console.info(`[!!!] CREATED A NEW USER ${createdUser}`);
 
   res
-    .status(201)
+    .status(StatusCodes.CREATED)
     .send({ status: "success", message: `REGISTRATION SUCCESSFUL` });
 });
 
@@ -41,7 +42,7 @@ route.get("/auth", verifyToken, async (req, res) => {
       const foundUser = await prisma.user.findFirstOrThrow({
         where: { uid: user.uid },
       });
-      return res.status(200).send({
+      return res.status(StatusCodes.OK).send({
         status: "success",
         message: "auth success",
         data: { ...foundUser },
@@ -49,7 +50,7 @@ route.get("/auth", verifyToken, async (req, res) => {
     } catch (error) {
       console.log(error);
       return res
-        .status(404)
+        .status(StatusCodes.NOT_FOUND)
         .send({ status: "error", message: "user not found, try later" });
     }
   }
@@ -68,7 +69,7 @@ route.get("/google-auth", verifyToken, async (req, res) => {
 
     if (checkUser) {
       // user auth
-      return res.status(200).send({
+      return res.status(StatusCodes.OK).send({
         status: "success",
         message: "auth with google success",
         data: { ...checkUser },
@@ -84,14 +85,14 @@ route.get("/google-auth", verifyToken, async (req, res) => {
         },
       });
 
-      return res.status(200).send({
+      return res.status(StatusCodes.CREATED).send({
         status: "success",
         message: "auth with google success",
         data: { ...newUser },
       });
     }
   } else {
-    res.status(400).send({ status: "error", message: "auth error, try later" });
+    res.status(StatusCodes.BAD_REQUEST).send({ status: "error", message: "auth error, try later" });
   }
 });
 
