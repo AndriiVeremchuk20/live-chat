@@ -4,13 +4,14 @@ import withAuth from "@/hooks/withAuth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import getCounryList from "@/utils/getCountryList";
 import useAppStore from "@/store";
-import { useCallback, useEffect } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import UserAvatar from "@/components/UserAvatar";
 
 type FormValues = {
   first_name: string;
   last_name: string;
+  avatar?: File;
   age: number;
   country: string;
   gender: number;
@@ -26,18 +27,47 @@ const CompleteProfile = () => {
     formState: { errors },
     setError,
     setValue,
+    getValues,
     setFocus,
   } = useForm<FormValues>();
   const { user } = useAppStore();
   const router = useRouter();
 
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null);
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
 
+  const onOpenFileInput = useCallback(() => {
+    inputFileRef.current?.click();
+  }, []);
+
+  const onAvatarChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        return setValue("avatar", event.target.files[0]);
+      }
+    },
+    []
+  );
+
   const onCancelClick = useCallback(() => {
     router.back();
   }, []);
+
+  useEffect(() => {
+    const avatar = getValues("avatar");
+    if (!avatar) {
+      setPreviewAvatarSrc(null);
+		return;
+	}
+    const avatarUrl = URL.createObjectURL(avatar);
+    setPreviewAvatarSrc(avatarUrl);
+
+    return () => URL.revokeObjectURL(avatarUrl);
+  }, [getValues("avatar")]);
 
   useEffect(() => {
     if (user?.first_name) {
@@ -59,12 +89,28 @@ const CompleteProfile = () => {
             <span>Complete Your Profile</span>
           </div>
           <div className="w-full flex flex-col justify-center items-center gap-3 my-4">
-            <UserAvatar size={140} />
+            {previewAvatarSrc ? (
+              <UserAvatar
+                image={{ src: previewAvatarSrc, alt: "preview avatar" }}
+                size={140}
+              />
+            ) : (
+              <UserAvatar size={140} />
+            )}
+            <input
+              type="file"
+              className="hidden"
+              ref={inputFileRef}
+              onChange={onAvatarChange}
+            />
             <button
+              onClick={onOpenFileInput}
               className="flex justify-center items-center px-3 py-1 border border-black rounded-md hover:bg-violet-100 hover:duration-200 focus:ring-2 focus:ring-neutral-200"
               type="button"
             >
-              <span className="font-semibold tracking-widest">Change avatar</span>
+              <span className="font-semibold tracking-widest">
+                Change avatar
+              </span>
             </button>
           </div>
           <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
