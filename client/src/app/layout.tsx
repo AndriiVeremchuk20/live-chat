@@ -7,10 +7,11 @@ import firebaseConfig from "@/config/firebase";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { authApi } from "@/api/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
+import Loader from "@/components/Loader";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -28,6 +29,7 @@ const AppInner = (props: any) => {
   const auth = getAuth();
   const { setUser } = useAppStore();
   const router = useRouter();
+  const { setStartLoading, setEndLoading } = useAppStore();
 
   const authMutation = useMutation(authApi.auth, {
     onSuccess(responseData) {
@@ -41,14 +43,16 @@ const AppInner = (props: any) => {
   });
 
   useEffect(() => {
+    setStartLoading();
     const unsub = auth.onAuthStateChanged((mbUser) => {
       if (mbUser) {
         //console.log(mbUser);
         if (!mbUser.emailVerified) {
           return router.push(routes.info.verifyemail);
         }
-      return authMutation.mutate();
+        authMutation.mutate();
       }
+      setEndLoading();
     });
 
     return unsub;
@@ -63,12 +67,25 @@ const AppInner = (props: any) => {
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
+  const { isLoading } = useAppStore();
+
   return (
     <AppWrapper>
       <html lang="en">
         <AppInner>
-          <Header />
-          {children}
+          {isLoading ? (
+            <div className="w-full h-screen bg-red-100 flex flex-col items-center justify-center">
+              <div className="w-[150px]">
+                <Loader />
+              </div>
+              <span className="my-2 text-2xl font-semibold tracking-wider">Loading..</span>
+            </div>
+          ) : (
+            <>
+              <Header />
+              {children}
+            </>
+          )}
         </AppInner>
       </html>
     </AppWrapper>

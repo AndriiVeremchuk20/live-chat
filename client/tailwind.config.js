@@ -19,7 +19,11 @@ module.exports = {
       desktop: "1280px",
       // => @media (min-width: 1280px) { ... }
     },
-    extend: {},
+    extend: {
+		animation:{
+			'pulse-slow': 'pulse 1s lineral infinite', // custom animation pulse-slow
+		}
+	},
   },
   plugins: [],
 };

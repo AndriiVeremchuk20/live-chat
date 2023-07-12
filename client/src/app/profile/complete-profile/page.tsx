@@ -34,21 +34,24 @@ const CompleteProfile = () => {
   const router = useRouter();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null); // ref to connect button "change avatar" and input type="file" tags
-  const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null);
-  const [isFile, setIsFile] = useState<boolean>(false);
+  const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null); // state to save url choosed file
+  const [isFile, setIsFile] = useState<boolean>(false); // ???
 
+  // submit form
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
 
+  // make click on input type="file" with inputFileRef
   const onOpenFileInput = useCallback(() => {
     inputFileRef.current?.click();
   }, []);
 
+  // func to set value avatar useForm
   const onAvatarChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setValue("avatar", event.target.files[0]);
-      setIsFile((prew) => !prew);
+      setIsFile((prew) => !prew); // ??
     }
   }, []);
 
@@ -58,16 +61,20 @@ const CompleteProfile = () => {
 
   useEffect(() => {
     const avatar = getValues("avatar");
+    // if ! vatar leave
     if (!avatar) {
       setPreviewAvatarSrc(null);
       return;
     }
-    const avatarUrl = URL.createObjectURL(avatar);
-    setPreviewAvatarSrc(avatarUrl);
 
-    return () => URL.revokeObjectURL(avatarUrl);
+    // if file choosed create fiel url
+    const avatarUrl = URL.createObjectURL(avatar);
+    setPreviewAvatarSrc(avatarUrl); // set path to preview
+
+    return () => URL.revokeObjectURL(avatarUrl); // returned revoke
   }, [getValues("avatar")]);
 
+  // if user have first_name and last_name, set this values in form
   useEffect(() => {
     if (user?.first_name) {
       setValue("first_name", user.first_name);
