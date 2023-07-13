@@ -90,7 +90,7 @@ const CompleteProfile = () => {
       <div className="flex justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="my-10 mx-1 desktop:w-1/2 phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50"
+          className="my-10 mx-1 desktop:w-1/2 phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50 dark:bg-neutral-800 dark:text-white"
         >
           <div className="text-2xl flex justify-center items-center border-b-2 border-violet-200 mb-3">
             <span>Complete Your Profile</span>
@@ -135,7 +135,7 @@ const CompleteProfile = () => {
                     ? "if you want to change the name, enter a new name"
                     : "Enter a name"
                 }
-                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors.first_name && "ring-2 ring-red-400"
                 }`}
                 {...register("first_name", {
@@ -160,7 +160,7 @@ const CompleteProfile = () => {
                     : "Enter last name"
                 }
                 autoFocus={!!user?.last_name}
-                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors.last_name && "ring-2 ring-red-400"
                 }`}
                 {...register("last_name", {
@@ -181,7 +181,7 @@ const CompleteProfile = () => {
               id="age"
               autoFocus
               placeholder="Your age."
-              className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+              className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                 errors?.age && "ring-2 ring-red-400"
               }`}
               {...register("age", {
@@ -204,7 +204,7 @@ const CompleteProfile = () => {
               <select
                 id="gender"
                 autoFocus
-                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`text-black w-full px-2 py-1 text-xl dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("gender", {
@@ -228,7 +228,7 @@ const CompleteProfile = () => {
               <select
                 id="partner_gender"
                 autoFocus
-                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("partner_gender", {
@@ -253,7 +253,7 @@ const CompleteProfile = () => {
               <select
                 id="country"
                 placeholder="Your name :)"
-                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("country", {
@@ -281,7 +281,7 @@ const CompleteProfile = () => {
                 id="about_self"
                 autoFocus
                 placeholder="Write 2-3 sentences about yourself"
-                className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full h-[150px] resize-none px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("about_self", {
@@ -306,7 +306,7 @@ const CompleteProfile = () => {
                 id="about_partner"
                 autoFocus
                 placeholder="Write 2-3 sentences about your ideal partner"
-                className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full resize-none h-[150px] px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("about_partner", {
@@ -326,7 +326,7 @@ const CompleteProfile = () => {
           <div className="w-full flex justify-end gap-3">
             <button
               onClick={onCancelClick}
-              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-neutral-400 hover:bg-neutral-600 active:bg-neutral-700 focus:outline-none focus:ring focus:ring-slate-300"
+              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-neutral-400 dark:bg-neutral-700 hover:bg-neutral-900 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300"
               type="button"
             >
               Cancel

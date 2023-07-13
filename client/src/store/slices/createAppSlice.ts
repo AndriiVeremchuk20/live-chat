@@ -1,7 +1,7 @@
+import LocalStorageKeys from "@/config/localStorageKeys";
 import {StateCreator} from "zustand";
 
 export type Theme="light"|"dark";
-const LocalStorageKey = "@@/Theme";
 
 export interface AppSlice {
 	isAppLoading: boolean;
@@ -22,13 +22,13 @@ export const createAppSlice:  StateCreator<AppSlice> = (set, get) => ({
 		set({isAppLoading: false})
 	},
 
-	currTheme: localStorage.getItem(LocalStorageKey)?localStorage.getItem(LocalStorageKey) as Theme : "light",
+	currTheme:"light",
 	setTheme: (theme: Theme)=>{
 		if(theme === get().currTheme){
 			return;
 		}
 
-		localStorage.setItem(LocalStorageKey, theme);
+		localStorage.setItem(LocalStorageKeys.Theme, theme);
 		set({currTheme: theme});
 	}
 })
