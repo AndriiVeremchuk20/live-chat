@@ -12,7 +12,7 @@ interface PropAlert {
 const Alert: React.FC<PropAlert> = ({ type, message }) => {
   if (type === "info") {
     return (
-      <div className="w-full flex justify-center items-center border-2 border-blue-800 rounded-lg bg-blue-100 text-blue-800 p-1">
+      <div className="w-full m-1 flex justify-start items-center border-2 border-blue-800 rounded-lg bg-blue-100 text-blue-800 p-1">
         <BiInfoCircle size={25} className="mx-1"/> <span className="text-lg">{message}</span>
       </div>
     );
@@ -20,7 +20,7 @@ const Alert: React.FC<PropAlert> = ({ type, message }) => {
   
   else if (type === "error") {
     return (
-      <div className="w-full flex justify-center items-center border-2 border-red-800 rounded-lg bg-red-100 text-red-800 p-1">
+      <div className="w-full m-1 flex justify-start items-center border-2 border-red-800 rounded-lg bg-red-100 text-red-800 p-1">
         <BiErrorCircle size={25} className="mx-1"/> <span className="text-lg">{message}</span>
       </div>
     );
@@ -28,7 +28,7 @@ const Alert: React.FC<PropAlert> = ({ type, message }) => {
 
   else {
     return (
-      <div className="w-full flex justify-center items-center border-2 border-yellow-800 rounded-lg bg-yellow-100 text-yellow-800 p-1">
+      <div className="w-full m-1 flex justify-start items-center border-2 border-yellow-800 rounded-lg bg-yellow-100 text-yellow-800 p-1">
         <AiOutlineWarning size={25} className="mx-1"/> <span className="text-lg">{message}</span>
       </div>
     );
