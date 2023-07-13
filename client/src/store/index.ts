@@ -1,12 +1,12 @@
 import { createUserSlice, UserSlice } from "./slices/createUserSlice";
-import { createLoadingSlice, LoadingSlice } from "./slices/createLoadindSlice";
+import { createAppSlice, AppSlice } from "./slices/createAppSlice";
 import { create } from "zustand";
 
-type StoreState = UserSlice & LoadingSlice;
+type StoreState = UserSlice & AppSlice;
 
 const useAppStore = create<StoreState>()((...a) => ({
   ...createUserSlice(...a),
-  ...createLoadingSlice(...a),
+  ...createAppSlice(...a),
 }));
 
 export default useAppStore;

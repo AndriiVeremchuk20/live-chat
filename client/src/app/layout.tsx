@@ -29,7 +29,7 @@ const AppInner = (props: any) => {
   const auth = getAuth();
   const { setUser } = useAppStore();
   const router = useRouter();
-  const { setStartLoading, setEndLoading } = useAppStore();
+  const { setAppStartLoading, setAppEndLoading } = useAppStore();
 
   const authMutation = useMutation(authApi.auth, {
     onSuccess(responseData) {
@@ -43,7 +43,7 @@ const AppInner = (props: any) => {
   });
 
   useEffect(() => {
-    setStartLoading();
+    setAppStartLoading();
     const unsub = auth.onAuthStateChanged((mbUser) => {
       if (mbUser) {
         //console.log(mbUser);
@@ -52,7 +52,7 @@ const AppInner = (props: any) => {
         }
         authMutation.mutate();
       }
-      setEndLoading();
+      setAppEndLoading();
     });
 
     return unsub;
@@ -60,20 +60,20 @@ const AppInner = (props: any) => {
 
   return (
     <body
-      className="min-h-screen max-h-fit bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
+      className="min-h-screen max-h-fit bg-gradient-to-r from-neutral-300 dark:from-neutral-900 via-white to-neutral-200 dark:to-neutral-800"
       {...props}
     ></body>
   );
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
-  const { isLoading } = useAppStore();
+  const { isAppLoading } = useAppStore();
 
   return (
     <AppWrapper>
       <html lang="en">
         <AppInner>
-          {isLoading ? (
+          {isAppLoading ? (
             <div className="w-full h-screen bg-red-100 flex flex-col items-center justify-center">
               <div className="w-[150px]">
                 <Loader />

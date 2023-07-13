@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { TbMessages } from "react-icons/tb";
 import Navbar from "./Navbar";
+import SetTheme from "./SetTheme";
 import { SignOutButton } from "./SignOutButton";
 
 const Header = () => {
@@ -22,6 +23,7 @@ const Header = () => {
         >
           <span className="font-bold font-sans">100</span> <TbMessages />
         </Link>
+		<SetTheme/>
         {user ? (
           <div>
             <span>{user.first_name}</span> <SignOutButton />

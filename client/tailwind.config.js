@@ -20,10 +20,11 @@ module.exports = {
       // => @media (min-width: 1280px) { ... }
     },
     extend: {
-		animation:{
-			'pulse-slow': 'pulse 1s lineral infinite', // custom animation pulse-slow
-		}
-	},
+      animation: {
+        "pulse-slow": "pulse 1s lineral infinite", // custom animation pulse-slow
+      },
+    },
   },
   plugins: [],
+  darkMode: "class",
 };

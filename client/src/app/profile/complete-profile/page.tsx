@@ -167,7 +167,7 @@ const CompleteProfile = () => {
                   required: "Last name is required",
                 })}
               />
-				{errors.last_name?.message && (
+              {errors.last_name?.message && (
                 <Alert type="error" message={errors.last_name.message} />
               )}
             </div>
@@ -205,8 +205,8 @@ const CompleteProfile = () => {
                 id="gender"
                 autoFocus
                 className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
-                errors?.age && "ring-2 ring-red-400"
-              }`}
+                  errors?.age && "ring-2 ring-red-400"
+                }`}
                 {...register("gender", {
                   required: "Gender is required",
                 })}
@@ -229,8 +229,8 @@ const CompleteProfile = () => {
                 id="partner_gender"
                 autoFocus
                 className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
-                errors?.age && "ring-2 ring-red-400"
-              }`}
+                  errors?.age && "ring-2 ring-red-400"
+                }`}
                 {...register("partner_gender", {
                   required: "Partner gender is required",
                 })}
@@ -254,8 +254,8 @@ const CompleteProfile = () => {
                 id="country"
                 placeholder="Your name :)"
                 className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
-                errors?.age && "ring-2 ring-red-400"
-              }`}
+                  errors?.age && "ring-2 ring-red-400"
+                }`}
                 {...register("country", {
                   required: "Country is required",
                 })}
@@ -282,8 +282,8 @@ const CompleteProfile = () => {
                 autoFocus
                 placeholder="Write 2-3 sentences about yourself"
                 className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
-                errors?.age && "ring-2 ring-red-400"
-              }`}
+                  errors?.age && "ring-2 ring-red-400"
+                }`}
                 {...register("about_self", {
                   required: "Tell about self is required",
                   minLength: { value: 50, message: "Please write longer text" },
@@ -307,8 +307,8 @@ const CompleteProfile = () => {
                 autoFocus
                 placeholder="Write 2-3 sentences about your ideal partner"
                 className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
-                errors?.age && "ring-2 ring-red-400"
-              }`}
+                  errors?.age && "ring-2 ring-red-400"
+                }`}
                 {...register("about_partner", {
                   required: "About partner is required",
                   minLength: { value: 50, message: "Please write tonger text" },
