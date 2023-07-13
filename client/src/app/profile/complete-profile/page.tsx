@@ -7,6 +7,7 @@ import useAppStore from "@/store";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import UserAvatar from "@/components/UserAvatar";
+import Alert from "@/components/Alert";
 
 type FormValues = {
   first_name: string;
@@ -134,11 +135,16 @@ const CompleteProfile = () => {
                     ? "if you want to change the name, enter a new name"
                     : "Enter a name"
                 }
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                  errors.first_name && "ring-2 ring-red-400"
+                }`}
                 {...register("first_name", {
                   required: "First name is required",
                 })}
               />
+              {errors.first_name?.message && (
+                <Alert type="error" message={errors.first_name.message} />
+              )}
             </div>
             <div className="w-full flex flex-col mb-2">
               <label htmlFor="last_name" className="text-lg">
@@ -154,11 +160,16 @@ const CompleteProfile = () => {
                     : "Enter last name"
                 }
                 autoFocus={!!user?.last_name}
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                  errors.last_name && "ring-2 ring-red-400"
+                }`}
                 {...register("last_name", {
                   required: "Last name is required",
                 })}
               />
+				{errors.last_name?.message && (
+                <Alert type="error" message={errors.last_name.message} />
+              )}
             </div>
           </div>
           <div className="flex flex-col mb-2">
@@ -170,13 +181,19 @@ const CompleteProfile = () => {
               id="age"
               autoFocus
               placeholder="Your age."
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+              className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
               {...register("age", {
                 required: "Age is required",
                 min: { value: 18, message: "Min age for registration 18!" },
                 max: { value: 140, message: "You're very old." },
               })}
             />
+
+            {errors.age?.message && (
+              <Alert type="error" message={errors.age.message} />
+            )}
           </div>
 
           <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
@@ -187,7 +204,9 @@ const CompleteProfile = () => {
               <select
                 id="gender"
                 autoFocus
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
                 {...register("gender", {
                   required: "Gender is required",
                 })}
@@ -197,6 +216,9 @@ const CompleteProfile = () => {
                 <option value={0}>Female</option>
                 <option value={2}>Gender binary</option>
               </select>
+              {errors.gender?.message && (
+                <Alert type="error" message={errors.gender.message} />
+              )}
             </div>
 
             <div className="w-full flex flex-col mb-2">
@@ -206,7 +228,9 @@ const CompleteProfile = () => {
               <select
                 id="partner_gender"
                 autoFocus
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
                 {...register("partner_gender", {
                   required: "Partner gender is required",
                 })}
@@ -216,6 +240,9 @@ const CompleteProfile = () => {
                 <option value={0}>Female</option>
                 <option value={2}>Gender binary</option>
               </select>
+              {errors.partner_gender?.message && (
+                <Alert type="error" message={errors.partner_gender.message} />
+              )}
             </div>
           </div>
           <div>
@@ -226,7 +253,9 @@ const CompleteProfile = () => {
               <select
                 id="country"
                 placeholder="Your name :)"
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
                 {...register("country", {
                   required: "Country is required",
                 })}
@@ -239,6 +268,9 @@ const CompleteProfile = () => {
                   >{`${country.emoji} ${country.name}`}</option>
                 ))}
               </select>
+              {errors.country?.message && (
+                <Alert type="error" message={errors.country.message} />
+              )}
             </div>
 
             <div className="flex flex-col mb-2">
@@ -249,7 +281,9 @@ const CompleteProfile = () => {
                 id="about_self"
                 autoFocus
                 placeholder="Write 2-3 sentences about yourself"
-                className="w-full resize-none h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
                 {...register("about_self", {
                   required: "Tell about self is required",
                   minLength: { value: 50, message: "Please write longer text" },
@@ -259,6 +293,9 @@ const CompleteProfile = () => {
                   },
                 })}
               />
+              {errors.about_self?.message && (
+                <Alert type="error" message={errors.about_self.message} />
+              )}
             </div>
 
             <div className="flex flex-col mb-2">
@@ -269,7 +306,9 @@ const CompleteProfile = () => {
                 id="about_partner"
                 autoFocus
                 placeholder="Write 2-3 sentences about your ideal partner"
-                className="w-full resize-none h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className={`w-full h-[150px] px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                errors?.age && "ring-2 ring-red-400"
+              }`}
                 {...register("about_partner", {
                   required: "About partner is required",
                   minLength: { value: 50, message: "Please write tonger text" },
@@ -279,6 +318,9 @@ const CompleteProfile = () => {
                   },
                 })}
               />
+              {errors.about_partner?.message && (
+                <Alert type="error" message={errors.about_partner.message} />
+              )}
             </div>
           </div>
           <div className="w-full flex justify-end gap-3">
