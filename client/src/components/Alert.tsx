@@ -20,7 +20,7 @@ const Alert: React.FC<PropAlert> = ({ type, message }) => {
   
   else if (type === "error") {
     return (
-      <div className="w-full m-1 flex justify-start items-center border-2 border-red-800 rounded-lg bg-red-100 text-red-800 p-1">
+      <div className="w-full m-1 flex justify-start items-center border-2 border-red-800 rounded-lg bg-red-100 dark:bg-inherit text-red-800 p-1">
         <BiErrorCircle size={25} className="mx-1"/> <span className="text-lg">{message}</span>
       </div>
     );

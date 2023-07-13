@@ -1,17 +1,19 @@
-import { Router } from "express";
-import prisma from "../../../prisma";
-import checkSimilarEmails from "../../middleware/checkEmail";
-import verifyToken from "../../middleware/verifyToken";
+import { Request, Response, NextFunction } from "express";
+import prisma from "../../prisma";
+import checkSimilarEmails from "../middleware/checkEmail";
+import verifyToken from "../middleware/verifyToken";
 import { StatusCodes } from "http-status-codes";
 
-const route = Router();
-
 // route for testing path
-route.get("/test", (req, res) => {
+const testRoute = (req: Request, res: Response) => {
   res.status(200).send("done");
-});
+};
 
-route.post("/registration", checkSimilarEmails, async (req, res, next) => {
+const registration = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   //get fields from request body
   const { first_name, last_name, email, uid } = req.body;
 
@@ -32,9 +34,9 @@ route.post("/registration", checkSimilarEmails, async (req, res, next) => {
   res
     .status(StatusCodes.CREATED)
     .send({ status: "success", message: `REGISTRATION SUCCESSFUL` });
-});
+};
 
-route.get("/auth", verifyToken, async (req, res) => {
+const auth = async (req: Request, res: Response) => {
   const { user } = req;
   //console.log(user);
   if (user) {
@@ -57,9 +59,10 @@ route.get("/auth", verifyToken, async (req, res) => {
   return res
     .status(401)
     .send({ status: "error", message: "permission denied" });
-});
+};
 
-route.get("/google-auth", verifyToken, async (req, res) => {
+const authWithGoogle = async (req: Request, res: Response) => {
+  //add middleware to check auth type
   const { user } = req;
 
   if (user) {
@@ -92,8 +95,10 @@ route.get("/google-auth", verifyToken, async (req, res) => {
       });
     }
   } else {
-    res.status(StatusCodes.BAD_REQUEST).send({ status: "error", message: "auth error, try later" });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ status: "error", message: "auth error, try later" });
   }
-});
+};
 
-export default route;
+export default { auth, authWithGoogle, registration, testRoute };

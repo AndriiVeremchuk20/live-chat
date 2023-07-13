@@ -3,7 +3,8 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors"
 import bodyParser from "body-parser";
-import AuthRoute from "./controllers/auth";
+import AuthRoute from "./routes/auth";
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
