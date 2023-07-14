@@ -1,24 +1,23 @@
 import { Request, Response, NextFunction } from "express";
-import {StatusCodes} from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 
-const completeProfile = async(req: Request, res:Response) => {
+const completeProfile = async (req: Request, res: Response) => {
+  const { user } = req;
+	console.log(req.body);
+	//console.log(req.headers["content-type"])
+  if (user) {
+    console.log("body = ", req.body);
 
-	const {user} = req;
-	if(user){
-		const {first_name, last_name, age, country, gender, partner_gender, about_self, about_partner} = req.body;
-		if(first_name && last_name && age && country&& gender&& partner_gender&& about_self&&about_partner){
-			console.log("all done");
-			return res.status(StatusCodes.OK).send({status: "success", message: "normas"});
-		}
-		else{
-			console.log(req.body)
-		}
+    return res
+      .status(StatusCodes.OK)
+      .send({ status: "success", message: "normas" });
+  }
 
-	}
-	
-	return res.status(StatusCodes.NOT_FOUND).send({status: "error", message: "User not identified"})
-}
+  return res
+    .status(StatusCodes.NOT_FOUND)
+    .send({ status: "error", message: "User not identified" });
+};
 
 export default {
-	completeProfile,
-}
+  completeProfile,
+};

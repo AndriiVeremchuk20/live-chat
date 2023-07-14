@@ -8,11 +8,13 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import UserAvatar from "@/components/UserAvatar";
 import Alert from "@/components/Alert";
+import { useMutation } from "react-query";
+import profileApi from "@/api/profile";
 
 type FormValues = {
   first_name: string;
   last_name: string;
-  avatar?: File;
+  avatar: File | null;
   age: number;
   country: string;
   gender: number;
@@ -38,9 +40,26 @@ const CompleteProfile = () => {
   const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null); // state to save url choosed file
   const [isFile, setIsFile] = useState<boolean>(false); // ???
 
-  // submit form
+  //send profile data
+  const sendProfileMutation = useMutation(profileApi.postProfile, {
+    onSuccess(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
+  //on submit form
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
+    const formData = new FormData();
+    //add data(form fields) to formData 
+	Object.entries(data).map(([key, value]) =>
+      formData.append(key, String(value))
+    );
+
+    sendProfileMutation.mutate(formData);
   };
 
   // make click on input type="file" with inputFileRef

@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.use("/auth", AuthRoute);
 
 app.use(verifyToken); // cut off users without account
+
 // private routes
 app.use("/profile", ProfileRoutes);
 
