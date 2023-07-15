@@ -54,10 +54,11 @@ const CompleteProfile = () => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
     const formData = new FormData();
-    //add data(form fields) to formData 
-	Object.entries(data).map(([key, value]) =>
-      formData.append(key, String(value))
-    );
+    //add data(form fields) to formData
+    Object.entries(data).map(([key, value]) => {
+      if (value !== null)
+        formData.append(key, typeof value === "number" ? String(value) : value);
+    });
 
     sendProfileMutation.mutate(formData);
   };

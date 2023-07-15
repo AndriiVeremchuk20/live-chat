@@ -7,7 +7,7 @@ const completeProfile = async (req: Request, res: Response) => {
 	//console.log(req.headers["content-type"])
   if (user) {
     console.log("body = ", req.body);
-
+	console.log("files = ", req.file);
     return res
       .status(StatusCodes.OK)
       .send({ status: "success", message: "normas" });
