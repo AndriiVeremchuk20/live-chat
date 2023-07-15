@@ -12,6 +12,7 @@ import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
 import Loader from "@/components/Loader";
+import LocalStorageKeys from "@/config/localStorageKeys";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -27,7 +28,7 @@ const AppWrapper = (props: any) => {
 
 const AppInner = (props: any) => {
   const auth = getAuth();
-  const { setUser } = useAppStore();
+	const { setUser, setTheme } = useAppStore();
   const router = useRouter();
   const { setAppStartLoading, setAppEndLoading } = useAppStore();
 
@@ -56,6 +57,21 @@ const AppInner = (props: any) => {
     });
 
     return unsub;
+  }, []);
+
+  useEffect(() => {
+    const localStorageValue = localStorage.getItem(LocalStorageKeys.Theme);
+
+    console.log(localStorageValue);
+
+    if (localStorageValue && localStorageValue === "dark") {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+      return;
+    }
+
+    setTheme("light");
+    document.documentElement.classList.remove("dark");
   }, []);
 
   return (

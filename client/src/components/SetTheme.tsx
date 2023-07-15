@@ -19,21 +19,6 @@ const SetTheme = () => {
     }
   }, [currTheme]);
 
-  useEffect(() => {
-    const localStorageValue = localStorage.getItem(LocalStorageKeys.Theme);
-
-    console.log(localStorageValue);
-
-    if (localStorageValue && localStorageValue === "dark") {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-      return;
-    }
-
-    setTheme("light");
-    document.documentElement.classList.remove("dark");
-  }, []);
-
   return (
     <button onClick={onChangeThemeClick} className="">
       {currTheme === "light" ? (
