@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 serviceAccountKey.json
+googleStorageKey.json
 /migrations
 
 # testing
