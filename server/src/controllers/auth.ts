@@ -4,11 +4,6 @@ import checkSimilarEmails from "../middleware/checkEmail";
 import verifyToken from "../middleware/verifyToken";
 import { StatusCodes } from "http-status-codes";
 
-// route for testing path
-const testRoute = (req: Request, res: Response) => {
-  res.status(200).send("done");
-};
-
 const registration = async (
   req: Request,
   res: Response,
@@ -22,10 +17,10 @@ const registration = async (
   //try add a new user into bd
   const createdUser = await prisma.user.create({
     data: {
+      id: uid,
       first_name,
       last_name,
       email,
-      uid,
     },
   });
 
@@ -42,7 +37,7 @@ const auth = async (req: Request, res: Response) => {
   if (user) {
     try {
       const foundUser = await prisma.user.findFirstOrThrow({
-        where: { uid: user.uid },
+        where: { id: user.uid },
       });
       return res.status(StatusCodes.OK).send({
         status: "success",
@@ -67,7 +62,7 @@ const authWithGoogle = async (req: Request, res: Response) => {
 
   if (user) {
     const checkUser = await prisma.user.findFirst({
-      where: { uid: user?.uid },
+      where: { id: user.uid },
     });
 
     if (checkUser) {
@@ -81,10 +76,10 @@ const authWithGoogle = async (req: Request, res: Response) => {
       // create a new user
       const newUser = await prisma.user.create({
         data: {
+          id: user.uid,
           first_name: user?.name.split(" ")[0] as string,
           last_name: user?.name.split(" ")[1] as string,
-          email: user?.email as string,
-          uid: user?.uid as string,
+          email: user.email as string,
         },
       });
 
@@ -101,4 +96,4 @@ const authWithGoogle = async (req: Request, res: Response) => {
   }
 };
 
-export default { auth, authWithGoogle, registration, testRoute };
+export default { auth, authWithGoogle, registration };

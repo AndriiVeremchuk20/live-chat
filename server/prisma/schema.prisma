@@ -22,8 +22,7 @@ enum Gender {
 }
 
 model User {
- id				String		@id @default(cuid())
- uid			String
+ id				String      @unique
  role			Role		@default(USER)
  first_name		String
  last_name		String

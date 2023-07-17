@@ -6,19 +6,32 @@ import { v4 as uuid } from "uuid";
 import prisma from "../../prisma";
 import getGender from "../utils/getGender";
 
-const completeProfile = async (req: Request, res: Response) => {
+const completeProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { user } = req;
-
   if (user) {
     let avatarStorageUrl: string | null = null;
-    const foundUser = await prisma.user.findFirst({ where: { uid: user.uid } });
 
+    // check user
+    const foundUser = await prisma.user.findFirst({ where: { id: user.uid } });
     if (!foundUser) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .send({ status: "error", message: "user not found, try again later" });
     }
 
+    //check profile
+    const foundUserProfile = await prisma.profile.findFirst({
+      where: { user_id: user.uid },
+    });
+	if(foundUserProfile){
+		return res.status(StatusCodes.CONFLICT).send({status: "error", message: "profile alredy exist"})
+	}
+
+	// callback to create a new user profile, after uploading avatar
     const addProfile = async () => {
       //adding user profile to DB
       const {
@@ -63,7 +76,6 @@ const completeProfile = async (req: Request, res: Response) => {
     };
 
     //if the user did not send the file, just add profile info
-
     // check type of the file, (file must be "image" type)
     const newAvatar = req.file;
 
