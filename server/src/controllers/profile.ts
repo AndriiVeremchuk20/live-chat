@@ -18,7 +18,7 @@ const completeProfile = async (req: Request, res: Response) => {
 
     // uploading avatar file and gtting image url
     if (req.file) {
-      const blob = cloudBucket.file(req.file.originalname);
+      const blob = cloudBucket.file(`avatars/${req.file.originalname}`);
       const blobStream = blob.createWriteStream();
 
       blobStream.on("error", (err) => {
