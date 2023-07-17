@@ -84,18 +84,19 @@ const completeProfile = async (req: Request, res: Response) => {
         avatarStorageUrl = format(
           `https://storage.googleapis.com/${cloudBucket.name}/${blob.name}`
         );
-        console.log(avatarStorageUrl);
-        return await addProfile();
+
+        //console.log(avatarStorageUrl);
+        await addProfile();
       });
 
       blobStream.end(newAvatar.buffer);
-    } 
-      return await addProfile();
-  }
-
-  return res
-    .status(StatusCodes.NOT_FOUND)
-    .send({ status: "error", message: "User not identified" });
+    } else {
+      await addProfile();
+    }
+  } else
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ status: "error", message: "User not identified" });
 };
 
 export default {
