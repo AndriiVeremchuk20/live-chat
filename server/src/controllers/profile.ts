@@ -19,6 +19,49 @@ const completeProfile = async (req: Request, res: Response) => {
         .send({ status: "error", message: "user not found, try again later" });
     }
 
+    const addProfile = async () => {
+      //adding user profile to DB
+      const {
+        first_name,
+        last_name,
+        age,
+        gender,
+        partner_gender,
+        country,
+        about_self,
+        about_partner,
+      } = req.body;
+
+      // if user update their first or last name, update this fields
+      if (
+        foundUser?.first_name !== first_name &&
+        foundUser?.last_name !== last_name
+      ) {
+        await prisma.user.update({
+          where: { id: foundUser.id },
+          data: { first_name, last_name },
+        });
+      }
+
+      // add user profile to database
+      const userProfile = await prisma.profile.create({
+        data: {
+          user_id: foundUser.id,
+          avatar_path: avatarStorageUrl,
+          age: parseInt(age),
+          gender: getGender(gender),
+          partner_gender: getGender(gender),
+          country,
+          about_self,
+          about_partner,
+        },
+      });
+
+      return res
+        .status(StatusCodes.OK)
+        .send({ status: "success", message: "Profile added" });
+    };
+
     //if the user did not send the file, just add profile info
 
     // check type of the file, (file must be "image" type)
@@ -36,55 +79,18 @@ const completeProfile = async (req: Request, res: Response) => {
         console.log(err);
       });
 
-      blobStream.on("finish",() => {
+      blobStream.on("finish", async () => {
         // The public URL can be used to directly access the file via HTTP.
         avatarStorageUrl = format(
           `https://storage.googleapis.com/${cloudBucket.name}/${blob.name}`
         );
-		  console.log(avatarStorageUrl)
+        console.log(avatarStorageUrl);
+        return await addProfile();
       });
 
       blobStream.end(newAvatar.buffer);
-    }
-
-    //adding user profile to Db
-    const {
-      first_name,
-      last_name,
-      age,
-      gender,
-      partner_gender,
-      country,
-      about_self,
-      about_partner,
-    } = req.body;
-
-    // if user update their first or last name, update this fields
-    if (
-      foundUser?.first_name !== first_name &&
-      foundUser?.last_name !== last_name
-    ) {
-      await prisma.user.update({
-        where: { id: foundUser.id },
-        data: { first_name, last_name },
-      });
-    }
-
-	// add user profile to database
-	const userProfile = await prisma.profile.create({data: {
-		user_id: foundUser.id,
-		avatar_path: avatarStorageUrl, 
-		age: parseInt(age),
-		gender: getGender(gender),
-		partner_gender: getGender(gender),
-		country,
-		about_self,
-		about_partner
-	}});
-
-    return res
-      .status(StatusCodes.OK)
-      .send({ status: "success", message: "Profile added" });
+    } 
+      return await addProfile();
   }
 
   return res
