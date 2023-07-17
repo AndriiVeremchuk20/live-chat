@@ -1,46 +1,90 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import cloudBucket from "../googleStorageCloud";
-import {format} from "util"
+import { format } from "util";
+import { v4 as uuid } from "uuid";
+import prisma from "../../prisma";
+import getGender from "../utils/getGender";
 
 const completeProfile = async (req: Request, res: Response) => {
   const { user } = req;
-  //console.log(req.body);
-  //console.log(req.headers["content-type"])
+
   if (user) {
-    //console.log("body = ", req.body);
-    //console.log("files = ", req.file);
+    let avatarStorageUrl: string | null = null;
+    const foundUser = await prisma.user.findFirst({ where: { uid: user.uid } });
+
+    if (!foundUser) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ status: "error", message: "user not found, try again later" });
+    }
 
     //if the user did not send the file, just add profile info
 
     // check type of the file, (file must be "image" type)
     const newAvatar = req.file;
 
-    // uploading avatar file and gtting image url
-    if (req.file) {
-      const blob = cloudBucket.file(`avatars/${req.file.originalname}`);
+    // uploading avatar file and save image url
+    if (newAvatar) {
+      const fileUID = uuid();
+      const fileFormat = newAvatar.originalname.split(".").reverse()[0];
+
+      const blob = cloudBucket.file(`avatars/${fileUID}.${fileFormat}`);
       const blobStream = blob.createWriteStream();
 
       blobStream.on("error", (err) => {
         console.log(err);
       });
 
-      blobStream.on("finish", () => {
+      blobStream.on("finish",() => {
         // The public URL can be used to directly access the file via HTTP.
-        const publicUrl = format(
+        avatarStorageUrl = format(
           `https://storage.googleapis.com/${cloudBucket.name}/${blob.name}`
         );
-        //return res.status(200).json({ publicUrl });
+		  console.log(avatarStorageUrl)
       });
 
-      blobStream.end(req.file.buffer);
-      console.log(req.file);
+      blobStream.end(newAvatar.buffer);
     }
+
     //adding user profile to Db
+    const {
+      first_name,
+      last_name,
+      age,
+      gender,
+      partner_gender,
+      country,
+      about_self,
+      about_partner,
+    } = req.body;
+
+    // if user update their first or last name, update this fields
+    if (
+      foundUser?.first_name !== first_name &&
+      foundUser?.last_name !== last_name
+    ) {
+      await prisma.user.update({
+        where: { id: foundUser.id },
+        data: { first_name, last_name },
+      });
+    }
+
+	// add user profile to database
+	const userProfile = await prisma.profile.create({data: {
+		user_id: foundUser.id,
+		avatar_path: avatarStorageUrl, 
+		age: parseInt(age),
+		gender: getGender(gender),
+		partner_gender: getGender(gender),
+		country,
+		about_self,
+		about_partner
+	}});
 
     return res
       .status(StatusCodes.OK)
-      .send({ status: "success", message: "normas" });
+      .send({ status: "success", message: "Profile added" });
   }
 
   return res
