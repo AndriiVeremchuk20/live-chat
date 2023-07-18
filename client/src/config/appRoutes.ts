@@ -6,6 +6,10 @@ const routes = {
 	},
 	info: {
 		verifyemail: "/info/verify-email",
+	},
+	help: {
+		forgotPassword: "/help/forgotPassword",
+		resetPassword: "/help/resetPassword",
 	}
 
 }

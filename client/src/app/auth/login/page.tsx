@@ -72,13 +72,12 @@ const Login = () => {
             type: "firebase",
             message: `User with email ${data.email} not found`,
           });
-
-		else if(error.code === "auth/wrong-password"){
+        else if (error.code === "auth/wrong-password") {
           setError("root.firebaseError", {
             type: "firebase",
             message: `Wrong password`,
           });
-		}
+        }
       }
 
       console.error(error);
@@ -181,6 +180,14 @@ const Login = () => {
             </span>
           </div>
           <GoogleButton />
+          <div className="flex justify-center my-2">
+            <Link
+              href={routes.help.forgotPassword}
+              className=" text-blue-600 underline hover:text-blue-300 "
+            >
+              Forgot password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>
