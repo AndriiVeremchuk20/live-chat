@@ -10,6 +10,7 @@ import UserAvatar from "@/components/UserAvatar";
 import Alert from "@/components/Alert";
 import { useMutation } from "react-query";
 import profileApi from "@/api/profile";
+import routes from "@/config/appRoutes";
 
 type FormValues = {
   first_name: string;
@@ -34,6 +35,7 @@ const CompleteProfile = () => {
     setFocus,
   } = useForm<FormValues>();
   const { user } = useAppStore();
+  const { setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null); // ref to connect button "change avatar" and input type="file" tags
@@ -43,10 +45,13 @@ const CompleteProfile = () => {
   //send profile data
   const sendProfileMutation = useMutation(profileApi.postProfile, {
     onSuccess(data) {
+      setAppEndLoading();
       console.log(data);
+      router.push(routes.home);
     },
     onError(error) {
       console.log(error);
+      setAppEndLoading();
     },
   });
 
@@ -80,6 +85,7 @@ const CompleteProfile = () => {
     router.back();
   }, []);
 
+  // effect to change avatar
   useEffect(() => {
     const avatar = getValues("avatar");
     // if ! vatar leave
@@ -104,6 +110,13 @@ const CompleteProfile = () => {
       setValue("last_name", user.last_name);
     }
   }, [user]);
+
+  // effect to loading
+  useEffect(() => {
+    if (sendProfileMutation.isLoading) {
+      setAppStartLoading();
+    }
+  }, [sendProfileMutation.isLoading]);
 
   return (
     <div>

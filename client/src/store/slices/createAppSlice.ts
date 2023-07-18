@@ -10,7 +10,7 @@ export interface AppSlice {
 
 	currTheme: Theme;
 	setTheme: (theme: Theme)=>void;
-	
+		
 }
 
 export const createAppSlice:  StateCreator<AppSlice> = (set, get) => ({

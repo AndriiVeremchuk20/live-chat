@@ -4,6 +4,9 @@ const routes = {
 		login: "/auth/login",
 		registrations: "/auth/registrations"
 	},
+	profile: {
+		completeProfile: "/profile/complete-profile"
+	},
 	info: {
 		verifyemail: "/info/verify-email",
 	},
