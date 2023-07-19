@@ -4,18 +4,23 @@ import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
 import { getAuth, getIdToken } from "firebase/auth";
+import Link from "next/link";
 
 const withAuth = (Component: any) => {
   const Auth = (props: any) => {
     const { user, isAppLoading } = useAppStore();
-    const auth = getAuth();
-	const router = useRouter();
-    const token = localStorage.getItem('firebaseToken'); 
-	useEffect(() => {
-      if (!user && !isAppLoading && !auth.currentUser) {
-        router.replace(routes.auth.login);
-      }
-    }, []);
+    const router = useRouter();
+    const token = localStorage.getItem("firebaseToken");
+
+    if (!user)
+      return (
+        <div>
+          <div>
+            <Link href={routes.auth.login}>Login</Link>
+            <Link href={routes.auth.registrations}>Registrations</Link>
+          </div>
+        </div>
+      );
 
     return <Component {...props} />;
   };

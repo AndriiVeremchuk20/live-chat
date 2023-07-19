@@ -378,4 +378,5 @@ const CompleteProfile = () => {
   );
 };
 
-export default CompleteProfile;
+//export default CompleteProfile;
+export default withAuth(CompleteProfile)

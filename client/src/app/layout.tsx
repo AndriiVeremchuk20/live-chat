@@ -28,31 +28,29 @@ const AppInner = (props: any) => {
   const { isAppLoading, setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
 
-	//const [l, setL] = useState<boolean>(true);
+  //const [l, setL] = useState<boolean>(true);
 
   const authMutation = useMutation(authApi.auth, {
-    onSuccess(responseData) {
-      //console.log(responseData);
-      setUser(responseData.data);
-    },
-    onError(err) {
-      //console.log(err);
-    },
-    onSettled() {
+    onSettled(data, errors) {
+      if (data) {
+        setUser(data.data);
+      }
+      if (errors) {
+        console.log(errors);
+      }
       setAppEndLoading();
     },
   });
 
-//  setAppStartLoading();
-
   useEffect(() => {
-     auth.onAuthStateChanged((mbUser) => {
+    const unsub = auth.onAuthStateChanged((mbUser) => {
       if (mbUser) {
         authMutation.mutate();
       }
-	  })
-	setAppEndLoading();
-   // return unsub;
+    });
+
+    setAppEndLoading();
+    return unsub;
   }, []);
 
   useEffect(() => {
