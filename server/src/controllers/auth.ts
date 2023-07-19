@@ -39,10 +39,15 @@ const auth = async (req: Request, res: Response) => {
       const foundUser = await prisma.user.findFirstOrThrow({
         where: { id: user.uid },
       });
+
+      const foundUserProfile = await prisma.profile.findFirst({
+        where: { user_id: user.uid },
+      });
+
       return res.status(StatusCodes.OK).send({
         status: "success",
         message: "auth success",
-        data: { ...foundUser },
+        data: { ...foundUser, profile: foundUserProfile },
       });
     } catch (error) {
       console.log(error);

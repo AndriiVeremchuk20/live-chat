@@ -93,7 +93,6 @@ const CompleteProfile = () => {
       setPreviewAvatarSrc(null);
       return;
     }
-
     // if file choosed create fiel url
     const avatarUrl = URL.createObjectURL(avatar);
     setPreviewAvatarSrc(avatarUrl); // set path to preview
@@ -103,11 +102,13 @@ const CompleteProfile = () => {
 
   // if user have first_name and last_name, set this values in form
   useEffect(() => {
-    if (user?.first_name) {
-      setValue("first_name", user.first_name);
-    }
-    if (user?.last_name) {
-      setValue("last_name", user.last_name);
+    if (user) {
+      if (user.first_name) {
+        setValue("first_name", user.first_name);
+      }
+      if (user.last_name) {
+        setValue("last_name", user.last_name);
+      }
     }
   }, [user]);
 
@@ -377,4 +378,4 @@ const CompleteProfile = () => {
   );
 };
 
-export default withAuth(CompleteProfile);
+export default CompleteProfile;

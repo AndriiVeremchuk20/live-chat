@@ -14,7 +14,7 @@ export interface AppSlice {
 }
 
 export const createAppSlice:  StateCreator<AppSlice> = (set, get) => ({
-	isAppLoading: false,
+	isAppLoading: true,
 	setAppStartLoading: () => {
 		set({isAppLoading: true});
 	},
