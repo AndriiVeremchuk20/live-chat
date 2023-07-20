@@ -1,26 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Login from "@/app/auth/login/page";
+import React from "react";
 import useAppStore from "@/store";
-import { useRouter } from "next/navigation";
-import routes from "@/config/appRoutes";
-import { getAuth, getIdToken } from "firebase/auth";
-import Link from "next/link";
+import PrivateRoute from "@/components/PrivateRoute";
 
 const withAuth = (Component: any) => {
   const Auth = (props: any) => {
-    const { user, isAppLoading } = useAppStore();
-    const router = useRouter();
-    const token = localStorage.getItem("firebaseToken");
+    const { user } = useAppStore();
 
     if (!user)
-      return (
-        <div>
-          <div>
-            <Link href={routes.auth.login}>Login</Link>
-            <Link href={routes.auth.registrations}>Registrations</Link>
-          </div>
-        </div>
-      );
+      return <PrivateRoute/>;
 
     return <Component {...props} />;
   };
