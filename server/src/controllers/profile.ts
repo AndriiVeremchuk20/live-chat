@@ -72,7 +72,7 @@ const completeProfile = async (
 
       return res
         .status(StatusCodes.OK)
-        .send({ status: "success", message: "Profile added" });
+        .send({ status: "success", message: "Profile added", data: {...userProfile} });
     };
 
     //if the user did not send the file, just add profile info

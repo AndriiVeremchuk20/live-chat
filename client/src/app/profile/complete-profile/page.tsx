@@ -11,6 +11,7 @@ import Alert from "@/components/Alert";
 import { useMutation } from "react-query";
 import profileApi from "@/api/profile";
 import routes from "@/config/appRoutes";
+import { genderType } from "@/types/profile.type";
 
 type FormValues = {
   first_name: string;
@@ -18,8 +19,8 @@ type FormValues = {
   avatar: File | null;
   age: number;
   country: string;
-  gender: number;
-  partner_gender: number;
+  gender: genderType;
+  partner_gender: genderType;
   about_self: string;
   about_partner: string;
 };
@@ -34,7 +35,7 @@ const CompleteProfile = () => {
     getValues,
     setFocus,
   } = useForm<FormValues>();
-  const { user } = useAppStore();
+  const { user, setUserProfile } = useAppStore();
   const { setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
 
@@ -47,6 +48,7 @@ const CompleteProfile = () => {
     onSuccess(data) {
       setAppEndLoading();
       console.log(data);
+	  setUserProfile(data.data)
       router.push(routes.home);
     },
     onError(error) {
@@ -108,6 +110,15 @@ const CompleteProfile = () => {
       }
       if (user.last_name) {
         setValue("last_name", user.last_name);
+      }
+
+      if (user.profile) {
+        setValue("age", user.profile.age);
+        setValue("gender", user.profile.gender);
+        setValue("partner_gender", user.profile.partner_gender);
+        setValue("country", user.profile.country);
+        setValue("about_self", user.profile.about_self);
+        setValue("about_partner", user.profile.about_partner);
       }
     }
   }, [user]);
@@ -246,9 +257,9 @@ const CompleteProfile = () => {
                 })}
               >
                 <option hidden>Choose your gender ⚥</option>
-                <option value={1}>Male</option>
-                <option value={0}>Female</option>
-                <option value={2}>Gender binary</option>
+                <option value={"MALE"}>Male</option>
+                <option value={"FEMALE"}>Female</option>
+                <option value={"BINARY"}>Gender binary</option>
               </select>
               {errors.gender?.message && (
                 <Alert type="error" message={errors.gender.message} />
@@ -270,9 +281,9 @@ const CompleteProfile = () => {
                 })}
               >
                 <option hidden>Choose partner gender ⚥</option>
-                <option value={1}>Male</option>
-                <option value={0}>Female</option>
-                <option value={2}>Gender binary</option>
+                <option value={"MALE"}>Male</option>
+                <option value={"FEMALE"}>Female</option>
+                <option value={"BINARY"}>Gender binary</option>
               </select>
               {errors.partner_gender?.message && (
                 <Alert type="error" message={errors.partner_gender.message} />
@@ -379,4 +390,4 @@ const CompleteProfile = () => {
 };
 
 //export default CompleteProfile;
-export default withAuth(CompleteProfile)
+export default withAuth(CompleteProfile);

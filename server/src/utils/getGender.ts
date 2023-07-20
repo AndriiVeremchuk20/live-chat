@@ -1,13 +1,11 @@
-// 1 - male
-// 0 - female
-// 2 - binary
+
 
 import { Gender } from "@prisma/client";
 
-const getGender = (gender: number) => {
-  return gender === 1
+const getGender = (gender: string) => {
+  return gender === "MALE"
     ? Gender.MALE
-    : gender === 0
+    : gender === "FEMALE"
     ? Gender.FEMALE
     : Gender.BINARY;
 };

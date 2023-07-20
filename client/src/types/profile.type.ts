@@ -2,11 +2,13 @@ interface Profile {
 	avatar?: string;
 	age: number;
 	country: string;
-	gender: string;
-	partner_gender: string;
+	gender: genderType;
+	partner_gender: genderType;
 	about_self: string;
 	about_partner: string;
 }
+
+export type genderType = "MALE"|"FEMALE"|"BINARY";
 
 export default Profile;
 
