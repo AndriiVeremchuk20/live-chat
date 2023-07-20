@@ -10,7 +10,7 @@ import routes from "@/config/appRoutes";
 
 const GoogleButton = () => {
   const auth = getAuth();
-  const { setUser } = useAppStore();
+  const { setUser, setAppEndLoading, setAppStartLoading } = useAppStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -27,6 +27,7 @@ const GoogleButton = () => {
   const googleAuthMutation = useMutation(authApi.authWithGoogle, {
     onSuccess(data) {
       console.log(data);
+      router.push(routes.home);
     },
     onError(error) {
       console.log(error);
@@ -36,10 +37,13 @@ const GoogleButton = () => {
   const onSignInWithGoogle = async () => {
     await signInWithPopup(auth, googleAuthProvider)
       .then((credentials) => {
-        console.log(credentials);
+        //console.log(credentials);
+        setAppStartLoading();
         googleAuthMutation.mutate();
+        setAppEndLoading();
       })
       .catch((e) => {
+		setAppEndLoading();
         console.log(e);
       });
   };

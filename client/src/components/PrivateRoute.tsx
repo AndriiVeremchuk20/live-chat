@@ -24,15 +24,33 @@ const PrivateRoute = () => {
         </span>
         <div className="text-xl mx-5">
           <span>
-            Please <Link href={routes.auth.login} className="text-blue-600 underline hover:text-blue-300">Login</Link> or{" "}
-            <Link href={routes.auth.registrations} className="text-blue-600 underline hover:text-blue-300">Register</Link>
+            Please{" "}
+            <Link
+              href={routes.auth.login}
+              className="text-blue-600 underline hover:text-blue-300"
+            >
+              Login
+            </Link>{" "}
+            or{" "}
+            <Link
+              href={routes.auth.registrations}
+              className="text-blue-600 underline hover:text-blue-300"
+            >
+              Register
+            </Link>
           </span>
         </div>
         <div className="flex gap-5 my-5 mx-3">
-          <button onClick={onBackClick} className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300">
+          <button
+            onClick={onBackClick}
+            className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+          >
             <BiArrowBack /> Back
           </button>
-          <button onClick={onHomeClick} className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300">
+          <button
+            onClick={onHomeClick}
+            className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+          >
             <BiHomeAlt2 /> Home
           </button>
         </div>

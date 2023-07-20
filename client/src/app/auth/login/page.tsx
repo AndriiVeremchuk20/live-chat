@@ -5,9 +5,7 @@ import Alert from "@/components/Alert";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
-import AppUser from "@/types/user.type";
 import { FirebaseError } from "firebase/app";
-
 import { getAuth, signInWithEmailAndPassword, User } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +22,7 @@ type FormValues = {
 const Login = () => {
   const auth = getAuth();
   const { setUser } = useAppStore();
+  const { setAppStartLoading, setAppEndLoading } = useAppStore();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
@@ -39,9 +38,12 @@ const Login = () => {
     onSuccess(responseData) {
       console.log(responseData);
       setUser(responseData.data);
+      setAppEndLoading();
+      router.push(routes.home);
     },
     onError(error) {
       console.log(error);
+      setAppEndLoading();
       setError("root.serverError", {
         type: "server",
         message: "Something wrong, try again.",
@@ -57,29 +59,31 @@ const Login = () => {
         data.email,
         data.password
       );
-
       if (!auth.currentUser?.emailVerified) {
         router.push(routes.info.verifyemail);
       } else {
+        setAppStartLoading();
         authMutation.mutate();
-        router.push(routes.home);
       }
       console.log(credential);
     } catch (error) {
+      setAppEndLoading();
       if (error instanceof FirebaseError) {
-        if (error.code === "auth/user-not-found")
-          setError("root.firebaseError", {
-            type: "firebase",
-            message: `User with email ${data.email} not found`,
-          });
-        else if (error.code === "auth/wrong-password") {
-          setError("root.firebaseError", {
-            type: "firebase",
-            message: `Wrong password`,
-          });
+        switch (error.code) {
+          case "auth/user-not-found":
+            setError("root.firebaseError", {
+              type: "firebase",
+              message: `User with email ${data.email} not found`,
+            });
+            break;
+          case "auth/wrong-password":
+            setError("root.firebaseError", {
+              type: "firebase",
+              message: `Wrong password`,
+            });
+            break;
         }
       }
-
       console.error(error);
     }
   };

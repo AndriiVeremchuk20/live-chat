@@ -4,6 +4,7 @@ import { authApi } from "@/api/auth";
 import Alert from "@/components/Alert";
 import GoogleButton from "@/components/GoogleButton";
 import routes from "@/config/appRoutes";
+import useAppStore from "@/store";
 import { FirebaseError } from "firebase/app";
 import {
   getAuth,
@@ -12,7 +13,7 @@ import {
   deleteUser,
 } from "firebase/auth";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiShow, BiHide } from "react-icons/bi";
@@ -29,20 +30,23 @@ type FormValues = {
 const Registrations = () => {
   const auth = getAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const { setAppEndLoading, setAppStartLoading } = useAppStore();
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<FormValues>();
-	const router = useRouter();
+  const router = useRouter();
 
   const registrationsMutation = useMutation(authApi.registrations, {
     onSuccess: (data) => {
       console.log(data);
-	  router.push(routes.info.verifyemail)
+      setAppEndLoading();
+      router.push(routes.info.verifyemail);
     },
     onError: (err) => {
+      setAppEndLoading();
       console.error(err);
       setError("root.serverError", {
         type: "ServerError",
@@ -77,6 +81,7 @@ const Registrations = () => {
         //alert("Check your email");
 
         //send user data to the server
+        setAppStartLoading();
         registrationsMutation.mutate({
           first_name: formData.first_name,
           last_name: formData.last_name,
@@ -85,14 +90,16 @@ const Registrations = () => {
         });
       }
     } catch (error) {
+      setAppEndLoading();
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case "auth/email-already-in-use":
-            setError("root.firebaseErrror", {
+            setError("root.firebaseError", {
               type: "FirebaseError",
-              message: `Email ${formData} alredy exists.`,
+              message: `Email ${formData.email} alredy exists.`,
             });
         }
+      } else {
         console.log(error);
       }
     }
@@ -223,13 +230,13 @@ const Registrations = () => {
           <div className="">
             {errors?.first_name?.message ? (
               <Alert type="error" message={errors.first_name.message} />
-			) : errors?.last_name?.message ? (
+            ) : errors?.last_name?.message ? (
               <Alert type="error" message={errors.last_name.message} />
-			) : errors?.email?.message ? (
+            ) : errors?.email?.message ? (
               <Alert type="error" message={errors.email.message} />
-			) : errors?.password?.message ? (
+            ) : errors?.password?.message ? (
               <Alert type="error" message={errors.password.message} />
-			) : errors.confirm_password?.message ? (
+            ) : errors.confirm_password?.message ? (
               <Alert type="error" message={errors.confirm_password.message} />
             ) : errors?.root?.serverError?.message ? (
               <Alert type="error" message={errors.root.serverError.message} />
