@@ -6,6 +6,7 @@ import { TbMessages } from "react-icons/tb";
 import Navbar from "./Navbar";
 import SetTheme from "./SetTheme";
 import { SignOutButton } from "./SignOutButton";
+import UserAvatar from "./UserAvatar";
 
 const Header = () => {
   const { user } = useAppStore();
@@ -24,9 +25,13 @@ const Header = () => {
           <span className="font-bold font-sans">100</span> <TbMessages />
         </Link>
 		<SetTheme/>
-        {user ? (
-          <div>
-            <span>{user.first_name}</span> <SignOutButton />
+        {user? (
+          <div className="flex">
+			{ user.profile?.avatar_path? 
+			<UserAvatar size={50} image={{src: user.profile.avatar_path, alt: user.first_name}} />:
+			<UserAvatar size={50}/>
+            }
+			<span>{user.first_name}</span> <SignOutButton />
           </div>
         ) : (
           <div className="mx-3 text-xl">
