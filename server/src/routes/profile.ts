@@ -1,5 +1,5 @@
 import { Router, Request } from "express";
-import ProfileControllers from "../controllers/profile";
+import ProfileController from "../controllers/profile";
 import multer, { FileFilterCallback } from "multer";
 
 const router = Router();
@@ -28,7 +28,8 @@ const uploadAvatar = multer({
 router.post(
   "/",
   uploadAvatar.single("avatar"),
-  ProfileControllers.completeProfile
+  ProfileController.completeProfile
 );
+router.put("/", uploadAvatar.single("avatar"), ProfileController.updateProfile);
 
 export default router;

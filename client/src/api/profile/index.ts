@@ -7,12 +7,25 @@ const URLs = {
 };
 
 const postProfile = async (payload: FormData) => {
-  const response = await client.post<BaseResponse<Profile>>(URLs.base, payload, {
+  const response = await client.post<BaseResponse<Profile>>(
+    URLs.base,
+    payload,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+  return response.data;
+};
+
+const updateProfile = async (payload: FormData) => {
+  const response = await client.put<BaseResponse<Profile>>(URLs.base, payload, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
   return response.data;
 };
 
 export default {
   postProfile,
+  updateProfile,
 };

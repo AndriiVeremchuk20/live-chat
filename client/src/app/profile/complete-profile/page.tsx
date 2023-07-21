@@ -48,7 +48,20 @@ const CompleteProfile = () => {
     onSuccess(data) {
       setAppEndLoading();
       console.log(data);
-	  setUserProfile(data.data)
+      setUserProfile(data.data);
+      router.push(routes.home);
+    },
+    onError(error) {
+      console.log(error);
+      setAppEndLoading();
+    },
+  });
+
+  const updateProfileMutation = useMutation(profileApi.updateProfile, {
+    onSuccess(data) {
+      setAppEndLoading();
+      console.log(data);
+      setUserProfile(data.data);
       router.push(routes.home);
     },
     onError(error) {
@@ -67,7 +80,12 @@ const CompleteProfile = () => {
         formData.append(key, typeof value === "number" ? String(value) : value);
     });
 
-    sendProfileMutation.mutate(formData);
+    // if the user does not have a profile, add a new profile, else update the existing one
+    if (user?.profile) {
+      updateProfileMutation.mutate(formData);
+    } else {
+      sendProfileMutation.mutate(formData);
+    }
   };
 
   // make click on input type="file" with inputFileRef
@@ -138,7 +156,7 @@ const CompleteProfile = () => {
           className="my-10 mx-1 desktop:w-1/2 phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50 dark:bg-neutral-800 dark:text-white"
         >
           <div className="text-2xl flex justify-center items-center border-b-2 border-violet-200 mb-3">
-            <span>Complete Your Profile</span>
+            {user?.profile ? "Update" : "Create"} Your Profile
           </div>
           <div className="w-full flex flex-col justify-center items-center gap-3 my-4">
             {previewAvatarSrc ? (
