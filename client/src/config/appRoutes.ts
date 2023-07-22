@@ -5,6 +5,8 @@ const routes = {
 		registrations: "/auth/registrations"
 	},
 	profile: {
+		profile: "/profile/",
+		userProofile: (id: string) => `/profile/${id}`,
 		completeProfile: "/profile/complete-profile"
 	},
 	info: {
