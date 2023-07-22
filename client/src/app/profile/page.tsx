@@ -55,7 +55,7 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex justify-end items-center">
-              <button className="flex items-center gap-2 my-2 p-2 text-xl text-white rounded-lg border border-indigo-300 font-semibold tracking-widest py-1 bg-violet-400 dark:bg-violet-700 hover:bg-violet-900 dark:hover:bg-violet-950 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300">
+              <button onClick={onEditClick} className="flex items-center gap-2 my-2 p-2 text-xl text-white rounded-lg border border-indigo-300 font-semibold tracking-widest py-1 bg-violet-400 dark:bg-violet-700 hover:bg-violet-900 dark:hover:bg-violet-950 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300">
                 <BiEditAlt size={25} /> Edit profile
               </button>
             </div>

@@ -142,6 +142,7 @@ const updateProfile = async (
         .status(StatusCodes.CONFLICT)
         .send({ status: "error", message: "Please create profile" });
     }
+	avatarStorageUrl = foundUserProfile.avatar_path;
 
     // callback to update user profile, after uploading avatar
     const updateProfile = async () => {

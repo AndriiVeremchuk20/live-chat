@@ -1,5 +1,5 @@
 interface Profile {
-	avatar_path?: string;
+	avatar_path: string|null;
 	age: number;
 	country: string;
 	gender: genderType;

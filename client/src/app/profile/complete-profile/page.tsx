@@ -40,9 +40,8 @@ const CompleteProfile = () => {
   const router = useRouter();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null); // ref to connect button "change avatar" and input type="file" tags
-  const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null); // state to save url choosed file
+  const [previewAvatarSrc, setPreviewAvatarSrc] = useState<string | null>(null); // state to save url choosed file or to show current user avatar
   const [isFile, setIsFile] = useState<boolean>(false); // ???
-
   //send profile data
   const sendProfileMutation = useMutation(profileApi.postProfile, {
     onSuccess(data) {
@@ -137,6 +136,7 @@ const CompleteProfile = () => {
         setValue("country", user.profile.country);
         setValue("about_self", user.profile.about_self);
         setValue("about_partner", user.profile.about_partner);
+        setPreviewAvatarSrc(user.profile.avatar_path);
       }
     }
   }, [user]);
