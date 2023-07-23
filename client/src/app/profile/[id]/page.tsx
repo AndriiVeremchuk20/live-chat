@@ -10,6 +10,7 @@ import { useCallback } from "react";
 import { BiEditAlt } from "react-icons/bi";
 
 const ProfilePage = ({ params }: { params: { id: string } }) => {
+
   const { user } = useAppStore();
   const router = useRouter();
 
