@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import AuthRoute from "./routes/auth";
 import verifyToken from "./middleware/verifyToken";
 import ProfileRoutes from "./routes/profile";
+import UserActionsRoute from "./routes/user";
 
 const app = express();
 const server = http.createServer(app);
@@ -25,6 +26,7 @@ app.use(verifyToken); // cut off users without account
 
 // private routes
 app.use("/profile", ProfileRoutes);
+app.use("/user-actions", UserActionsRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
