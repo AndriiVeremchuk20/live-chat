@@ -6,7 +6,7 @@ const routes = {
 	},
 	profile: {
 		profile: "/profile/",
-		userProofile: (id: string) => `/profile/${id}`,
+		userProfile: (id: string) => `/profile/${id}`,
 		completeProfile: "/profile/complete-profile"
 	},
 	info: {

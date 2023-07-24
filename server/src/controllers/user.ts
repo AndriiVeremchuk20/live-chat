@@ -7,10 +7,13 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const foundUser = await prisma.user.findFirstOrThrow({ where: { id } });
-    return res.status(StatusCodes.OK).send({
+    
+	const foundUserProfile = await prisma.profile.findFirst({where: {user_id: id}});
+
+	return res.status(StatusCodes.OK).send({
       status: "success",
       message: "user found",
-      data: { ...foundUser },
+      data: { ...foundUser, profile: {...foundUserProfile} },
     });
   } catch (error) {
     return res
