@@ -9,17 +9,18 @@ import AppUser from "@/types/user.type";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { BiEditAlt } from "react-icons/bi";
+import { FiSend } from "react-icons/fi";
 import { useMutation } from "react-query";
 
 const ProfilePage = ({ params }: { params: { id: string } }) => {
+  const userId = params.id;
   const [userInfo, setUserInfo] = useState<AppUser | null>(null);
   const { user } = useAppStore();
   const router = useRouter();
 
   const getUserByIdMutation = useMutation(userActions.getProfileById, {
     onSuccess(data) {
-		console.log(data)
+      console.log(data);
       setUserInfo(data.data);
     },
     onError(error) {
@@ -27,12 +28,15 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
     },
   });
 
-  useEffect(()=>{
-	if(user){
-		getUserByIdMutation.mutate(params.id);
-	}
+  const onSendMessageClick = useCallback(()=>{
+	//	router.push(chat/[id]);
+  },[]);
 
-  }, [user]);
+  useEffect(() => {
+    if (user && userId) {
+      getUserByIdMutation.mutate(params.id);
+    }
+  }, [user, userId]);
 
   if (userInfo?.profile)
     return (
@@ -54,6 +58,12 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
               <span>{userInfo.first_name}</span>
               <span>{userInfo.last_name}</span>
             </div>
+            <button
+              //onClick={onEditClick}
+              className="flex items-center gap-2 my-2 p-2 text-xl text-white rounded-lg border border-indigo-300 font-semibold tracking-widest py-1 bg-violet-400 dark:bg-violet-700 hover:bg-violet-900 dark:hover:bg-violet-950 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300"
+            >
+              <FiSend size={25} /> Send message
+            </button>
           </div>
           <div className="flex flex-col gap-4 border-t-2 border-violet-300 py-3">
             <span className="text-xl font-semibold tracking-wide mb-5">
@@ -74,14 +84,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
                 {userInfo.profile.about_self}
               </div>
             </div>
-            <div className="flex justify-end items-center">
-              <button
-                //onClick={onEditClick}
-                className="flex items-center gap-2 my-2 p-2 text-xl text-white rounded-lg border border-indigo-300 font-semibold tracking-widest py-1 bg-violet-400 dark:bg-violet-700 hover:bg-violet-900 dark:hover:bg-violet-950 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300"
-              >
-                <BiEditAlt size={25} /> Edit profile
-              </button>
-            </div>
+            <div className="flex justify-end items-center"></div>
           </div>
         </div>
       </div>

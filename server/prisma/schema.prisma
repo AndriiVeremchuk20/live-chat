@@ -44,4 +44,3 @@ model Profile {
 	about_self String
 	about_partner String
 }
-
