@@ -29,7 +29,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   });
 
   const onSendMessageClick = useCallback(()=>{
-	//	router.push(chat/[id]);
+	//	router.push(routes.chat/[id]);
   },[]);
 
   useEffect(() => {

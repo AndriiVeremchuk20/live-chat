@@ -11,36 +11,70 @@ datasource db {
 }
 
 enum Role {
-	USER
-	ADMIN
+  USER
+  ADMIN
 }
 
 enum Gender {
-	MALE
-	FEMALE
-	BINARY
+  MALE
+  FEMALE
+  BINARY
 }
 
 model User {
- id				String      @unique
- role			Role		@default(USER)
- first_name		String
- last_name		String
- email			String		@unique
- created_at		DateTime	@default(now())
- profile		Profile?
+  id         String   @unique
+  role       Role     @default(USER)
+  first_name String
+  last_name  String
+  email      String   @unique
+  created_at DateTime @default(now())
+  profile    Profile?
+
+  chats   ChatParticipant[]
+  sender  Message[]  @relation("sender")
+  reciver Message[]  @relation("reciver")
 }
 
 model Profile {
-	id	String	@id @default(cuid())
-	user User @relation(fields: [user_id], references: [id])
-	user_id	String @unique
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
 
-	avatar_path String?
-	age Int
-	country String
-	gender Gender
-	partner_gender Gender
-	about_self String
-	about_partner String
+  avatar_path    String?
+  age            Int
+  country        String
+  gender         Gender
+  partner_gender Gender
+  about_self     String
+  about_partner  String
+}
+
+model ChatParticipant {
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  chat    Chat   @relation(fields: [chat_id], references: [id])
+  chat_id String
+}
+
+model Chat {
+  id       String     @id @default(cuid())
+  messages Message[]
+  ChatLink ChatParticipant[]
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  text       String
+  created_at DateTime @default(now())
+
+  chat    Chat   @relation(fields: [chat_id], references: [id])
+  chat_id String
+
+  sender    User   @relation("sender", fields: [sender_id], references: [id])
+  sender_id String
+
+  reciver    User   @relation("reciver", fields: [reciver_id], references: [id])
+  reciver_id String
 }
