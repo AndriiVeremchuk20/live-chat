@@ -80,14 +80,14 @@ const Chat = ({ params }: { params: { id: string } }) => {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full flex flex-col"
         >
-          <div className="flex">
+          <div className="flex text-black dark:text-white">
             <textarea
-              className="resize-none w-full"
+              className="resize-none w-full outline-none rounded-lg px-2 py-1 m-1 dark:bg-neutral-800 bg-opacity-75"
               {...register("message")}
               placeholder="Send message"
             ></textarea>
             <button type="button" className="p-2">
-              <BsEmojiSmileUpsideDown size={25} />
+              <BsEmojiSmileUpsideDown size={25}/>
             </button>
             <button className="p-2" type="button">
               <FiPaperclip size={25} />
