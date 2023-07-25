@@ -72,7 +72,7 @@ const Registrations = () => {
       const credentials = await createUserWithEmailAndPassword(
         auth,
         formData.email,
-        formData.password
+        formData.password,
       );
 
       if (credentials && auth.currentUser) {
@@ -117,17 +117,17 @@ const Registrations = () => {
   }, []);
 
   return (
-    <div className="h-screen flex flex-row items-center justify-end bg-[url(/auth-bg.jpg)] bg-cover ">
-      <div className="desktop:w-1/2 phone:w-full h-screen flex flex-col justify-center items-center bg-violet-400 bg-opacity-20">
+    <div className="flex h-screen flex-row items-center justify-end bg-[url(/auth-bg.jpg)] bg-cover ">
+      <div className="flex h-screen flex-col items-center justify-center bg-violet-400 bg-opacity-20 phone:w-full desktop:w-1/2">
         <form
-          className="flex flex-col w-[400px] gap-3 px-2 text-xl bg-neutral-100 rounded-lg border-violet-300 border-[2px] shadow-md"
+          className="flex w-[400px] flex-col gap-3 rounded-lg border-[2px] border-violet-300 bg-neutral-100 px-2 text-xl shadow-md"
           autoComplete="off"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <span className="text-2xl font-bold text-center py-2 px-1 border-b-2 border-violet-300">
+          <span className="border-b-2 border-violet-300 px-1 py-2 text-center text-2xl font-bold">
             Create your Account
           </span>
-          <div className="flex flex-col mb-2">
+          <div className="mb-2 flex flex-col">
             <label htmlFor="first_name" className="text-lg">
               First name:
             </label>
@@ -136,14 +136,14 @@ const Registrations = () => {
               id="first_name"
               placeholder="John"
               autoFocus
-              className="w-full px-2 py-1 text-xl rounded-lg focus:outline-none border border-neutral-300 focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+              className="w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300"
               {...register("first_name", {
                 required: "first name is required",
               })}
             />
           </div>
 
-          <div className="flex flex-col mb-2">
+          <div className="mb-2 flex flex-col">
             <label htmlFor="last_name" className="text-lg">
               Last name:
             </label>
@@ -151,12 +151,12 @@ const Registrations = () => {
               type="text"
               id="last_name"
               placeholder="Doe"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+              className="w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300"
               {...register("last_name", { required: "last name is required" })}
             />
           </div>
 
-          <div className="flex flex-col mb-2">
+          <div className="mb-2 flex flex-col">
             <label htmlFor="email" className="text-lg">
               Email:
             </label>
@@ -164,7 +164,7 @@ const Registrations = () => {
               type="email"
               id="email"
               placeholder="example@mail.com"
-              className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+              className="w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -175,7 +175,7 @@ const Registrations = () => {
               })}
             />
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="mb-2 flex flex-col">
             <label htmlFor="password" className="text-lg">
               Password:
             </label>
@@ -184,7 +184,7 @@ const Registrations = () => {
                 type={showPassword ? "text" : "password"}
                 id="passowrd"
                 placeholder="Your strong password"
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className="w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300"
                 {...register("password", {
                   required: "Password required",
                   minLength: { value: 6, message: "Min length password 6chr" },
@@ -198,7 +198,7 @@ const Registrations = () => {
               </div>
             </div>
           </div>
-          <div className="relative flex flex-col mb-2">
+          <div className="relative mb-2 flex flex-col">
             <label htmlFor="rep_password" className="text-lg">
               Comfirm password:
             </label>
@@ -207,14 +207,14 @@ const Registrations = () => {
                 type={showPassword ? "text" : "password"}
                 id="rep_password"
                 placeholder="Confirm passowrd"
-                className="w-full px-2 py-1 text-xl rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300"
+                className="w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300"
                 {...register("confirm_password", {
                   required: "Password required",
                   minLength: { value: 6, message: "Min length password 6chr" },
                 })}
               />
               <div
-                className="absolute top-2 right-2"
+                className="absolute right-2 top-2"
                 onClick={onChangePassvordVisibly}
               >
                 {showPassword ? <BiShow /> : <BiHide />}
@@ -222,7 +222,7 @@ const Registrations = () => {
             </div>
           </div>
           <button
-            className=" mb-2 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+            className=" mb-2 rounded-lg border border-neutral-300 bg-violet-500 py-1 text-xl font-bold text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700"
             type="submit"
           >
             Create account

@@ -66,7 +66,7 @@ const AppInner = (props: any) => {
 
   if (isAppLoading)
     return (
-      <div className="h-screen bg-red-100 dark:bg-slate-600 flex flex-col justify-center items-center">
+      <div className="flex h-screen flex-col items-center justify-center bg-red-100 dark:bg-slate-600">
         <div className="flex flex-col items-center gap-3">
           <Loader />
           <span className="text-2xl font-semibold">Wait...</span>
@@ -80,7 +80,7 @@ const AppInner = (props: any) => {
 export default function App({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen max-h-fit bg-gradient-to-r from-neutral-300 dark:from-neutral-900 via-white to-neutral-200 dark:to-neutral-800">
+      <body className="max-h-fit min-h-screen bg-gradient-to-r from-neutral-300 via-white to-neutral-200 dark:from-neutral-900 dark:to-neutral-800">
         <AppWrapper>
           <AppInner>
             <Header />

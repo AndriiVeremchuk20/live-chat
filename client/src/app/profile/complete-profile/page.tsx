@@ -153,12 +153,12 @@ const CompleteProfile = () => {
       <div className="flex justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="my-10 mx-1 desktop:w-1/2 phone:w-full border-2 border-violet-200 p-4 rounded-lg bg-neutral-50 dark:bg-neutral-800 dark:text-white"
+          className="mx-1 my-10 rounded-lg border-2 border-violet-200 bg-neutral-50 p-4 dark:bg-neutral-800 dark:text-white phone:w-full desktop:w-1/2"
         >
-          <div className="text-2xl flex justify-center items-center border-b-2 border-violet-200 mb-3">
+          <div className="mb-3 flex items-center justify-center border-b-2 border-violet-200 text-2xl">
             {user?.profile ? "Update" : "Create"} Your Profile
           </div>
-          <div className="w-full flex flex-col justify-center items-center gap-3 my-4">
+          <div className="my-4 flex w-full flex-col items-center justify-center gap-3">
             {previewAvatarSrc ? (
               <UserAvatar
                 image={{ src: previewAvatarSrc, alt: "preview avatar" }}
@@ -175,7 +175,7 @@ const CompleteProfile = () => {
             />
             <button
               onClick={onOpenFileInput}
-              className="flex justify-center items-center px-3 py-1 border border-black rounded-md hover:bg-violet-100 hover:duration-200 focus:ring-2 focus:ring-neutral-200"
+              className="flex items-center justify-center rounded-md border border-black px-3 py-1 hover:bg-violet-100 hover:duration-200 focus:ring-2 focus:ring-neutral-200"
               type="button"
             >
               <span className="font-semibold tracking-widest">
@@ -183,8 +183,8 @@ const CompleteProfile = () => {
               </span>
             </button>
           </div>
-          <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
-            <div className="w-full flex flex-col mb-2">
+          <div className="flex w-full phone:flex-col desktop:flex-row desktop:gap-4">
+            <div className="mb-2 flex w-full flex-col">
               <label htmlFor="first_name" className="text-lg">
                 First name:
               </label>
@@ -198,7 +198,7 @@ const CompleteProfile = () => {
                     ? "if you want to change the name, enter a new name"
                     : "Enter a name"
                 }
-                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors.first_name && "ring-2 ring-red-400"
                 }`}
                 {...register("first_name", {
@@ -209,7 +209,7 @@ const CompleteProfile = () => {
                 <Alert type="error" message={errors.first_name.message} />
               )}
             </div>
-            <div className="w-full flex flex-col mb-2">
+            <div className="mb-2 flex w-full flex-col">
               <label htmlFor="last_name" className="text-lg">
                 Last name:
               </label>
@@ -223,7 +223,7 @@ const CompleteProfile = () => {
                     : "Enter last name"
                 }
                 autoFocus={!!user?.last_name}
-                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors.last_name && "ring-2 ring-red-400"
                 }`}
                 {...register("last_name", {
@@ -235,7 +235,7 @@ const CompleteProfile = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="mb-2 flex flex-col">
             <label htmlFor="first_name" className="text-lg">
               Age:
             </label>
@@ -244,7 +244,7 @@ const CompleteProfile = () => {
               id="age"
               autoFocus
               placeholder="Your age."
-              className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+              className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                 errors?.age && "ring-2 ring-red-400"
               }`}
               {...register("age", {
@@ -259,15 +259,15 @@ const CompleteProfile = () => {
             )}
           </div>
 
-          <div className="w-full flex desktop:flex-row desktop:gap-4 phone:flex-col">
-            <div className="w-full flex flex-col mb-2">
+          <div className="flex w-full phone:flex-col desktop:flex-row desktop:gap-4">
+            <div className="mb-2 flex w-full flex-col">
               <label htmlFor="gender" className="text-lg">
                 Gender:
               </label>
               <select
                 id="gender"
                 autoFocus
-                className={`text-black w-full px-2 py-1 text-xl dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("gender", {
@@ -284,14 +284,14 @@ const CompleteProfile = () => {
               )}
             </div>
 
-            <div className="w-full flex flex-col mb-2">
+            <div className="mb-2 flex w-full flex-col">
               <label htmlFor="partner_gender" className="text-lg">
                 Partner gender:
               </label>
               <select
                 id="partner_gender"
                 autoFocus
-                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("partner_gender", {
@@ -309,14 +309,14 @@ const CompleteProfile = () => {
             </div>
           </div>
           <div>
-            <div className="flex flex-col mb-2">
+            <div className="mb-2 flex flex-col">
               <label htmlFor="country" className="text-lg">
                 Country:
               </label>
               <select
                 id="country"
                 placeholder="Your name :)"
-                className={`w-full px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("country", {
@@ -336,7 +336,7 @@ const CompleteProfile = () => {
               )}
             </div>
 
-            <div className="flex flex-col mb-2">
+            <div className="mb-2 flex flex-col">
               <label htmlFor="about_self" className="text-lg">
                 About You:
               </label>
@@ -344,7 +344,7 @@ const CompleteProfile = () => {
                 id="about_self"
                 autoFocus
                 placeholder="Write 2-3 sentences about yourself"
-                className={`w-full h-[150px] resize-none px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`h-[150px] w-full resize-none rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("about_self", {
@@ -361,7 +361,7 @@ const CompleteProfile = () => {
               )}
             </div>
 
-            <div className="flex flex-col mb-2">
+            <div className="mb-2 flex flex-col">
               <label htmlFor="about_partner" className="text-lg">
                 About your ideal partner:
               </label>
@@ -369,7 +369,7 @@ const CompleteProfile = () => {
                 id="about_partner"
                 autoFocus
                 placeholder="Write 2-3 sentences about your ideal partner"
-                className={`w-full resize-none h-[150px] px-2 py-1 text-xl text-black dark:text-white dark:bg-neutral-500 rounded-lg border border-neutral-300 focus:outline-none focus:ring focus:border-blue-500 focus:shadow-lg focus:duration-300 ${
+                className={`h-[150px] w-full resize-none rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
                   errors?.age && "ring-2 ring-red-400"
                 }`}
                 {...register("about_partner", {
@@ -386,16 +386,16 @@ const CompleteProfile = () => {
               )}
             </div>
           </div>
-          <div className="w-full flex justify-end gap-3">
+          <div className="flex w-full justify-end gap-3">
             <button
               onClick={onCancelClick}
-              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-neutral-400 dark:bg-neutral-700 hover:bg-neutral-900 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300"
+              className="my-2 rounded-lg border border-neutral-300 bg-neutral-400 p-2 py-1 text-xl font-semibold tracking-widest text-white hover:bg-neutral-900 focus:outline-none focus:ring focus:ring-slate-300 active:bg-neutral-600 dark:bg-neutral-700"
               type="button"
             >
               Cancel
             </button>
             <button
-              className="my-2 p-2 text-xl text-white rounded-lg border border-neutral-300 font-semibold tracking-widest py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+              className="my-2 rounded-lg border border-neutral-300 bg-violet-500 p-2 py-1 text-xl font-semibold tracking-widest text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700"
               type="submit"
             >
               Save

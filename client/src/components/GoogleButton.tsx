@@ -43,7 +43,7 @@ const GoogleButton = () => {
         setAppEndLoading();
       })
       .catch((e) => {
-		setAppEndLoading();
+        setAppEndLoading();
         console.log(e);
       });
   };
@@ -51,7 +51,7 @@ const GoogleButton = () => {
   return (
     <button
       onClick={onSignInWithGoogle}
-      className="w-full py-2 my-2 flex justify-center border-y-2 border-violet-300 items-center gap-3 hover:border-violet-200 focus:border-violet-200"
+      className="my-2 flex w-full items-center justify-center gap-3 border-y-2 border-violet-300 py-2 hover:border-violet-200 focus:border-violet-200"
       type="button"
     >
       <FcGoogle size={30} /> <span>Sign in with google</span>

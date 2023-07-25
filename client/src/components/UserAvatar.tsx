@@ -15,7 +15,7 @@ const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
   if (image) {
     return (
       <div
-        className={`w-fit border border-violet-900 bg-violet-300 rounded-full m-1 p-1`}
+        className={`m-1 w-fit rounded-full border border-violet-900 bg-violet-300 p-1`}
       >
         <Image
           width={size}
@@ -30,7 +30,7 @@ const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
   }
 
   return (
-    <div className="w-fit border border-violet-900 rounded-full">
+    <div className="w-fit rounded-full border border-violet-900">
       <BiSolidUserCircle size={size} />
     </div>
   );

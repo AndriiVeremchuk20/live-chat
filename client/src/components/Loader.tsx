@@ -1,12 +1,10 @@
-
 const Loader = () => {
-
   return (
-      <div className="w-full flex h-fit gap-2">
-		<div className="w-1/3 bg-violet-300 p-5 animate-pulse"></div>
-		<div className="w-1/3 bg-violet-300 p-5 animate-pulse-slow"></div>
-		<div className="w-1/3 bg-violet-300 p-5 animate-pulse"></div>
-	  </div>
+    <div className="flex h-fit w-full gap-2">
+      <div className="w-1/3 animate-pulse bg-violet-300 p-5"></div>
+      <div className="w-1/3 animate-pulse-slow bg-violet-300 p-5"></div>
+      <div className="w-1/3 animate-pulse bg-violet-300 p-5"></div>
+    </div>
   );
 };
 

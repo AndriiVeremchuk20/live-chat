@@ -12,5 +12,9 @@ export const SignOutButton = () => {
     });
   }, []);
 
-  return <button onClick={onSingOutClick} className="bg-red-200">SingOut</button>;
+  return (
+    <button onClick={onSingOutClick} className="bg-red-200">
+      SingOut
+    </button>
+  );
 };

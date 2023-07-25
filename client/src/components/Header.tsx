@@ -16,22 +16,26 @@ const Header = () => {
   }, [user]);
 
   return (
-    <div className="flex flex-col h-[120px] justify-between content-center bg-violet-400">
-      <div className="w-full h-full flex justify-between items-center">
+    <div className="flex h-[120px] flex-col content-center justify-between bg-violet-400 dark:bg-violet-700">
+      <div className="flex h-full w-full items-center justify-between">
         <Link
-          className="text-4xl text-white mx-4 flex gap-1"
+          className="mx-4 flex gap-1 text-4xl text-white"
           href={routes.home}
         >
-          <span className="font-bold font-sans">100</span> <TbMessages />
+          <span className="font-sans font-bold">100</span> <TbMessages />
         </Link>
-		<SetTheme/>
-        {user? (
+        <SetTheme />
+        {user ? (
           <div className="flex">
-			{ user.profile?.avatar_path? 
-			<UserAvatar size={50} image={{src: user.profile.avatar_path, alt: user.first_name}} />:
-			<UserAvatar size={50}/>
-            }
-			<span>{user.first_name}</span> <SignOutButton />
+            {user.profile?.avatar_path ? (
+              <UserAvatar
+                size={50}
+                image={{ src: user.profile.avatar_path, alt: user.first_name }}
+              />
+            ) : (
+              <UserAvatar size={50} />
+            )}
+            <span>{user.first_name}</span> <SignOutButton />
           </div>
         ) : (
           <div className="mx-3 text-xl">

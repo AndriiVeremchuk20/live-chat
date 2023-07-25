@@ -16,8 +16,8 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   },
   setUserProfile: (profile: Profile) => {
     const user = get().user;
-	  if (user) {
-      set({user: {...user, profile}});
+    if (user) {
+      set({ user: { ...user, profile } });
     }
   },
   deleteUser: () => {

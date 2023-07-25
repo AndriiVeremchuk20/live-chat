@@ -6,8 +6,7 @@ const withAuth = (Component: any) => {
   const Auth = (props: any) => {
     const { user } = useAppStore();
 
-    if (!user)
-      return <PrivateRoute/>;
+    if (!user) return <PrivateRoute />;
 
     return <Component {...props} />;
   };

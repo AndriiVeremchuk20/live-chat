@@ -33,9 +33,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
     },
   });
 
-  const onShowEmojiClick = useCallback(() => {
-    setShowEmoji((state) => !state);
-  }, []);
+  //  const onShowEmojiClick = useCallback(() => {
+  //    setShowEmoji((state) => !state);
+  //  }, []);
 
   //const onEmojiClick = useCallback((emoji: EmojiClickData) => {
   //  const text = getValues("message");
@@ -55,9 +55,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex flex-col justify-between m-1 h-96 desktop:w-2/3 tablet:w-full phone:w-full my-5 border-2 border-violet-600 rounded-lg bg-neutral-300 dark:bg-gray-800 bg-opacity-80">
-        <div className="p-2 flex justify-end bg-violet-400 dark:bg-violet-700">
+    <div className="flex items-center justify-center">
+      <div className="m-1 my-5 flex h-96 flex-col justify-between rounded-lg border-2 border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:w-full tablet:w-full desktop:w-2/3">
+        <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
             <span className="font-semibold">
               {receiver.first_name + " " + receiver.last_name}
@@ -78,16 +78,16 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full flex flex-col"
+          className="flex w-full flex-col"
         >
           <div className="flex text-black dark:text-white">
             <textarea
-              className="resize-none w-full outline-none rounded-lg px-2 py-1 m-1 dark:bg-neutral-800 bg-opacity-75"
+              className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
               {...register("message")}
               placeholder="Send message"
             ></textarea>
             <button type="button" className="p-2">
-              <BsEmojiSmileUpsideDown size={25}/>
+              <BsEmojiSmileUpsideDown size={25} />
             </button>
             <button className="p-2" type="button">
               <FiPaperclip size={25} />

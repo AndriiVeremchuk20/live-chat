@@ -10,15 +10,13 @@ const URLs = {
 
 const getUserRecommendations = async () => {
   const response = await client.get<BaseResponse<Array<AppUser>>>(
-    URLs.getUserRecommendations
+    URLs.getUserRecommendations,
   );
   return response.data;
 };
 
 const getProfileById = async (id: string) => {
-  const response = await client.get<BaseResponse<AppUser>>(
-    URLs.getById(id)
-  );
+  const response = await client.get<BaseResponse<AppUser>>(URLs.getById(id));
   return response.data;
 };
 

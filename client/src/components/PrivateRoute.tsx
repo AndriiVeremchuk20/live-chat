@@ -17,12 +17,12 @@ const PrivateRoute = () => {
   }, []);
 
   return (
-    <div className="h-96 flex flex-col items-center justify-center text-black dark:text-white">
-      <div className="desktop:w-1/3 tablet:w-1/2 phone:w-full bg-red-400 bg-opacity-60 flex flex-col rounded-md border-2 border-red-600">
-        <span className="my-1 self-center font-semibold text-2xl border-b-2 border-red-600">
+    <div className="flex h-96 flex-col items-center justify-center text-black dark:text-white">
+      <div className="flex flex-col rounded-md border-2 border-red-600 bg-red-400 bg-opacity-60 phone:w-full tablet:w-1/2 desktop:w-1/3">
+        <span className="my-1 self-center border-b-2 border-red-600 text-2xl font-semibold">
           Sorry, but this route is private!
         </span>
-        <div className="text-xl mx-5">
+        <div className="mx-5 text-xl">
           <span>
             Please{" "}
             <Link
@@ -40,16 +40,16 @@ const PrivateRoute = () => {
             </Link>
           </span>
         </div>
-        <div className="flex gap-5 my-5 mx-3">
+        <div className="mx-3 my-5 flex gap-5">
           <button
             onClick={onBackClick}
-            className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+            className="mb-2 flex items-center justify-center rounded-lg border border-neutral-300 bg-violet-500 px-5 py-1 text-xl font-bold text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700"
           >
             <BiArrowBack /> Back
           </button>
           <button
             onClick={onHomeClick}
-            className="flex justify-center items-center mb-2 px-5 text-xl text-white rounded-lg border border-neutral-300 font-bold py-1 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+            className="mb-2 flex items-center justify-center rounded-lg border border-neutral-300 bg-violet-500 px-5 py-1 text-xl font-bold text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700"
           >
             <BiHomeAlt2 /> Home
           </button>

@@ -12,7 +12,7 @@ const postProfile = async (payload: FormData) => {
     payload,
     {
       headers: { "Content-Type": "multipart/form-data" },
-    }
+    },
   );
   return response.data;
 };

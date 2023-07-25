@@ -27,5 +27,5 @@ const authWithGoogle = async () => {
 export const authApi = {
   registrations,
   auth,
-  authWithGoogle
+  authWithGoogle,
 };
