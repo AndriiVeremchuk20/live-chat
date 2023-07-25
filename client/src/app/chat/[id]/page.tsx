@@ -11,6 +11,9 @@ import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
+import * as io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5000/");
 
 interface FormFields {
   message: string;
@@ -20,6 +23,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const [receiver, setReceiver] = useState<null | AppUser>(null);
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
+
+
 
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
@@ -48,6 +53,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     getUserByIdMutation.mutate(params.id);
+  }, []);
+
+   useEffect(() => {
+    let socket = io.connect("http://localhost:5000");
+	console.log(socket)
   }, []);
 
   if (!receiver) {

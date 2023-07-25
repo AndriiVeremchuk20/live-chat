@@ -8,10 +8,12 @@ import verifyToken from "./middleware/verifyToken";
 import ProfileRoutes from "./routes/profile";
 import UserActionsRoute from "./routes/user";
 
+import logger from "./logger";
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-	cors: { origin: `${process.env.ORIGIN || "http://localhost:3000/"}`, 
+	cors: { origin: `${process.env.ORIGIN || "http://localhost:3000"}`, 
 	methods: ["GET", "POST"] },
 });
 
@@ -36,10 +38,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
+// socket io
 io.on("connection", (socket) => {
-  console.log("User is connected");
+  logger.info("User is connected " + socket.id);
 });
 
 app.listen(PORT, () => {
-  console.log(`[server]: Server is running at http://localhost:${PORT}`);
+  logger.info(`Server is running at http://localhost:${PORT}`);
 });
