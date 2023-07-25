@@ -10,7 +10,10 @@ import UserActionsRoute from "./routes/user";
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+	cors: { origin: `${process.env.ORIGIN || "http://localhost:3000/"}`, 
+	methods: ["GET", "POST"] },
+});
 
 const PORT = process.env.PORT || 5000;
 
@@ -22,7 +25,8 @@ app.use(bodyParser.json());
 //app routes
 app.use("/auth", AuthRoute);
 
-app.use(verifyToken); // cut off users without account
+// cut off users without account
+app.use(verifyToken);
 
 // private routes
 app.use("/profile", ProfileRoutes);
