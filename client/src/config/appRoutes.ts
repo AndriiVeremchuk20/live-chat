@@ -1,22 +1,24 @@
 const routes = {
-	home: "/",
-	auth :{
-		login: "/auth/login",
-		registrations: "/auth/registrations"
-	},
-	profile: {
-		profile: "/profile/",
-		userProfile: (id: string) => `/profile/${id}`,
-		completeProfile: "/profile/complete-profile"
-	},
-	info: {
-		verifyemail: "/info/verify-email",
-	},
-	help: {
-		forgotPassword: "/help/forgotPassword",
-		resetPassword: "/help/resetPassword",
-	}
+  home: "/",
+  auth: {
+    login: "/auth/login",
+    registrations: "/auth/registrations",
+  },
+  profile: {
+    profile: "/profile/",
+    userProfile: (id: string) => `/profile/${id}`,
+    completeProfile: "/profile/complete-profile",
+  },
+  info: {
+    verifyemail: "/info/verify-email",
+  },
+  help: {
+    forgotPassword: "/help/forgotPassword",
+    resetPassword: "/help/resetPassword",
+  },
+  chat: {
+    base: (id: string) => `/chat/${id}`,
+  },
+};
 
-}
-
-export default routes
+export default routes;

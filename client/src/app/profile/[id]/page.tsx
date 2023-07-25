@@ -29,7 +29,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   });
 
   const onSendMessageClick = useCallback(()=>{
-	//	router.push(routes.chat/[id]);
+	router.push(routes.chat.base(userId));
   },[]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
               <span>{userInfo.last_name}</span>
             </div>
             <button
-              //onClick={onEditClick}
+              onClick={onSendMessageClick}
               className="flex items-center gap-2 my-2 p-2 text-xl text-white rounded-lg border border-indigo-300 font-semibold tracking-widest py-1 bg-violet-400 dark:bg-violet-700 hover:bg-violet-900 dark:hover:bg-violet-950 active:bg-neutral-600 focus:outline-none focus:ring focus:ring-slate-300"
             >
               <FiSend size={25} /> Send message

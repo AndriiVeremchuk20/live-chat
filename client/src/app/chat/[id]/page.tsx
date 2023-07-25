@@ -7,8 +7,8 @@ import AppUser from "@/types/user.type";
 import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { BiSolidSend } from "react-icons/bi";
+import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
-import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -18,8 +18,8 @@ interface FormFields {
 
 const Chat = ({ params }: { params: { id: string } }) => {
   const [receiver, setReceiver] = useState<null | AppUser>(null);
-  const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const { currTheme } = useAppStore();
+  //const [showEmoji, setShowEmoji] = useState<boolean>(false);
+  //const { currTheme } = useAppStore();
 
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
@@ -37,10 +37,10 @@ const Chat = ({ params }: { params: { id: string } }) => {
     setShowEmoji((state) => !state);
   }, []);
 
-  const onEmojiClick = useCallback((emoji: EmojiClickData) => {
-    const text = getValues("message");
-    setValue("message", text + emoji.emoji);
-  }, []);
+  //const onEmojiClick = useCallback((emoji: EmojiClickData) => {
+  //  const text = getValues("message");
+  //  setValue("message", text + emoji.emoji);
+  //}, []);
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
@@ -56,7 +56,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="m-1 h-96 desktop:w-2/3 tablet:w-full phone:w-full my-5 border-2 border-violet-600 rounded-lg bg-neutral-300 dark:bg-gray-800 bg-opacity-80">
+      <div className="flex flex-col justify-between m-1 h-96 desktop:w-2/3 tablet:w-full phone:w-full my-5 border-2 border-violet-600 rounded-lg bg-neutral-300 dark:bg-gray-800 bg-opacity-80">
         <div className="p-2 flex justify-end bg-violet-400 dark:bg-violet-700">
           <div className="flex items-center gap-3">
             <span className="font-semibold">
@@ -78,25 +78,21 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className=" w-full flex flex-col"
+          className="w-full flex flex-col"
         >
-          {showEmoji ? (
-            <div className="w-full">
-              <EmojiPicker
-                width={"100%"}
-                theme={currTheme == "light" ? Theme.LIGHT : Theme.DARK}
-                onEmojiClick={onEmojiClick}
-              />
-            </div>
-          ) : null}
           <div className="flex">
-            <textarea className="resize-none w-full" {...register("message")} placeholder="Send message">
-            </textarea>
-            <button type="button" onClick={onShowEmojiClick}>
+            <textarea
+              className="resize-none w-full"
+              {...register("message")}
+              placeholder="Send message"
+            ></textarea>
+            <button type="button" className="p-2">
               <BsEmojiSmileUpsideDown size={25} />
             </button>
-
-            <button type="submit" className="p-3">
+            <button className="p-2" type="button">
+              <FiPaperclip size={25} />
+            </button>
+            <button type="submit" className="p-2">
               <BiSolidSend size={25} />
             </button>
           </div>
