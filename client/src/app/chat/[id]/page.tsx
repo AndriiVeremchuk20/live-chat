@@ -11,9 +11,9 @@ import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import * as io from "socket.io-client";
+import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:5000/");
+//const socket = io.connect("http://localhost:5000/");
 
 interface FormFields {
   message: string;
@@ -56,7 +56,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
   }, []);
 
    useEffect(() => {
-    let socket = io.connect("http://localhost:5000");
+     let socket = io("http://localhost:5000");
 	console.log(socket)
   }, []);
 
