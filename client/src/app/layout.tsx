@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
 import Loader from "@/components/Loader";
 import LocalStorageKeys from "@/config/localStorageKeys";
+import socket from "@/socket";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -24,7 +25,7 @@ const AppWrapper = (props: any) => {
 
 const AppInner = (props: any) => {
   const auth = getAuth();
-  const { setUser, setTheme } = useAppStore();
+  const { user, setUser, setTheme } = useAppStore();
   const { isAppLoading, setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
 
@@ -63,6 +64,14 @@ const AppInner = (props: any) => {
     setTheme("light");
     document.documentElement.classList.remove("dark");
   }, []);
+
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user]);
 
   if (isAppLoading)
     return (

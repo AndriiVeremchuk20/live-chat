@@ -11,9 +11,7 @@ import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import io from "socket.io-client";
-
-//const socket = io.connect("http://localhost:5000/");
+import socket from "@/socket";
 
 interface FormFields {
   message: string;
@@ -23,8 +21,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const [receiver, setReceiver] = useState<null | AppUser>(null);
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
-
-
+  const [messages, setMessages] = useState<Array<string>>([]);
 
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
@@ -49,15 +46,13 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
+	socket.emit("send_message", data.message);
   };
 
   useEffect(() => {
     getUserByIdMutation.mutate(params.id);
-  }, []);
 
-   useEffect(() => {
-     let socket = io("http://localhost:5000");
-	console.log(socket)
+	socket.on("receive_message", (data)=>{console.log(data), setMessages(prev=>[...prev, data])});
   }, []);
 
   if (!receiver) {
@@ -69,7 +64,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
       <div className="m-1 my-5 flex h-96 flex-col justify-between rounded-lg border-2 border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:w-full tablet:w-full desktop:w-2/3">
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
-            <span className="font-semibold">
+		   <span className="font-semibold">
               {receiver.first_name + " " + receiver.last_name}
             </span>
             <UserAvatar
@@ -85,7 +80,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
             />
           </div>
         </div>
-
+		<div>
+			{
+					messages.map(message=><li>{message}</li>)
+			}
+		</div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"

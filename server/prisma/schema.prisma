@@ -28,11 +28,12 @@ model User {
   last_name  String
   email      String   @unique
   created_at DateTime @default(now())
+  //isOnline   Boolean  @default(false)
   profile    Profile?
 
   chats   ChatParticipant[]
-  sender  Message[]  @relation("sender")
-  reciver Message[]  @relation("reciver")
+  sender  Message[]         @relation("sender")
+  reciver Message[]         @relation("reciver")
 }
 
 model Profile {
@@ -59,7 +60,7 @@ model ChatParticipant {
 }
 
 model Chat {
-  id       String     @id @default(cuid())
+  id       String            @id @default(cuid())
   messages Message[]
   ChatLink ChatParticipant[]
 }

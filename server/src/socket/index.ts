@@ -18,7 +18,16 @@ const io = new Server(server, {
 
 // socket io
 io.on("connection", (socket) => {
-  logger.info("User is connected " + socket.id);
+  console.log("User is connected " + socket.id);
+
+  socket.on("send_message", (message)=>{
+	console.log("Recived message: ", message);	
+	io.emit("receive_message", message);
+  });
+
+  socket.on("disconnect", ()=>{
+	console.log("user dosconnected");
+  })
 });
 
 export { app, server };

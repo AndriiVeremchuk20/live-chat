@@ -1,8 +1,8 @@
 import {io} from "socket.io-client";
 
-const OriginURL = "http://localhost:4000";
+const URL = "http://localhost:5000";
 
-const socket = io(OriginURL,{
+const socket = io(URL,{
 	autoConnect: false,
 });
 

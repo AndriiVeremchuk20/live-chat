@@ -1,14 +1,11 @@
-import express, { Request, Response } from "express";
-import http from "http";
-import { Server } from "socket.io";
-import cors from "cors";
+import { Request, Response } from "express";
 import bodyParser from "body-parser";
 import AuthRoute from "./routes/auth";
 import verifyToken from "./middleware/verifyToken";
 import ProfileRoutes from "./routes/profile";
 import UserActionsRoute from "./routes/user";
 import logger from "./logger";
-import {app, server} from "./socket"
+import { app, server } from "./socket";
 
 const PORT = Number(process.env.PORT) || 5000;
 
