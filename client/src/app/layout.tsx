@@ -66,10 +66,15 @@ const AppInner = (props: any) => {
   }, []);
 
   useEffect(() => {
-    socket.connect();
-
+    if (user) {
+      socket.connect();
+      socket.emit("online", user.id);
+    }
     return () => {
-      socket.disconnect();
+      if (user) {
+        //socket.emit("offline", user.id);
+        socket.disconnect();
+      }
     };
   }, [user]);
 

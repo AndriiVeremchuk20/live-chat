@@ -6,6 +6,7 @@ export interface UserSlice {
   user: AppUser | null;
   setUser: (user: AppUser) => void;
   setUserProfile: (profile: Profile) => void;
+  setIsOnline: (isOnline: boolean) => void;
   deleteUser: () => void;
 }
 
@@ -19,6 +20,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
     if (user) {
       set({ user: { ...user, profile } });
     }
+  },
+  setIsOnline: (isOnline: boolean) => {
+	const user = get().user;
+	if(user){
+		set({user: {...user, isOnline}})
+	}
   },
   deleteUser: () => {
     set({ user: null });

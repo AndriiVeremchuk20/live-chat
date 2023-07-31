@@ -20,4 +20,5 @@ const getProfileById = async (id: string) => {
   return response.data;
 };
 
+
 export default { getUserRecommendations, getProfileById };
