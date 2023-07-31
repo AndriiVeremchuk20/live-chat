@@ -12,16 +12,18 @@ import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
+import Message from "@/types/message.type";
 
 interface FormFields {
   message: string;
 }
 
 const Chat = ({ params }: { params: { id: string } }) => {
+  const {user} = useAppStore();
   const [receiver, setReceiver] = useState<null | AppUser>(null);
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
-  const [messages, setMessages] = useState<Array<string>>([]);
+  const [messages, setMessages] = useState<Array<Message>>([]);
 
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
@@ -46,13 +48,22 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
-	socket.emit("send_message", data.message);
+	if(!user?.id || !receiver?.id){
+		return;
+	}
+	const userMessage = {
+		sender_id: user.id,
+		receiver_id: receiver.id,
+		text: data.message
+	}
+
+	socket.emit("send_message", userMessage); // send message
+	setValue("message", ""); //clear input message form
   };
 
   useEffect(() => {
     getUserByIdMutation.mutate(params.id);
-
-	socket.on("receive_message", (data)=>{console.log(data), setMessages(prev=>[...prev, data])});
+	socket.on("receive_message", (data: Message)=>{console.log(data), setMessages(prev=>[...prev, data])});
   }, []);
 
   if (!receiver) {
@@ -82,7 +93,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
         </div>
 		<div>
 			{
-					messages.map(message=><li>{message}</li>)
+					messages.map(message=><li key={message.id}>{message.text}</li>)
 			}
 		</div>
         <form

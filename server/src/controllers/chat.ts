@@ -7,7 +7,7 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
   if (!user) {
     return next("User not auth");
   }
-	
+  const chat = await prisma.chat.findFirst({where: {}})
 
 };
 
