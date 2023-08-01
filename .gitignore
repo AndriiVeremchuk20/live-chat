@@ -2,11 +2,12 @@
 
 # dependencies
 /node_modules
+/migrations
+
 /.pnp
 .pnp.js
 serviceAccountKey.json
 googleStorageKey.json
-/prisma/migrations
 
 # testing
 /coverage

@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import bodyParser from "body-parser";
-import AuthRoute from "./routes/auth";
 import verifyToken from "./middleware/verifyToken";
-import ProfileRoutes from "./routes/profile";
-import UserActionsRoute from "./routes/user";
 import logger from "./logger";
 import { app, server } from "./socket";
+
+// app routes
+import ProfileRoutes from "./routes/profile";
+import UserActionsRoute from "./routes/user";
+import AuthRoute from "./routes/auth";
+import ChatRoute from "./routes/chat";
 
 const PORT = Number(process.env.PORT) || 5000;
 
@@ -22,6 +25,7 @@ app.use(verifyToken);
 // private routes
 app.use("/profile", ProfileRoutes);
 app.use("/user-actions", UserActionsRoute);
+app.use("/chat", ChatRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");

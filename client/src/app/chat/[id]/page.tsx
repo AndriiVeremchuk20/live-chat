@@ -13,13 +13,14 @@ import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
+import ChatApi from "@/api/chat";
 
 interface FormFields {
   message: string;
 }
 
 const Chat = ({ params }: { params: { id: string } }) => {
-  const {user} = useAppStore();
+  const { user } = useAppStore();
   const [receiver, setReceiver] = useState<null | AppUser>(null);
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
@@ -37,6 +38,15 @@ const Chat = ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const getChatMessagesMutation = useMutation(ChatApi.getChatMessages, {
+    onSuccess(data) {
+      setMessages(data.data);
+      console.log(data);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
   //  const onShowEmojiClick = useCallback(() => {
   //    setShowEmoji((state) => !state);
   //  }, []);
@@ -48,22 +58,25 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
-	if(!user?.id || !receiver?.id){
-		return;
-	}
-	const userMessage = {
-		sender_id: user.id,
-		receiver_id: receiver.id,
-		text: data.message
-	}
+    if (!user?.id || !receiver?.id) {
+      return;
+    }
+    const userMessage = {
+      sender_id: user.id,
+      receiver_id: receiver.id,
+      text: data.message,
+    };
 
-	socket.emit("send_message", userMessage); // send message
-	setValue("message", ""); //clear input message form
+    socket.emit("send_message", userMessage); // send message
+    setValue("message", ""); //clear input message form
   };
 
   useEffect(() => {
     getUserByIdMutation.mutate(params.id);
-	socket.on("receive_message", (data: Message)=>{console.log(data), setMessages(prev=>[...prev, data])});
+    getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
+    socket.on("receive_message", (data: Message) => {
+      console.log(data), setMessages((prev) => [...prev, data]);
+    });
   }, []);
 
   if (!receiver) {
@@ -75,7 +88,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
       <div className="m-1 my-5 flex h-96 flex-col justify-between rounded-lg border-2 border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:w-full tablet:w-full desktop:w-2/3">
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
-		   <span className="font-semibold">
+            <span className="font-semibold">
               {receiver.first_name + " " + receiver.last_name}
             </span>
             <UserAvatar
@@ -91,11 +104,21 @@ const Chat = ({ params }: { params: { id: string } }) => {
             />
           </div>
         </div>
-		<div>
-			{
-					messages.map(message=><li key={message.id}>{message.text}</li>)
-			}
-		</div>
+        <div className="flex flex-col gap-3">
+          {messages.map((message) => {
+            if (message.sender_id === user?.id) {
+              return (
+                <div className="flex w-full justify-end">
+                  <div className="bg-violet-500 p-3 rounded-lg">
+					<span>{message.text}</span>
+					<span>{message.created_at}</span>
+				  </div>
+                </div>
+              );
+            }
+            return <div className="bg-violet-800">{message.text}</div>;
+          })}
+        </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"

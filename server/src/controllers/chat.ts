@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
 
+const DEFAULT_MESSAGES_LIMIT = 20;
+
 const getChatMessages = async (
   req: Request,
   res: Response,
@@ -9,6 +11,8 @@ const getChatMessages = async (
 ) => {
   const { user } = req;
   const { receiverId } = req.params;
+  const limit  = req.query.limit as string;
+
   if (!user) {
     return next("User not auth");
   }
@@ -25,16 +29,16 @@ const getChatMessages = async (
         created_at: "asc",
       },
     ],
-    take: 10,
+    take: limit? parseInt(limit):DEFAULT_MESSAGES_LIMIT,
   });
 
-  res
-    .status(StatusCodes.OK)
-    .send({
-      status: "success",
-      message: "massages found",
-      data: [...messages],
-    });
+  console.log(messages);
+
+  res.status(StatusCodes.OK).send({
+    status: "success",
+    message: "massages found",
+    data: [...messages],
+  });
 };
 
 export default { getChatMessages };
