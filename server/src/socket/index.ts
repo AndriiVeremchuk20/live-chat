@@ -33,8 +33,9 @@ io.on("connection", (socket) => {
       },
     });
     socket.broadcast.emit("online_user", updatedUser.id);
-  });
+  }); 
 
+  // sending message
   socket.on("send_message", async (data: UserSendMessageType) => {
     console.log("Recived message: ", data);
 
@@ -44,7 +45,7 @@ io.on("connection", (socket) => {
       data: {
         text: data.text,
         sender_id: data.sender_id,
-        reciver_id: data.receiver_id,
+        receiver_id: data.receiver_id,
       },
     });
 

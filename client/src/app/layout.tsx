@@ -72,7 +72,7 @@ const AppInner = (props: any) => {
     }
     return () => {
       if (user) {
-        //socket.emit("offline", user.id);
+        socket.emit("offline", user.id);
         socket.disconnect();
       }
     };
