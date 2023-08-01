@@ -28,9 +28,7 @@ const AppInner = (props: any) => {
   const { user, setUser, setTheme } = useAppStore();
   const { isAppLoading, setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
-
-  //const [l, setL] = useState<boolean>(true);
-
+  
   const authMutation = useMutation(authApi.auth, {
     onSettled(data, errors) {
       if (data) {

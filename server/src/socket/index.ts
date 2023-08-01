@@ -38,7 +38,6 @@ io.on("connection", (socket) => {
   // sending message
   socket.on("send_message", async (data: UserSendMessageType) => {
     console.log("Recived message: ", data);
-
     // !!! add check both users
     // adding message in database
     const newMessage = await prisma.message.create({
