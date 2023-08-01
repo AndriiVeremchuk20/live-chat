@@ -6,7 +6,7 @@
 .pnp.js
 serviceAccountKey.json
 googleStorageKey.json
-migrations
+/prisma/migrations
 
 # testing
 /coverage
