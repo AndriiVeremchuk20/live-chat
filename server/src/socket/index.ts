@@ -21,19 +21,24 @@ const io = new Server(server, {
 // socket io
 io.on("connection", (socket) => {
   console.log("User is connected " + socket.id);
-
   // set user status online
-  io.on("online", async (user_id: string) => {
+  socket.on("online", async (user_id: string) => {
     const updatedUser = await prisma.user.update({
       where: {
         id: user_id,
       },
       data: {
         isOnline: true,
+		socket_id: socket.id
       },
-    });
-    socket.broadcast.emit("online_user", updatedUser.id);
+    }); 
+    
+	socket.broadcast.emit("online_user", updatedUser.id);
   }); 
+
+	//socket.on("join_chat", async({chat_id})=>{
+		
+	//}) 
 
   // sending message
   //socket.on("send_message", async (data: UserSendMessageType) => {
@@ -51,10 +56,32 @@ io.on("connection", (socket) => {
     //io.emit("receive_message", { ...newMessage });
   //});
 
-  //socket.on("disconnect", () => {
-   // console.log("user dosconnected");
-    //io.emit("online-users", )
-  //});
+  socket.on("disconnect", async() => {
+	
+	// find user to chek
+	const mbUser = await prisma.user.findFirst({
+	where: {
+		socket_id: socket.id,
+	}});
+
+	//chek user
+	if(!mbUser){
+		logger.warn("user not found");
+		return
+	}
+	// set socket null, isOnline false
+	await prisma.user.update({
+		where: {
+			id: mbUser.id
+		},
+		data: {
+			socket_id: null,
+			isOnline: false,
+		}
+	});
+
+	//io.emit("online-users", )
+  });
 
   //socket.on("offline", async (user_id: string) => {
    // await prisma.user.update({

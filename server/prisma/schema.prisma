@@ -22,7 +22,7 @@ enum Gender {
 }
 
 model User {
-  id         String   @unique
+  id         String   @id @unique
   role       Role     @default(USER)
   first_name String
   last_name  String
@@ -31,14 +31,12 @@ model User {
   isOnline   Boolean  @default(false)
   profile    Profile?
 
-  chat_links ChatLink[]
+  chats UsersOnChats[]
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
 
   socket_id String?
-  Chat      Chat?   @relation(fields: [chatId], references: [id])
-  chatId    String?
 }
 
 model Profile {
@@ -55,19 +53,19 @@ model Profile {
   about_partner  String
 }
 
-model ChatLink {
-  id      String  @id @default(cuid())
-  chat    Chat?
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
+model UsersOnChats {
+	user User @relation(fields: [user_id], references: [id])
+	user_id String
+	chat Chat @relation(fields: [chat_id], references: [id])
+	chat_id String
+
+	@@id([user_id, chat_id])
 }
 
 model Chat {
-  id       String     @id @default(cuid())
-  users    User[]
+  id       String    @id @default(cuid())
+  users    UsersOnChats[]
   messages Message[]
-  chat_link ChatLink @relation(fields: [chat_link_id], references: [id]) 
-  chat_link_id String @unique
 }
 
 model Message {
@@ -75,8 +73,8 @@ model Message {
   text       String
   created_at DateTime @default(now())
 
-  chat       Chat     @relation(fields: [chat_id], references: [id])
-  chat_id    String
+  chat    Chat   @relation(fields: [chat_id], references: [id])
+  chat_id String
 
   sender    User   @relation("sender", fields: [sender_id], references: [id])
   sender_id String
