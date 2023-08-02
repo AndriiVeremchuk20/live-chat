@@ -36,36 +36,36 @@ io.on("connection", (socket) => {
   }); 
 
   // sending message
-  socket.on("send_message", async (data: UserSendMessageType) => {
-    console.log("Recived message: ", data);
+  //socket.on("send_message", async (data: UserSendMessageType) => {
+  //  console.log("Recived message: ", data);
     // !!! add check both users
     // adding message in database
-    const newMessage = await prisma.message.create({
-      data: {
-        text: data.text,
-        sender_id: data.sender_id,
-        receiver_id: data.receiver_id,
-      },
-    });
+    //const newMessage = await prisma.message.create({
+    //  data: {
+    //    text: data.text,
+    //    sender_id: data.sender_id,
+    //    receiver_id: data.receiver_id,
+     // },
+    //});
 
-    io.emit("receive_message", { ...newMessage });
-  });
+    //io.emit("receive_message", { ...newMessage });
+  //});
 
-  socket.on("disconnect", () => {
-    console.log("user dosconnected");
+  //socket.on("disconnect", () => {
+   // console.log("user dosconnected");
     //io.emit("online-users", )
-  });
+  //});
 
-  socket.on("offline", async (user_id: string) => {
-    await prisma.user.update({
-      where: {
-        id: user_id,
-      },
-      data: {
-        isOnline: false,
-      },
-    });
-  });
+  //socket.on("offline", async (user_id: string) => {
+   // await prisma.user.update({
+     // where: {
+       // id: user_id,
+      //},
+     // data: {
+      //  isOnline: false,
+   //   },
+   // });
+  //});
 });
 
 export { app, server };
