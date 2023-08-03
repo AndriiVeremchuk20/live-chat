@@ -14,6 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
+import chat from "@/api/chat";
 
 interface FormFields {
   message: string;
@@ -38,6 +39,15 @@ const Chat = ({ params }: { params: { id: string } }) => {
     },
   });
 
+	const getChatMutation = useMutation(ChatApi.getChat, {
+		onSuccess(data){
+			console.log(data);
+		},
+		onError(error){
+			console.log(error);
+		}
+	});
+	
   const getChatMessagesMutation = useMutation(ChatApi.getChatMessages, {
     onSuccess(data) {
       setMessages(data.data);
@@ -73,7 +83,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     getUserByIdMutation.mutate(params.id);
-    getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
+    getChatMutation.mutate({receiverId: params.id});
+	//getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
     socket.on("receive_message", (data: Message) => {
       console.log(data), setMessages((prev) => [...prev, data]);
     });

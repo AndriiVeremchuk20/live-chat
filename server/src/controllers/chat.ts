@@ -1,8 +1,9 @@
-import {User} from "@prisma/client";
+import { User, UsersOnChats } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
 import getUser from "../utils/isUser";
+import { v4 } from "uuid";
 
 const DEFAULT_MESSAGES_LIMIT = 20;
 
@@ -56,29 +57,36 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
   const currUser = await getUser({ id: user.uid });
   const receiver = await getUser({ id: receiverId });
 
-  if (!receiverId&&!currUser) {
+  if (!receiver || !currUser) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .send({ status: "errror", message: "users not found" });
   }
 
-  let chat = await prisma.chat.findFirst({
-    where: {
-      AND: [
-        { users: { some: { id: currUser?.id } } },
-        { users: { some: { id: receiver?.id } } },
-      ],
+  // generate id for chat
+//	const chat_id = v4();
+
+ const chat = await prisma.chat.create({
+    data: {
+	//id: chat_id,
+      users: {
+        create: [
+			{
+				user_id: currUser.id,
+//				chat_id: chat_id,
+			},
+			{
+				user_id: receiver.id,
+//				chat_id: chat_id,
+			},
+		] as UsersOnChats[],
+      },
     },
   });
 
-  // if chat not found create a new chat
-  if(!chat){
-	chat = await prisma.chat.create({
-		users: [currUser, receiver]
-	})
-  }
-
-  return res.status(StatusCodes.OK).send({status: "success", message: "chat found/create", data: {...chat}});
+  return res
+    .status(StatusCodes.OK)
+    .send({ status: "success", message: "chat", data: { ...chat } });
 };
 
 export default { getChatMessages, createChat };

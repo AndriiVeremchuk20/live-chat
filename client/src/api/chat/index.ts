@@ -3,9 +3,11 @@ import Message from "@/types/message.type";
 import client from "..";
 
 const URLs = {
-  base: "/chat/",
-  getChatMessages: (reseiverId: string, limit?: number) =>
-    `/chat/${reseiverId}${limit ? `?limit=${limit}` : ""}`,
+  base: "/chat/", 
+ getChat: (reseiverId: string) =>
+    `/chat/${reseiverId}`,
+ getChatMessages: (reseiverId: string, limit?: number) =>
+    `/chat/messages/${reseiverId}${limit ? `?limit=${limit}` : ""}`,
 };
 
 const getChatMessages = async (payload: {
@@ -18,4 +20,9 @@ const getChatMessages = async (payload: {
   return response.data;
 };
 
-export default { getChatMessages };
+const getChat = async (payload: {receiverId: string}) =>{
+	const response = await client.get<BaseResponse<any>>(URLs.getChat(payload.receiverId));
+	return response.data;
+}
+
+export default { getChatMessages, getChat };
