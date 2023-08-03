@@ -1,28 +1,45 @@
 import BaseResponse from "@/types/api/response.type";
 import Message from "@/types/message.type";
+import AppUser from "@/types/user.type";
 import client from "..";
 
 const URLs = {
-  base: "/chat/", 
- getChat: (reseiverId: string) =>
-    `/chat/${reseiverId}`,
- getChatMessages: (reseiverId: string, limit?: number) =>
-    `/chat/messages/${reseiverId}${limit ? `?limit=${limit}` : ""}`,
+  base: "/chat/",
+  getChat: (reseiverId: string) => `/chat/${reseiverId}`,
+  getChatMetadata: (chat_id: string, limit?: number) =>
+    `/chat/metadata/${chat_id}${limit ? `?limit=${limit}` : ""}`,
 };
 
-const getChatMessages = async (payload: {
-  receiverId: string;
-  limit?: number;
-}) => {
-  const response = await client.get<BaseResponse<Array<Message>>>(
-    URLs.getChatMessages(payload.receiverId, payload.limit),
+//const getChatMessages = async (payload: {
+//  receiverId: string;
+//  limit?: number;
+//}) => {
+//  const response = await client.get<BaseResponse<Array<Message>>>(
+//    URLs.getChatMessages(payload.receiverId, payload.limit),
+//  );
+//  return response.data;
+//};
+
+const getChat = async (payload: { receiverId: string }) => {
+  const response = await client.get<BaseResponse<{ chat_id: string }>>(
+    URLs.getChat(payload.receiverId),
   );
   return response.data;
 };
 
-const getChat = async (payload: {receiverId: string}) =>{
-	const response = await client.get<BaseResponse<any>>(URLs.getChat(payload.receiverId));
-	return response.data;
-}
+const getChatMetadata = async (payload: {
+  chat_id: string;
+  limit?: number;
+}) => {
+  const response = await client.get<
+    BaseResponse<{
+      id: string;
+      receiver: AppUser,
+      messages: Array<Message>;
+    }>
+  >(URLs.getChatMetadata(payload.chat_id, payload.limit));
 
-export default { getChatMessages, getChat };
+  return response.data;
+};
+
+export default { getChat, getChatMetadata };

@@ -6,5 +6,6 @@ const router = Router();
 
 router.get("/:reseiverId", ChatControllers.createChat);
 router.get("/messages/:reseiverId", ChatControllers.getChatMessages);
+router.get("/metadata/:chat_id", ChatControllers.getChatMetadata);
 
 export default router;

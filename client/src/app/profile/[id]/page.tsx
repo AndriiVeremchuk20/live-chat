@@ -11,10 +11,12 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { useMutation } from "react-query";
+import ChatApi from "@/api/chat";
 
 const ProfilePage = ({ params }: { params: { id: string } }) => {
   const userId = params.id;
   const [userInfo, setUserInfo] = useState<AppUser | null>(null);
+  const [chatId, setChatId] = useState<string>("");
   const { user } = useAppStore();
   const router = useRouter();
 
@@ -28,8 +30,19 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const getChatMutation = useMutation(ChatApi.getChat, {
+    onSuccess(data) {
+      //setChatId(data.data.chat_id);
+      console.log(data);
+	  router.push(routes.chat.base(data.data.chat_id));
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
   const onSendMessageClick = useCallback(() => {
-    router.push(routes.chat.base(userId));
+    getChatMutation.mutate({receiverId: userId});
   }, []);
 
   useEffect(() => {

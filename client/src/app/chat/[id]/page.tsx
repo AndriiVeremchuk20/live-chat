@@ -14,7 +14,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
-import chat from "@/api/chat";
 
 interface FormFields {
   message: string;
@@ -22,35 +21,18 @@ interface FormFields {
 
 const Chat = ({ params }: { params: { id: string } }) => {
   const { user } = useAppStore();
-  const [receiver, setReceiver] = useState<null | AppUser>(null);
+  const [chatId, setChatId] = useState<string>("");
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
   const [messages, setMessages] = useState<Array<Message>>([]);
+  const [receiver, setReceiver] = useState<AppUser | null>(null);
 
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
-  const getUserByIdMutation = useMutation(userActions.getProfileById, {
+  const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
     onSuccess(data) {
-      setReceiver(data.data);
-      console.log(data);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
-
-	const getChatMutation = useMutation(ChatApi.getChat, {
-		onSuccess(data){
-			console.log(data);
-		},
-		onError(error){
-			console.log(error);
-		}
-	});
-	
-  const getChatMessagesMutation = useMutation(ChatApi.getChatMessages, {
-    onSuccess(data) {
-      setMessages(data.data);
+      setMessages(data.data.messages);
+      setReceiver(data.data.receiver);
       console.log(data);
     },
     onError(error) {
@@ -82,9 +64,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
-    getUserByIdMutation.mutate(params.id);
-    getChatMutation.mutate({receiverId: params.id});
-	//getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
+    //getUserByIdMutation.mutate(params.id);
+    getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
+    //getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
     socket.on("receive_message", (data: Message) => {
       console.log(data), setMessages((prev) => [...prev, data]);
     });
@@ -120,10 +102,10 @@ const Chat = ({ params }: { params: { id: string } }) => {
             if (message.sender_id === user?.id) {
               return (
                 <div className="flex w-full justify-end">
-                  <div className="bg-violet-500 p-3 rounded-lg">
-					<span>{message.text}</span>
-					<span>{message.created_at}</span>
-				  </div>
+                  <div className="rounded-lg bg-violet-500 p-3">
+                    <span>{message.text}</span>
+                    <span>{message.created_at}</span>
+                  </div>
                 </div>
               );
             }
