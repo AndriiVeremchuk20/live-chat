@@ -63,26 +63,31 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
       .send({ status: "errror", message: "users not found" });
   }
 
-  // generate id for chat
-//	const chat_id = v4();
-
- const chat = await prisma.chat.create({
-    data: {
-	//id: chat_id,
-      users: {
-        create: [
-			{
-				user_id: currUser.id,
-//				chat_id: chat_id,
-			},
-			{
-				user_id: receiver.id,
-//				chat_id: chat_id,
-			},
-		] as UsersOnChats[],
-      },
-    },
+  let chat = await prisma.chat.findFirst({
+	where: {
+		AND: [
+			{users: {some: {user_id: currUser.id}}},
+			{users: {some: {user_id: receiver.id}}},
+		],
+	},
   });
+
+  if (!chat) {
+    chat = await prisma.chat.create({
+      data: {
+        users: {
+          create: [
+            {
+              user_id: currUser.id,
+            },
+            {
+              user_id: receiver.id,
+            },
+          ] as UsersOnChats[],
+        },
+      },
+    });
+  }
 
   return res
     .status(StatusCodes.OK)
