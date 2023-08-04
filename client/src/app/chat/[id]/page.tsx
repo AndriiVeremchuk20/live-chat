@@ -75,6 +75,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
     socket.on("receive_message", (data: Message) => {
       console.log(data), setMessages((prev) => [...prev, data]);
     });
+	return () => {
+		socket.emit("leave_chat", {chat_id: chat_id});
+	}
   }, []);
 
   if (!receiver) {

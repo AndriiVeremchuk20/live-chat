@@ -41,6 +41,11 @@ io.on("connection", (socket) => {
     socket.join(chat_id);
   });
 
+  socket.on("leave_chat", async({chat_id}: {chat_id: string})=>{
+	console.log("user leave from chat: " + socket.id);
+	  socket.leave(chat_id);
+  })
+
   socket.on(
     "send_message",
     async ({
