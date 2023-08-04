@@ -14,19 +14,21 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
+import {text} from "stream/consumers";
 
 interface FormFields {
   message: string;
 }
 
 const Chat = ({ params }: { params: { id: string } }) => {
+  const chat_id = params.id;
+
   const { user } = useAppStore();
-  const [chatId, setChatId] = useState<string>("");
+  //const [chatId, setChatId] = useState<string>("");
   //const [showEmoji, setShowEmoji] = useState<boolean>(false);
   //const { currTheme } = useAppStore();
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [receiver, setReceiver] = useState<AppUser | null>(null);
-
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
   const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
@@ -53,19 +55,22 @@ const Chat = ({ params }: { params: { id: string } }) => {
     if (!user?.id || !receiver?.id) {
       return;
     }
-    const userMessage = {
+    
+	const userMessage = {
+      chat_id: chat_id,
       sender_id: user.id,
       receiver_id: receiver.id,
       text: data.message,
-    };
+   };
 
-    socket.emit("send_message", userMessage); // send message
+    socket.emit("send_message", {...userMessage}); // send message
     setValue("message", ""); //clear input message form
   };
 
   useEffect(() => {
     //getUserByIdMutation.mutate(params.id);
     getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
+    socket.emit("join_chat", {chat_id: chat_id});
     //getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
     socket.on("receive_message", (data: Message) => {
       console.log(data), setMessages((prev) => [...prev, data]);
@@ -101,7 +106,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
           {messages.map((message) => {
             if (message.sender_id === user?.id) {
               return (
-                <div className="flex w-full justify-end">
+                <div key={message.id} className="flex w-full justify-end">
                   <div className="rounded-lg bg-violet-500 p-3">
                     <span>{message.text}</span>
                     <span>{message.created_at}</span>
@@ -109,7 +114,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
                 </div>
               );
             }
-            return <div className="bg-violet-800">{message.text}</div>;
+            return (
+              <div key={message.id} className="bg-violet-800">
+                {message.text}
+              </div>
+            );
           })}
         </div>
         <form
