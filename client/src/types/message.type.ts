@@ -1,3 +1,5 @@
+import AppUser from "./user.type";
+
 interface Message {
 	id: string;
 	text: string;

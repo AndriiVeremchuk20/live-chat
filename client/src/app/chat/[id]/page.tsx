@@ -16,7 +16,8 @@ import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
 import { text } from "stream/consumers";
 import routes from "@/config/appRoutes";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import {ChatMessage} from "@/components/ChatMessage";
 
 interface FormFields {
   message: string;
@@ -32,8 +33,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [receiver, setReceiver] = useState<AppUser | null>(null);
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
-	
-	const router = useRouter();
+
+  const router = useRouter();
 
   const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
     onSuccess(data) {
@@ -72,19 +73,16 @@ const Chat = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
-    //getUserByIdMutation.mutate(params.id);
     if (user) {
       getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
       socket.emit("join_chat", { chat_id: chat_id, user_id: user?.id });
-      //getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
       socket.on("receive_message", (data: Message) => {
         console.log(data), setMessages((prev) => [...prev, data]);
       });
 
-	  socket.on("socket_error", (data)=>{
-		alert(data.message);
-		router.push(routes.home);		
-	  })
+      socket.on("socket_error", (data) => {
+        router.replace(routes.home);
+      });
     }
     return () => {
       if (user) {
@@ -93,13 +91,22 @@ const Chat = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
+  // scroll header
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 100,
+      behavior: "smooth",
+    });
+  }, []);
+
   if (!receiver) {
     return <div>user not found</div>;
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="m-1 my-5 flex h-96 flex-col justify-between rounded-lg border-2 border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:w-full tablet:w-full desktop:w-2/3">
+    <div className="flex h-screen items-center justify-center">
+      <div className=" flex flex-col justify-between border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:h-full phone:w-full tablet:w-full desktop:m-1 desktop:my-5 desktop:h-[90%] desktop:w-2/3 desktop:rounded-lg desktop:border-2">
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
             <span className="font-semibold">
@@ -118,20 +125,14 @@ const Chat = ({ params }: { params: { id: string } }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          {messages.map((message) => {
-			return (
-			<div key={message.id} className={`flex ${message.sender_id === user?.id?"justify-end":"justify-start"}`}>
-				<div className={`w-fit p-1 rounded-md ${message.sender_id === user?.id?"bg-violet-200":"bg-violet-400"}`}>{message.text}</div>
-			</div>
-			)
-          })}
-        </div>
+        <div className="my-3 flex overflow-auto h-[90%] flex-col gap-3">
+          {messages.map((message) => <ChatMessage message={message} key={message.id}/> )}
+		</div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"
         >
-          <div className="flex text-black dark:text-white">
+          <div className="flex text-black dark:text-white mt-2 bg-opacity-20">
             <textarea
               className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
               {...register("message")}
