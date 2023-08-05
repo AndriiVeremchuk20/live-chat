@@ -46,9 +46,9 @@ const getChatMessages = async (
 
 const createChat = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  const { receiverId } = req.params;
+  const { receiverId } = req.body;
 
-  if (!user) {
+  if (!user || !receiverId) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .send({ status: "errror", message: "user not found" });
@@ -63,7 +63,7 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
       .send({ status: "errror", message: "users not found" });
   }
 
-  let chat = await prisma.chat.findFirst({
+  const checkChat = await prisma.chat.findFirst({
     where: {
       AND: [
         { users: { some: { user_id: currUser.id } } },
@@ -72,11 +72,31 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
     },
     select: {
       id: true,
+      users: {
+        select: {
+          user: {
+            select: {
+              first_name: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  if (!chat) {
-    chat = await prisma.chat.create({
+  console.table(checkChat);
+
+  if (checkChat)
+    return res
+      .status(StatusCodes.OK)
+      .send({
+        status: "success",
+        message: "chat",
+        data: { chat_id: checkChat?.id },
+      });
+
+  if (!checkChat) {
+    const chat = await prisma.chat.create({
       data: {
         users: {
           create: [
@@ -90,11 +110,18 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
+
+    console.log("Create a new chat ");
+    console.table(chat);
+
+    return res
+      .status(StatusCodes.OK)
+      .send({ status: "success", message: "chat", data: { chat_id: chat.id } });
   }
 
   return res
     .status(StatusCodes.OK)
-    .send({ status: "success", message: "chat", data: { chat_id: chat.id } });
+    .send({ status: "success", message: "chat" });
 };
 
 const getChatMetadata = async (
@@ -149,15 +176,17 @@ const getChatMetadata = async (
       .send({ satus: "not found", message: "chat not found" });
   }
 
-	const recponseChatMetadata = {
-		id: chatInfo.id,
-		receiver: chatInfo.users[0].user,
-		messages: chatInfo.messages,
-	}
+  const recponseChatMetadata = {
+    id: chatInfo.id,
+    receiver: chatInfo.users[0].user,
+    messages: chatInfo.messages,
+  };
 
-  res
-    .status(StatusCodes.OK)
-    .send({ status: "success", message: "chat found", data: { ...recponseChatMetadata} });
+  res.status(StatusCodes.OK).send({
+    status: "success",
+    message: "chat found",
+    data: { ...recponseChatMetadata },
+  });
 };
 
 export default { getChatMessages, createChat, getChatMetadata };

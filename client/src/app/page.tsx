@@ -43,7 +43,7 @@ export default function Home() {
       <div>Text</div>
       <div>
         {userRecommendations.map((item) => (
-          <Link key={item.id} href={routes.profile.userProfile(item.id)}>
+          <Link key={item.id} href={routes.profile.userProfile(item.id)} className="m-6">
             {item.first_name}
           </Link>
         ))}

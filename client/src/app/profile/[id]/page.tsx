@@ -42,6 +42,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   });
 
   const onSendMessageClick = useCallback(() => {
+	console.log(userId)
     getChatMutation.mutate({receiverId: userId});
   }, []);
 

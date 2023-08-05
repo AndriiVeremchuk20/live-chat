@@ -14,7 +14,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
-import {text} from "stream/consumers";
+import { text } from "stream/consumers";
+import routes from "@/config/appRoutes";
+import {useRouter} from "next/navigation";
 
 interface FormFields {
   message: string;
@@ -30,6 +32,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [receiver, setReceiver] = useState<AppUser | null>(null);
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
+	
+	const router = useRouter();
 
   const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
     onSuccess(data) {
@@ -55,29 +59,38 @@ const Chat = ({ params }: { params: { id: string } }) => {
     if (!user?.id || !receiver?.id) {
       return;
     }
-    
-	const userMessage = {
+
+    const userMessage = {
       chat_id: chat_id,
       sender_id: user.id,
       receiver_id: receiver.id,
       text: data.message,
-   };
+    };
 
-    socket.emit("send_message", {...userMessage}); // send message
+    socket.emit("send_message", { ...userMessage }); // send message
     setValue("message", ""); //clear input message form
   };
 
   useEffect(() => {
     //getUserByIdMutation.mutate(params.id);
-    getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
-    socket.emit("join_chat", {chat_id: chat_id});
-    //getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
-    socket.on("receive_message", (data: Message) => {
-      console.log(data), setMessages((prev) => [...prev, data]);
-    });
-	return () => {
-		socket.emit("leave_chat", {chat_id: chat_id});
-	}
+    if (user) {
+      getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
+      socket.emit("join_chat", { chat_id: chat_id, user_id: user?.id });
+      //getChatMessagesMutation.mutate({ receiverId: params.id, limit: 20 });
+      socket.on("receive_message", (data: Message) => {
+        console.log(data), setMessages((prev) => [...prev, data]);
+      });
+
+	  socket.on("socket_error", (data)=>{
+		alert(data.message);
+		router.push(routes.home);		
+	  })
+    }
+    return () => {
+      if (user) {
+        socket.emit("leave_chat", { chat_id: chat_id });
+      }
+    };
   }, []);
 
   if (!receiver) {
@@ -107,21 +120,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="flex flex-col gap-3">
           {messages.map((message) => {
-            if (message.sender_id === user?.id) {
-              return (
-                <div key={message.id} className="flex w-full justify-end">
-                  <div className="rounded-lg bg-violet-500 p-3">
-                    <span>{message.text}</span>
-                    <span>{message.created_at}</span>
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <div key={message.id} className="bg-violet-800">
-                {message.text}
-              </div>
-            );
+			return (
+			<div key={message.id} className={`flex ${message.sender_id === user?.id?"justify-end":"justify-start"}`}>
+				<div className={`w-fit p-1 rounded-md ${message.sender_id === user?.id?"bg-violet-200":"bg-violet-400"}`}>{message.text}</div>
+			</div>
+			)
           })}
         </div>
         <form

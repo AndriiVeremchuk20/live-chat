@@ -67,7 +67,8 @@ const AppInner = (props: any) => {
     if (user) {
       socket.connect();
       socket.emit("online", user.id);
-    }
+	//socket.on("socket_error", (data)=>{alert(data.message)})
+   }
     return () => {
       if (user) {
         socket.emit("offline", user.id);

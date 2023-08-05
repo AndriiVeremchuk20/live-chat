@@ -5,7 +5,7 @@ import client from "..";
 
 const URLs = {
   base: "/chat/",
-  getChat: (reseiverId: string) => `/chat/${reseiverId}`,
+  craeteChat: `/chat/create_chat/`,
   getChatMetadata: (chat_id: string, limit?: number) =>
     `/chat/metadata/${chat_id}${limit ? `?limit=${limit}` : ""}`,
 };
@@ -21,9 +21,7 @@ const URLs = {
 //};
 
 const getChat = async (payload: { receiverId: string }) => {
-  const response = await client.get<BaseResponse<{ chat_id: string }>>(
-    URLs.getChat(payload.receiverId),
-  );
+  const response = await client.post<BaseResponse<{ chat_id: string }>>(URLs.craeteChat, {...payload});
   return response.data;
 };
 

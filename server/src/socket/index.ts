@@ -5,6 +5,7 @@ import cors from "cors";
 import logger from "../logger";
 import prisma from "../../prisma";
 import UserSendMessageType from "../types/message";
+import SocketEvents from "./socketEvents";
 
 const app = express();
 app.use(cors());
@@ -19,10 +20,12 @@ const io = new Server(server, {
 });
 
 // socket io
-io.on("connection", (socket) => {
-  console.log("User is connected " + socket.id);
+io.on(SocketEvents.connection, (socket) => {
+  // user connected event
+  logger.info("User connected, Socket ID:" + socket.id);
+
   // set user status online
-  socket.on("online", async (user_id: string) => {
+  socket.on(SocketEvents.online.online, async (user_id: string) => {
     const updatedUser = await prisma.user.update({
       where: {
         id: user_id,
@@ -36,18 +39,42 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("online_user", updatedUser.id);
   });
 
-  socket.on("join_chat", async ({ chat_id }: { chat_id: string }) => {
-    console.log("user Joined:  " + socket.id + " " + chat_id);
-    socket.join(chat_id);
-  });
+  // --> join user  to chat
+  socket.on(
+    SocketEvents.chat.join,
+    async ({ chat_id, user_id }: { chat_id: string; user_id: string }) => {
+      // try found chat
+      const checkUserChat = await prisma.chat.findFirst({
+        where: {
+          id: chat_id,
+          users: { some: { user_id: user_id } },
+        },
+      });
 
-  socket.on("leave_chat", async({chat_id}: {chat_id: string})=>{
-	console.log("user leave from chat: " + socket.id);
-	  socket.leave(chat_id);
-  })
+      // if user not found in chat return socket_error (Private chat);
+      if (!checkUserChat) {
+        return socket.emit(SocketEvents.error, { message: "Private chat" });
+      }
+
+      // join user to chat
+      logger.info(
+        `user ${user_id} join to chat ${chat_id} with socket ${socket.id}`
+      );
+      socket.join(chat_id);
+    }
+  );
+
+  // --> leave user from room
+  socket.on(
+    SocketEvents.chat.leave,
+    async ({ chat_id }: { chat_id: string }) => {
+      console.log("user leave from chat: " + socket.id);
+      socket.leave(chat_id);
+    }
+  );
 
   socket.on(
-    "send_message",
+    SocketEvents.message.send,
     async ({
       chat_id,
       sender_id,
@@ -69,25 +96,9 @@ io.on("connection", (socket) => {
         },
       });
       console.table({ chat_id, sender_id, receiver_id, text });
-      io.to(chat_id).emit("receive_message", {...newMessage});
+      io.to(chat_id).emit(SocketEvents.message.receive, { ...newMessage });
     }
   );
-
-  // sending message
-  //socket.on("send_message", async (data: UserSendMessageType) => {
-  //  console.log("Recived message: ", data);
-  // !!! add check both users
-  // adding message in database
-  //const newMessage = await prisma.message.create({
-  //  data: {
-  //    text: data.text,
-  //    sender_id: data.sender_id,
-  //    receiver_id: data.receiver_id,
-  // },
-  //});
-
-  //io.emit("receive_message", { ...newMessage });
-  //});
 
   socket.on("disconnect", async () => {
     // find user to chek
@@ -112,20 +123,18 @@ io.on("connection", (socket) => {
         isOnline: false,
       },
     });
-
-    //io.emit("online-users", )
   });
 
-  //socket.on("offline", async (user_id: string) => {
-  // await prisma.user.update({
-  // where: {
-  // id: user_id,
-  //},
-  // data: {
-  //  isOnline: false,
-  //   },
-  // });
-  //});
+  socket.on(SocketEvents.online.offline, async (user_id: string) => {
+    await prisma.user.update({
+      where: {
+        id: user_id,
+      },
+      data: {
+        isOnline: false,
+      },
+    });
+  });
 });
 
 export { app, server };
