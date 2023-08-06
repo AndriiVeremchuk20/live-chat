@@ -100,6 +100,22 @@ io.on(SocketEvents.connection, (socket) => {
     }
   );
 
+  socket.on(
+    SocketEvents.typingMessage.typing,
+    ({
+      chat_id,
+      sender_id,
+      status,
+    }: {
+      chat_id: string;
+      sender_id: string;
+      status: boolean;
+    }) => {
+
+		io.to(chat_id).emit(SocketEvents.typingMessage.typing_response,{sender_id, status})
+	}
+  );
+
   socket.on("disconnect", async () => {
     // find user to chek
     const mbUser = await prisma.user.findFirst({

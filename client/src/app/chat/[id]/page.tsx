@@ -17,7 +17,8 @@ import ChatApi from "@/api/chat";
 import { text } from "stream/consumers";
 import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
-import {ChatMessage} from "@/components/ChatMessage";
+import { ChatMessage } from "@/components/ChatMessage";
+import socketApi from "@/socket/actions";
 
 interface FormFields {
   message: string;
@@ -32,6 +33,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
   //const { currTheme } = useAppStore();
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [receiver, setReceiver] = useState<AppUser | null>(null);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
 
   const router = useRouter();
@@ -68,16 +70,47 @@ const Chat = ({ params }: { params: { id: string } }) => {
       text: data.message,
     };
 
-    socket.emit("send_message", { ...userMessage }); // send message
+    socketApi.onSendMessage(userMessage);
+    //socket.emit("send_message", { ...userMessage }); // send message
     setValue("message", ""); //clear input message form
+  };
+
+  const onMessageTyping = () => {
+    if (getValues("message").length === 0) {
+      socket.emit("typing", {
+        chat_id: chat_id,
+        sender_id: user?.id,
+        status: false,
+      });
+      console.log("end typing");
+    }
+    console.log("start typing");
+    socket.emit("typing", {
+      chat_id: chat_id,
+      sender_id: user?.id,
+      status: true,
+    });
   };
 
   useEffect(() => {
     if (user) {
       getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
-      socket.emit("join_chat", { chat_id: chat_id, user_id: user?.id });
-      socket.on("receive_message", (data: Message) => {
-        console.log(data), setMessages((prev) => [...prev, data]);
+      
+	  // joit to chat
+	  socketApi.onJoinChat({chat_id: chat_id, user_id: user.id})
+	  
+	  // receive message
+	  socketApi.onReseiveMessage((data: Message) => {
+        console.log(data);
+        setMessages((prev) => [...prev, data]);
+      });
+		
+	// typing response status	
+      socket.on("typing_response", (data) => {
+        console.log(data);
+        if (data.sender_id === receiver?.id) {
+          setIsTyping(data.status);
+        }
       });
 
       socket.on("socket_error", (data) => {
@@ -86,7 +119,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
     }
     return () => {
       if (user) {
-        socket.emit("leave_chat", { chat_id: chat_id });
+        socketApi.onLeaveChat({chat_id: chat_id});
       }
     };
   }, []);
@@ -95,7 +128,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     window.scrollTo({
-      top: 100,
+      top: 110,
       behavior: "smooth",
     });
   }, []);
@@ -109,6 +142,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
       <div className=" flex flex-col justify-between border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:h-full phone:w-full tablet:w-full desktop:m-1 desktop:my-5 desktop:h-[90%] desktop:w-2/3 desktop:rounded-lg desktop:border-2">
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
+            <div className="text-2xl">{isTyping ? "Typing" : "No typing"}</div>
             <span className="font-semibold">
               {receiver.first_name + " " + receiver.last_name}
             </span>
@@ -125,17 +159,23 @@ const Chat = ({ params }: { params: { id: string } }) => {
             />
           </div>
         </div>
-        <div className="my-3 flex overflow-auto h-[90%] flex-col gap-3">
-          {messages.map((message) => <ChatMessage message={message} key={message.id}/> )}
-		</div>
+        <div
+          className="my-3 flex h-full flex-col gap-3 overflow-auto"
+          id="messages"
+        >
+          {messages.map((message) => (
+            <ChatMessage message={message} key={message.id} />
+          ))}
+        </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"
         >
-          <div className="flex text-black dark:text-white mt-2 bg-opacity-20">
+          <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
             <textarea
+              onInput={onMessageTyping}
               className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
-              {...register("message")}
+              {...register("message", { minLength: 1, maxLength: 252 })}
               placeholder="Send message"
             ></textarea>
             <button type="button" className="p-2">

@@ -26,7 +26,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
           ))}
         </div>
         <span
-          className={`text-neutral-500 text-opacity-70 ${
+          className={`text-sm text-neutral-500 text-opacity-70 ${
             message.sender_id === user?.id ? "self-end" : "self-start"
           }`}
         >
