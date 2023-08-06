@@ -70,46 +70,48 @@ const Chat = ({ params }: { params: { id: string } }) => {
       text: data.message,
     };
 
+    // send message
     socketApi.onSendMessage(userMessage);
-    //socket.emit("send_message", { ...userMessage }); // send message
     setValue("message", ""); //clear input message form
   };
 
   const onMessageTyping = () => {
+    if (!user) return;
+
     if (getValues("message").length === 0) {
-      socket.emit("typing", {
+      socketApi.onTyping({
         chat_id: chat_id,
-        sender_id: user?.id,
-        status: false,
+        sender_id: user.id,
+        isTyping: false,
       });
       console.log("end typing");
     }
     console.log("start typing");
-    socket.emit("typing", {
+    socketApi.onTyping({
       chat_id: chat_id,
-      sender_id: user?.id,
-      status: true,
+      sender_id: user.id,
+      isTyping: true,
     });
   };
 
   useEffect(() => {
     if (user) {
       getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
-      
-	  // joit to chat
-	  socketApi.onJoinChat({chat_id: chat_id, user_id: user.id})
-	  
-	  // receive message
-	  socketApi.onReseiveMessage((data: Message) => {
+
+      // joit to chat
+      socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
+
+      // receive message
+      socketApi.onReseiveMessage((data: Message) => {
         console.log(data);
         setMessages((prev) => [...prev, data]);
       });
-		
-	// typing response status	
-      socket.on("typing_response", (data) => {
+
+      // typing response status
+      socketApi.onTypingResponse((data) => {
         console.log(data);
         if (data.sender_id === receiver?.id) {
-          setIsTyping(data.status);
+          setIsTyping(data.isTyping);
         }
       });
 
@@ -119,7 +121,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
     }
     return () => {
       if (user) {
-        socketApi.onLeaveChat({chat_id: chat_id});
+        socketApi.onLeaveChat({ chat_id: chat_id });
       }
     };
   }, []);

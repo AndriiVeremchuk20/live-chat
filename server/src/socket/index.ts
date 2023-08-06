@@ -105,14 +105,14 @@ io.on(SocketEvents.connection, (socket) => {
     ({
       chat_id,
       sender_id,
-      status,
+      isTyping,
     }: {
       chat_id: string;
       sender_id: string;
-      status: boolean;
+      isTyping: boolean;
     }) => {
 
-		io.to(chat_id).emit(SocketEvents.typingMessage.typing_response,{sender_id, status})
+		io.to(chat_id).emit(SocketEvents.typingMessage.typing_response,{sender_id, isTyping})
 	}
   );
 
