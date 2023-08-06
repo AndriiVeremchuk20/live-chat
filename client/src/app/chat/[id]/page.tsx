@@ -1,6 +1,5 @@
 "use client";
 
-import userActions from "@/api/userActions";
 import UserAvatar from "@/components/UserAvatar";
 import withAuth from "@/hooks/withAuth";
 import AppUser from "@/types/user.type";
@@ -14,7 +13,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
 import ChatApi from "@/api/chat";
-import { text } from "stream/consumers";
 import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
 import { ChatMessage } from "@/components/ChatMessage";
@@ -48,6 +46,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
       console.log(error);
     },
   });
+
   //  const onShowEmojiClick = useCallback(() => {
   //    setShowEmoji((state) => !state);
   //  }, []);
@@ -73,24 +72,21 @@ const Chat = ({ params }: { params: { id: string } }) => {
     // send message
     socketApi.onSendMessage(userMessage);
     setValue("message", ""); //clear input message form
+
+    // end typing
+    socketApi.onTyping({
+      chat_id: chat_id,
+      sender_id: user.id,
+      isTyping: false,
+    });
   };
 
   const onMessageTyping = () => {
     if (!user) return;
-
-    if (getValues("message").length === 0) {
-      socketApi.onTyping({
-        chat_id: chat_id,
-        sender_id: user.id,
-        isTyping: false,
-      });
-      console.log("end typing");
-    }
-    console.log("start typing");
     socketApi.onTyping({
       chat_id: chat_id,
       sender_id: user.id,
-      isTyping: true,
+      isTyping: !!getValues("message"),
     });
   };
 
@@ -102,15 +98,14 @@ const Chat = ({ params }: { params: { id: string } }) => {
       socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
 
       // receive message
-      socketApi.onReseiveMessage((data: Message) => {
-        console.log(data);
-        setMessages((prev) => [...prev, data]);
+      socketApi.onReseiveMessage((message) => {
+        //console.log(data);
+        setMessages((prev) => [...prev, message]);
       });
 
       // typing response status
       socketApi.onTypingResponse((data) => {
-        console.log(data);
-        if (data.sender_id === receiver?.id) {
+        if (data.sender_id !== user.id) {
           setIsTyping(data.isTyping);
         }
       });
@@ -144,7 +139,14 @@ const Chat = ({ params }: { params: { id: string } }) => {
       <div className=" flex flex-col justify-between border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:h-full phone:w-full tablet:w-full desktop:m-1 desktop:my-5 desktop:h-[90%] desktop:w-2/3 desktop:rounded-lg desktop:border-2">
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
-            <div className="text-2xl">{isTyping ? "Typing" : "No typing"}</div>
+            {isTyping ? (
+              <div className="flex text-xl">
+                Typing{" "}
+                <div className="flex">
+                  <div className="animate-bounce">.</div> <div className="animate-bounce-slow">.</div> <div className="animate-bounce">.</div>
+                </div>
+              </div>
+            ) : null}
             <span className="font-semibold">
               {receiver.first_name + " " + receiver.last_name}
             </span>
@@ -175,7 +177,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
         >
           <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
             <textarea
-              onInput={onMessageTyping}
+              onKeyUp={onMessageTyping}
               className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
               {...register("message", { minLength: 1, maxLength: 252 })}
               placeholder="Send message"

@@ -6,6 +6,7 @@ import logger from "../logger";
 import prisma from "../../prisma";
 import UserSendMessageType from "../types/message";
 import SocketEvents from "./socketEvents";
+import {title} from "process";
 
 const app = express();
 app.use(cors());
@@ -73,6 +74,7 @@ io.on(SocketEvents.connection, (socket) => {
     }
   );
 
+  // send message event
   socket.on(
     SocketEvents.message.send,
     async ({
@@ -96,6 +98,8 @@ io.on(SocketEvents.connection, (socket) => {
         },
       });
       console.table({ chat_id, sender_id, receiver_id, text });
+	  
+	  // send message to chat
       io.to(chat_id).emit(SocketEvents.message.receive, { ...newMessage });
     }
   );
@@ -111,7 +115,7 @@ io.on(SocketEvents.connection, (socket) => {
       sender_id: string;
       isTyping: boolean;
     }) => {
-
+		console.log("user typing")		
 		io.to(chat_id).emit(SocketEvents.typingMessage.typing_response,{sender_id, isTyping})
 	}
   );
