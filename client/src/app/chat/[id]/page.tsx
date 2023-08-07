@@ -3,8 +3,7 @@
 import UserAvatar from "@/components/UserAvatar";
 import withAuth from "@/hooks/withAuth";
 import AppUser from "@/types/user.type";
-import { useCallback, useEffect, useState } from "react";
-import { useMutation } from "react-query";
+import { useEffect, useRef, useState } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
@@ -12,7 +11,6 @@ import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import socket from "@/socket";
 import Message from "@/types/message.type";
-import ChatApi from "@/api/chat";
 import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
 import { ChatMessage } from "@/components/ChatMessage";
@@ -34,6 +32,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const [receiver, setReceiver] = useState<AppUser | null>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
+
+  const messgesBlock = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
 
@@ -84,12 +84,12 @@ const Chat = ({ params }: { params: { id: string } }) => {
     if (user) {
       // joit to chat
       socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
-	  
-	  // get chat metadata
-	  socketApi.joinChatResponse((chat: Chat)=>{
-		setReceiver(chat.receiver);
-		setMessages(chat.messages);
-	  });
+
+      // get chat metadata
+      socketApi.joinChatResponse((chat: Chat) => {
+        setReceiver(chat.receiver);
+        setMessages(chat.messages);
+      });
 
       // receive message
       socketApi.onReseiveMessage((message) => {
@@ -123,6 +123,15 @@ const Chat = ({ params }: { params: { id: string } }) => {
       behavior: "smooth",
     });
   }, []);
+
+  useEffect(() => {
+    if (messgesBlock.current) {
+      messgesBlock.current.scrollTo({
+        top: 1000,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
 
   if (!receiver) {
     return <div>user not found</div>;
@@ -161,7 +170,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
         </div>
         <div
           className="my-3 flex h-full flex-col gap-3 overflow-auto"
-          id="messages"
+          ref={messgesBlock}
         >
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />

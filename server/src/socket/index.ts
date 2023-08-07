@@ -108,7 +108,7 @@ io.on(SocketEvents.connection, (socket) => {
       const recponseChatMetadata = {
         id: chatMetadata.id,
         receiver: chatMetadata.users[0].user,
-        messages: chatMetadata.messages,
+        messages: chatMetadata.messages.reverse(),
       };
 
       // join user to chat
