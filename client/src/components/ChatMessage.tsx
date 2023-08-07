@@ -22,15 +22,8 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
         }`}
       >
         <div className="flex flex-col text-lg">
-          {message.text.split("\n").map((str) => {
-            if (str.length === 0) return;
-            return (
-              <span key={uuidv4()} className="break-all">
-                {str}
-              </span>
-            );
-          })}
-        </div>
+          <span className="break-all">{message.text}</span>        
+		</div>
         <span
           className={`text-sm text-neutral-500 text-opacity-70 ${
             message.sender_id === user?.id ? "self-end" : "self-start"

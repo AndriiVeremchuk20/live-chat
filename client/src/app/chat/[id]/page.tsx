@@ -3,7 +3,7 @@
 import UserAvatar from "@/components/UserAvatar";
 import withAuth from "@/hooks/withAuth";
 import AppUser from "@/types/user.type";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
@@ -16,6 +16,8 @@ import { useRouter } from "next/navigation";
 import { ChatMessage } from "@/components/ChatMessage";
 import socketApi from "@/socket/actions";
 import Chat from "@/types/chat.type";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 interface FormFields {
   message: string;
@@ -25,9 +27,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const chat_id = params.id;
 
   const { user } = useAppStore();
-  //const [chatId, setChatId] = useState<string>("");
-  //const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  //const { currTheme } = useAppStore();
+  const [showEmoji, setShowEmoji] = useState<boolean>(false);
+  const { currTheme } = useAppStore();
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [receiver, setReceiver] = useState<AppUser | null>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -37,14 +38,19 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
 
-  //  const onShowEmojiClick = useCallback(() => {
-  //    setShowEmoji((state) => !state);
-  //  }, []);
+    const onShowEmojiClick = useCallback(() => {
+      setShowEmoji((state) => !state);
+    }, []);
 
-  //const onEmojiClick = useCallback((emoji: EmojiClickData) => {
-  //  const text = getValues("message");
-  //  setValue("message", text + emoji.emoji);
-  //}, []);
+  const onEmojiClick = useCallback((emoji: any) => {
+    console.log(emoji)
+	const text = getValues("message");
+    setValue("message", text + emoji.native);
+  }, []);
+
+  const onClickOutsideEmojiPicker = useCallback(()=>{
+	setShowEmoji(false);
+  },[])
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
@@ -127,11 +133,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     if (messgesBlock.current) {
       messgesBlock.current.scrollTo({
-        top: 1000,
+        top: 4000,
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  }, [messages.length]);
 
   if (!receiver) {
     return <div>user not found</div>;
@@ -180,14 +186,20 @@ const Chat = ({ params }: { params: { id: string } }) => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"
         >
-          <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
+          {
+			showEmoji?
+			<div className="z-10 absolute bottom-[5%] desktop:right-[20%] phone:right-3">
+			 <Picker data={data} onEmojiSelect={onEmojiClick} onClickOutside={onClickOutsideEmojiPicker} theme={currTheme}/>
+			</div>:null
+		  }
+		  <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
             <textarea
               onKeyUp={onMessageTyping}
               className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
               {...register("message", { minLength: 1, maxLength: 252 })}
               placeholder="Send message"
             ></textarea>
-            <button type="button" className="p-2">
+            <button onClick={onShowEmojiClick} type="button" className="p-2">
               <BsEmojiSmileUpsideDown size={25} />
             </button>
             <button className="p-2" type="button">
