@@ -34,7 +34,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
     onSuccess(data) {
       //setChatId(data.data.chat_id);
       console.log(data);
-	  router.push(routes.chat.base(data.data.chat_id));
+      router.push(routes.chat.base(data.data.chat_id));
     },
     onError(error) {
       console.log(error);
@@ -42,8 +42,8 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   });
 
   const onSendMessageClick = useCallback(() => {
-	console.log(userId)
-    getChatMutation.mutate({receiverId: userId});
+    console.log(userId);
+    getChatMutation.mutate({ receiverId: userId });
   }, []);
 
   useEffect(() => {

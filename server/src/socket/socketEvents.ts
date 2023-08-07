@@ -13,6 +13,7 @@ const SocketEvents = {
 	online: {
 		online: "online",
 		offline: "offline",
+		online_users: "online_users",
 	},
 	typingMessage: {
 		typing: "typing",

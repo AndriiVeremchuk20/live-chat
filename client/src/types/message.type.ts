@@ -1,15 +1,14 @@
 import AppUser from "./user.type";
 
 interface Message {
-	id: string;
-	text: string;
-	sender_id: string;
-	reciver_id: string;
-	created_at: string;
+  id: string;
+  text: string;
+  sender_id: string;
+  reciver_id: string;
+  created_at: string;
 }
 
 export default Message;
-
 
 // for example
 //

@@ -21,9 +21,9 @@ module.exports = {
     },
     extend: {
       animation: {
-		"pulse-slow": "pulse 1s infinite alternate", // custom animation pulse-slow
-		"bounce-slow": "bounce 0.6s infinite alternate"
-	  },
+        "pulse-slow": "pulse 1s infinite alternate", // custom animation pulse-slow
+        "bounce-slow": "bounce 0.6s infinite alternate",
+      },
     },
   },
   plugins: [],

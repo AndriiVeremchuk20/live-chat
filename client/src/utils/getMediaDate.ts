@@ -1,5 +1,3 @@
-const getContentDate = () => {
-
-}
+const getContentDate = () => {};
 
 export default getContentDate;

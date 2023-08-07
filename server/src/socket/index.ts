@@ -4,9 +4,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import logger from "../logger";
 import prisma from "../../prisma";
-import UserSendMessageType from "../types/message";
 import SocketEvents from "./socketEvents";
-import {title} from "process";
 
 const app = express();
 app.use(cors());
@@ -19,6 +17,9 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
+const DEFAULT_MESSAGES_LIMIT = 20;
+const online_users = new Map<string, string>();
 
 // socket io
 io.on(SocketEvents.connection, (socket) => {
@@ -37,31 +38,86 @@ io.on(SocketEvents.connection, (socket) => {
       },
     });
 
-    socket.broadcast.emit("online_user", updatedUser.id);
+    online_users.set(socket.id, user_id);
+    socket.broadcast.emit(SocketEvents.online.online_users, online_users);
+  });
+
+  socket.on(SocketEvents.online.offline, async (user_id: string) => {
+    await prisma.user.update({
+      where: {
+        id: user_id,
+      },
+      data: {
+        isOnline: false,
+      },
+    });
+
+    online_users.delete(socket.id);
+
+    socket.broadcast.emit(SocketEvents.online.online_users, online_users);
   });
 
   // --> join user  to chat
   socket.on(
     SocketEvents.chat.join,
     async ({ chat_id, user_id }: { chat_id: string; user_id: string }) => {
-      // try found chat
-      const checkUserChat = await prisma.chat.findFirst({
+      const chatMetadata = await prisma.chat.findFirst({
         where: {
           id: chat_id,
-          users: { some: { user_id: user_id } },
+          users: {
+            some: {
+              user_id: user_id,
+            },
+          },
+        },
+        select: {
+          id: true,
+          users: {
+            where: {
+              NOT: [{ user_id: user_id }],
+            },
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  first_name: true,
+                  last_name: true,
+                  email: true,
+                  role: true,
+                  isOnline: true,
+                  created_at: true,
+                  profile: true,
+                },
+              },
+            },
+          },
+          messages: {
+            orderBy: {
+              created_at: "desc",
+            },
+            take: DEFAULT_MESSAGES_LIMIT,
+          },
         },
       });
 
       // if user not found in chat return socket_error (Private chat);
-      if (!checkUserChat) {
+      if (!chatMetadata) {
         return socket.emit(SocketEvents.error, { message: "Private chat" });
       }
+
+      const recponseChatMetadata = {
+        id: chatMetadata.id,
+        receiver: chatMetadata.users[0].user,
+        messages: chatMetadata.messages,
+      };
 
       // join user to chat
       logger.info(
         `user ${user_id} join to chat ${chat_id} with socket ${socket.id}`
       );
-      socket.join(chat_id);
+      
+	  socket.join(chat_id);
+      socket.emit("response_user_join", { ...recponseChatMetadata });
     }
   );
 
@@ -98,12 +154,13 @@ io.on(SocketEvents.connection, (socket) => {
         },
       });
       console.table({ chat_id, sender_id, receiver_id, text });
-	  
-	  // send message to chat
+
+      // send message to chat
       io.to(chat_id).emit(SocketEvents.message.receive, { ...newMessage });
     }
   );
 
+  // user typing message
   socket.on(
     SocketEvents.typingMessage.typing,
     ({
@@ -115,11 +172,15 @@ io.on(SocketEvents.connection, (socket) => {
       sender_id: string;
       isTyping: boolean;
     }) => {
-		console.log("user typing")		
-		io.to(chat_id).emit(SocketEvents.typingMessage.typing_response,{sender_id, isTyping})
-	}
+      //console.log("user typing")
+      io.to(chat_id).emit(SocketEvents.typingMessage.typing_response, {
+        sender_id,
+        isTyping,
+      });
+    }
   );
 
+  //on user disconnect
   socket.on("disconnect", async () => {
     // find user to chek
     const mbUser = await prisma.user.findFirst({
@@ -140,17 +201,6 @@ io.on(SocketEvents.connection, (socket) => {
       },
       data: {
         socket_id: null,
-        isOnline: false,
-      },
-    });
-  });
-
-  socket.on(SocketEvents.online.offline, async (user_id: string) => {
-    await prisma.user.update({
-      where: {
-        id: user_id,
-      },
-      data: {
         isOnline: false,
       },
     });

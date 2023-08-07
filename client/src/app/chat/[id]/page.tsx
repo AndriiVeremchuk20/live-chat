@@ -17,6 +17,7 @@ import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
 import { ChatMessage } from "@/components/ChatMessage";
 import socketApi from "@/socket/actions";
+import Chat from "@/types/chat.type";
 
 interface FormFields {
   message: string;
@@ -36,17 +37,6 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
 
-  const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
-    onSuccess(data) {
-      setMessages(data.data.messages);
-      setReceiver(data.data.receiver);
-      console.log(data);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
-
   //  const onShowEmojiClick = useCallback(() => {
   //    setShowEmoji((state) => !state);
   //  }, []);
@@ -58,7 +48,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
-    if (!user?.id || !receiver?.id) {
+    if (!user?.id || !receiver?.id || !getValues("message")) {
       return;
     }
 
@@ -92,10 +82,14 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (user) {
-      getChatMetadataMutation.mutate({ chat_id: params.id, limit: 20 });
-
       // joit to chat
       socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
+	  
+	  // get chat metadata
+	  socketApi.joinChatResponse((chat: Chat)=>{
+		setReceiver(chat.receiver);
+		setMessages(chat.messages);
+	  });
 
       // receive message
       socketApi.onReseiveMessage((message) => {
@@ -143,7 +137,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
               <div className="flex text-xl">
                 Typing{" "}
                 <div className="flex">
-                  <div className="animate-bounce">.</div> <div className="animate-bounce-slow">.</div> <div className="animate-bounce">.</div>
+                  <div className="animate-bounce">.</div>{" "}
+                  <div className="animate-bounce-slow">.</div>{" "}
+                  <div className="animate-bounce">.</div>
                 </div>
               </div>
             ) : null}

@@ -1,6 +1,6 @@
 import useAppStore from "@/store";
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { BiSolidUserCircle } from "react-icons/bi";
 
 type ImageType = {
@@ -14,17 +14,19 @@ interface propUserAvatar {
 }
 
 const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
-  const {user} = useAppStore();
-	const [isOnline, setIsOnline] = useState<boolean>(false);
+  const { user } = useAppStore();
+  const [isOnline, setIsOnline] = useState<boolean>(false);
 
-	//useEffect(()=>{
-		
-	//},[])
+  //useEffect(()=>{
+
+  //},[])
 
   if (image) {
     return (
       <div
-        className={`m-1 w-fit rounded-full border border-violet-900 p-1 ${user?.isOnline?"bg-green-600":"bg-violet-900"}`}
+        className={`m-1 w-fit rounded-full border border-violet-900 p-1 ${
+          user?.isOnline ? "bg-green-600" : "bg-violet-900"
+        }`}
       >
         <Image
           width={size}
@@ -39,7 +41,11 @@ const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
   }
 
   return (
-    <div className={`w-fit rounded-full border ${user?.isOnline?"border-green-900":"border-violet-900"}`}>
+    <div
+      className={`w-fit rounded-full border ${
+        user?.isOnline ? "border-green-900" : "border-violet-900"
+      }`}
+    >
       <BiSolidUserCircle size={size} />
     </div>
   );

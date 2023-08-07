@@ -6,7 +6,7 @@ const getContentDate = (dateString: string): string => {
     return date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "numeric",
-	  hour12: false,
+      hour12: false,
     });
   }
 
@@ -15,7 +15,7 @@ const getContentDate = (dateString: string): string => {
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-	hour12: false,
+    hour12: false,
   });
 };
 

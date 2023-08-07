@@ -28,7 +28,7 @@ const AppInner = (props: any) => {
   const { user, setUser, setTheme } = useAppStore();
   const { isAppLoading, setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
-  
+
   const authMutation = useMutation(authApi.auth, {
     onSettled(data, errors) {
       if (data) {
@@ -67,8 +67,8 @@ const AppInner = (props: any) => {
     if (user) {
       socket.connect();
       socket.emit("online", user.id);
-	//socket.on("socket_error", (data)=>{alert(data.message)})
-   }
+      //socket.on("socket_error", (data)=>{alert(data.message)})
+    }
     return () => {
       if (user) {
         socket.emit("offline", user.id);
