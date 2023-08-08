@@ -95,7 +95,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
             <div>
               <span>About partner:</span>
               <div className="break-all rounded-lg border-2 border-violet-300 bg-neutral-200 bg-opacity-75 p-3 dark:bg-neutral-600">
-                {userInfo.profile.about_self}
+                {userInfo.profile.about_partner}
               </div>
             </div>
             <div className="flex items-center justify-end"></div>

@@ -121,15 +121,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
-  // scroll header
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 110,
-      behavior: "smooth",
-    });
-  }, []);
-
+// scroll chat to bottom
   useEffect(() => {
     if (messgesBlock.current) {
       messgesBlock.current.scrollTo({

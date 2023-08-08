@@ -66,10 +66,14 @@ const AppInner = (props: any) => {
   useEffect(() => {
     if (user) {
       socket.connect();
-      
-	  socket.emit("online", user.id);
-      socket.on("online_users", (data)=>{console.log(data)});
-	  socket.on("socket_error", (data)=>{alert(data.message)})
+
+      socket.emit("online", user.id);
+      socket.on("online_users", (data) => {
+        console.log(data);
+      });
+      socket.on("socket_error", (data) => {
+        alert(data.message);
+      });
     }
     return () => {
       if (user) {
@@ -84,7 +88,9 @@ const AppInner = (props: any) => {
       <div className="flex h-screen flex-col items-center justify-center bg-neutral-500">
         <div className="flex flex-col items-center gap-3">
           <Loader />
-          <span className="text-2xl font-semibold dark:text-white">Wait...</span>
+          <span className="text-2xl font-semibold dark:text-white">
+            Wait...
+          </span>
         </div>
       </div>
     );
@@ -93,6 +99,7 @@ const AppInner = (props: any) => {
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
+
   return (
     <html lang="en">
       <body className="max-h-fit min-h-screen bg-gradient-to-r from-neutral-300 via-white to-neutral-200 dark:from-neutral-900 dark:to-neutral-800">

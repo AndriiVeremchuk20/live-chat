@@ -6,6 +6,62 @@ import getUser from "../utils/isUser";
 
 const DEFAULT_MESSAGES_LIMIT = 20;
 
+const getUserChats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user } = req;
+
+  if (!user) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ status: "error", message: "user not found" });
+  }
+
+  const userChats = await prisma.chat.findMany({
+    where: {
+      users: {
+        some: { user_id: user.uid },
+      },
+    },
+    select: {
+      id: true,
+      messages: {
+        select: {
+          id: true,
+          text: true,
+          sender: {
+			select: {
+				id: true,
+				first_name: true,
+				last_name: true,
+				email: true,
+				profile: true,
+				created_at: true,
+			}
+		  },
+          receiver: true,
+          created_at: true,
+        },
+        orderBy: [{ created_at: "desc" }],
+        take: 1,
+      },
+    },
+    take: 20,
+  });
+
+  const userChatsResponse = userChats.map((chat) => ({
+    chat_id: chat.id,
+    messages: chat.messages,
+    //receiver: chat.users[0],
+  }));
+
+  res
+    .status(StatusCodes.OK)
+    .send({ status: "OK", message: "chats found", data: userChatsResponse });
+};
+
 const getChatMessages = async (
   req: Request,
   res: Response,
@@ -86,13 +142,11 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
   console.table(checkChat);
 
   if (checkChat)
-    return res
-      .status(StatusCodes.OK)
-      .send({
-        status: "success",
-        message: "chat",
-        data: { chat_id: checkChat?.id },
-      });
+    return res.status(StatusCodes.OK).send({
+      status: "success",
+      message: "chat",
+      data: { chat_id: checkChat?.id },
+    });
 
   if (!checkChat) {
     const chat = await prisma.chat.create({
@@ -123,4 +177,4 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
     .send({ status: "success", message: "chat" });
 };
 
-export default { createChat };
+export default { createChat, getUserChats };
