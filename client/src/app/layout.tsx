@@ -66,8 +66,10 @@ const AppInner = (props: any) => {
   useEffect(() => {
     if (user) {
       socket.connect();
-      socket.emit("online", user.id);
-      //socket.on("socket_error", (data)=>{alert(data.message)})
+      
+	  socket.emit("online", user.id);
+      socket.on("online_users", (data)=>{console.log(data)});
+	  socket.on("socket_error", (data)=>{alert(data.message)})
     }
     return () => {
       if (user) {
@@ -79,10 +81,10 @@ const AppInner = (props: any) => {
 
   if (isAppLoading)
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-red-100 dark:bg-slate-600">
+      <div className="flex h-screen flex-col items-center justify-center bg-neutral-500">
         <div className="flex flex-col items-center gap-3">
           <Loader />
-          <span className="text-2xl font-semibold">Wait...</span>
+          <span className="text-2xl font-semibold dark:text-white">Wait...</span>
         </div>
       </div>
     );

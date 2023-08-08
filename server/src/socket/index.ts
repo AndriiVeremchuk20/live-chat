@@ -38,8 +38,15 @@ io.on(SocketEvents.connection, (socket) => {
       },
     });
 
-    online_users.set(socket.id, user_id);
-    socket.broadcast.emit(SocketEvents.online.online_users, online_users);
+    online_users.set(user_id, socket.id);
+	
+	const onlineUsersResponse: Array<string> = [];
+	
+	online_users.forEach((value, key)=>{
+		onlineUsersResponse.push(key);
+	})
+
+    socket.broadcast.emit(SocketEvents.online.online_users, {online_users: onlineUsersResponse});
   });
 
   socket.on(SocketEvents.online.offline, async (user_id: string) => {
