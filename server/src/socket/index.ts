@@ -5,6 +5,7 @@ import cors from "cors";
 import logger from "../logger";
 import prisma from "../../prisma";
 import SocketEvents from "./socketEvents";
+import redisClient from "../redis";
 
 const app = express();
 app.use(cors());
@@ -28,15 +29,15 @@ io.on(SocketEvents.connection, (socket) => {
 
   // set user status online
   socket.on(SocketEvents.online.online, async (user_id: string) => {
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: user_id,
-      },
-      data: {
-        isOnline: true,
-        socket_id: socket.id,
-      },
-    });
+	//const updatedUser = await prisma.user.update({
+    //  where: {
+    //    id: user_id,
+    //  },
+    //  data: {
+    //    isOnline: true,
+    //    socket_id: socket.id,
+    //  },
+   // });
 
     online_users.set(user_id, socket.id);
 	
