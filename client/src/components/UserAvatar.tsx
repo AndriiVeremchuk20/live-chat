@@ -11,21 +11,18 @@ type ImageType = {
 interface propUserAvatar {
   image?: ImageType;
   size: number;
+  user_id?: string;
 }
 
-const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
+const UserAvatar: React.FC<propUserAvatar> = ({ image, size, user_id }) => {
   const { user, onlineUsers } = useAppStore();
-  const [isOnline, setIsOnline] = useState<boolean>(false);
-
-  //useEffect(()=>{
-
-  //},[])
+  const [isOnline, setIsOnline] = useState<boolean>(onlineUsers.some(id=>user_id === id));
 
   if (image) {
     return (
       <div
         className={`m-1 w-fit rounded-full border border-violet-900 p-1 ${
-          user?.isOnline ? "bg-green-600" : "bg-violet-900"
+          isOnline ? "bg-green-600" : "bg-violet-900"
         }`}
       >
         <Image
@@ -43,7 +40,7 @@ const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
   return (
     <div
       className={`w-fit rounded-full border ${
-        user?.isOnline ? "border-green-900" : "border-violet-900"
+        isOnline ? "border-green-900" : "border-violet-900"
       }`}
     >
       <BiSolidUserCircle size={size} />
