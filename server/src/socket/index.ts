@@ -6,6 +6,7 @@ import logger from "../logger";
 import prisma from "../../prisma";
 import SocketEvents from "./socketEvents";
 import redisClient from "../redis";
+import getUserKey from "../utils/getUserKey";
 
 const app = express();
 app.use(cors());
@@ -19,50 +20,59 @@ const io = new Server(server, {
   },
 });
 
+redisClient.connect();
+
 const DEFAULT_MESSAGES_LIMIT = 20;
-const online_users = new Map<string, string>();
 
 // socket io
 io.on(SocketEvents.connection, (socket) => {
   // user connected event
   logger.info("User connected, Socket ID:" + socket.id);
 
-  // set user status online
-  socket.on(SocketEvents.online.online, async (user_id: string) => {
-	//const updatedUser = await prisma.user.update({
-    //  where: {
-    //    id: user_id,
-    //  },
-    //  data: {
-    //    isOnline: true,
-    //    socket_id: socket.id,
-    //  },
-   // });
+  socket.on(SocketEvents.ping, async ({ user_id }: { user_id: string }) => {
+    console.log("User ONLINE " + user_id);
+    try {
+      await redisClient.set(getUserKey(user_id), "online", { EX: 10 });
 
-    online_users.set(user_id, socket.id);
-	
-	const onlineUsersResponse: Array<string> = [];
-	
-	online_users.forEach((value, key)=>{
-		onlineUsersResponse.push(key);
-	})
+      const onlineUsers = await redisClient.keys("user:*");
+      console.table(onlineUsers);
 
-    socket.broadcast.emit(SocketEvents.online.online_users, {online_users: onlineUsersResponse});
-  });
+      const usersWithChatTarget = await prisma.chat.findMany({
+        where: {
+          users: {
+            some: { user_id: user_id },
+          },
+        },
+        select: {
+          users: {
+            where: {
+              NOT: [{ user_id }],
+              user_id: {
+                in: onlineUsers.map((key) => key.split(":")[1]),
+              },
+            },
+            select: {
+              user_id: true,
+            },
+            take: 1,
+          },
+        },
+      });
 
-  socket.on(SocketEvents.online.offline, async (user_id: string) => {
-    await prisma.user.update({
-      where: {
-        id: user_id,
-      },
-      data: {
-        isOnline: false,
-      },
-    });
+      console.table(usersWithChatTarget);
 
-    online_users.delete(socket.id);
-
-    socket.broadcast.emit(SocketEvents.online.online_users, online_users);
+      const onlineUsersResponse = usersWithChatTarget
+        .map((chat) => chat.users[0])
+        .filter(Boolean)
+        .map((user) => user.user_id);
+      return socket.emit(SocketEvents.online, onlineUsersResponse);
+    } catch (error) {
+      logger.error(error);
+      socket.emit(SocketEvents.error, {
+        status: "error",
+        message: "server error",
+      });
+    }
   });
 
   // --> join user  to chat
@@ -123,8 +133,8 @@ io.on(SocketEvents.connection, (socket) => {
       logger.info(
         `user ${user_id} join to chat ${chat_id} with socket ${socket.id}`
       );
-      
-	  socket.join(chat_id);
+
+      socket.join(chat_id);
       socket.emit("response_user_join", { ...recponseChatMetadata });
     }
   );
@@ -190,28 +200,8 @@ io.on(SocketEvents.connection, (socket) => {
 
   //on user disconnect
   socket.on("disconnect", async () => {
-    // find user to chek
-    const mbUser = await prisma.user.findFirst({
-      where: {
-        socket_id: socket.id,
-      },
-    });
-
-    //chek user
-    if (!mbUser) {
-      logger.warn("user not found");
-      return;
-    }
-    // set socket null, isOnline false
-    await prisma.user.update({
-      where: {
-        id: mbUser.id,
-      },
-      data: {
-        socket_id: null,
-        isOnline: false,
-      },
-    });
+    //console.log("user disconnect " + user_id);
+    //await redisClient.del(getUserKey(user_id));
   });
 });
 

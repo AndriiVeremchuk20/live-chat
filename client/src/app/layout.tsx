@@ -14,6 +14,7 @@ import routes from "@/config/appRoutes";
 import Loader from "@/components/Loader";
 import LocalStorageKeys from "@/config/localStorageKeys";
 import socket from "@/socket";
+import socketApi from "@/socket/actions";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -26,7 +27,8 @@ const AppWrapper = (props: any) => {
 const AppInner = (props: any) => {
   const auth = getAuth();
   const { user, setUser, setTheme } = useAppStore();
-  const { isAppLoading, setAppStartLoading, setAppEndLoading } = useAppStore();
+  const { isAppLoading, setAppStartLoading, setAppEndLoading, setOnlineUsers } =
+    useAppStore();
   const router = useRouter();
 
   const authMutation = useMutation(authApi.auth, {
@@ -64,21 +66,28 @@ const AppInner = (props: any) => {
   }, []);
 
   useEffect(() => {
+    let pingInterval: any = null;
     if (user) {
       socket.connect();
 
-      socket.emit("online", user.id);
-      socket.on("online_users", (data) => {
+      pingInterval = setInterval(() => {
+        socketApi.userPing({ user_id: user.id });
+      }, 10 * 1000);
+
+      socketApi.onlineUsers((data: Array<string>) => {
         console.log(data);
+        setOnlineUsers(data);
       });
+
       socket.on("socket_error", (data) => {
         alert(data.message);
       });
     }
     return () => {
       if (user) {
-        socket.emit("offline", user.id);
-        socket.disconnect();
+        clearInterval(pingInterval);
+        console.log("emit disconnected user");
+        socket.emit("disconnect_event", { user_id: user.id });
       }
     };
   }, [user]);
@@ -99,7 +108,6 @@ const AppInner = (props: any) => {
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
-
   return (
     <html lang="en">
       <body className="max-h-fit min-h-screen bg-gradient-to-r from-neutral-300 via-white to-neutral-200 dark:from-neutral-900 dark:to-neutral-800">

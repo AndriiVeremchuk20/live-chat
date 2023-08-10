@@ -2,7 +2,7 @@ const SocketEvents = {
   connection: "connection",
   chat: {
     join: "join_chat",
-	response: "response_user_join",
+    response: "response_user_join",
     leave: "leave_chat",
   },
   message: {
@@ -11,14 +11,12 @@ const SocketEvents = {
     delete: "delete_message",
     edit: "edit_message",
   },
-  online: {
-    online: "online",
-    offline: "offline",
-  },
+  online: "online",
   typingMessage: {
     typing: "typing",
     typing_response: "typing_response",
   },
+  ping: "user_ping",
   error: "socket_error",
 };
 

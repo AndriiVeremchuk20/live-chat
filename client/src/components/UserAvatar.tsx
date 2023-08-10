@@ -14,7 +14,7 @@ interface propUserAvatar {
 }
 
 const UserAvatar: React.FC<propUserAvatar> = ({ image, size }) => {
-  const { user } = useAppStore();
+  const { user, onlineUsers } = useAppStore();
   const [isOnline, setIsOnline] = useState<boolean>(false);
 
   //useEffect(()=>{
