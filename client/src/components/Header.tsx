@@ -30,10 +30,11 @@ const Header = () => {
             {user.profile?.avatar_path ? (
               <UserAvatar
                 size={50}
+				user_id={user.id}
                 image={{ src: user.profile.avatar_path, alt: user.first_name }}
               />
             ) : (
-              <UserAvatar size={50} />
+              <UserAvatar size={50} user_id={user.id}/>
             )}
             <span>{user.first_name}</span> <SignOutButton />
           </div>

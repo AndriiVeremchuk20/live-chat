@@ -28,15 +28,12 @@ model User {
   last_name  String
   email      String   @unique
   created_at DateTime @default(now())
-  isOnline   Boolean  @default(false)
   profile    Profile?
 
   chats UsersOnChats[]
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
-
-  socket_id String?
 }
 
 model Profile {

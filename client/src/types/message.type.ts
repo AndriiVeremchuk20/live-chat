@@ -4,7 +4,9 @@ interface Message {
   id: string;
   text: string;
   sender_id: string;
+  sender: AppUser;
   reciver_id: string;
+  receiver: AppUser;
   created_at: string;
 }
 

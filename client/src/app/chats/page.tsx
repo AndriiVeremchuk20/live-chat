@@ -40,7 +40,7 @@ const ChatsPage = () => {
             <div className="flex flex-col items-center">
                {
 				chats.map((chat)=><div key={chat.chat_id} className="flex">
-					<UserAvatar size={40} user_id={chat.messages[0].sender_id} />
+					<UserAvatar size={40} user_id={chat.messages[0].sender_id}/>
 					<div>{chat.messages[0].text.slice(0,20)}</div>
 				</div>)
 			  }

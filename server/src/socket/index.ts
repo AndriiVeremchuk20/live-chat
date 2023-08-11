@@ -102,7 +102,6 @@ io.on(SocketEvents.connection, (socket) => {
                   last_name: true,
                   email: true,
                   role: true,
-                  isOnline: true,
                   created_at: true,
                   profile: true,
                 },

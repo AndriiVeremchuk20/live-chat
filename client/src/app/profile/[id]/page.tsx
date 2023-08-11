@@ -59,7 +59,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
           <div className="mb-5 flex flex-col items-center justify-center">
             <UserAvatar
               size={200}
-              user_id={userInfo.id}
+              user_id={params.id}
 			  image={
                 userInfo.profile?.avatar_path
                   ? {
