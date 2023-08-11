@@ -1,5 +1,6 @@
 const SocketEvents = {
   connection: "connection",
+  auth: "auth",
   chat: {
     join: "join_chat",
     leave: "leave_chat",

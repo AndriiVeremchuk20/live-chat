@@ -72,12 +72,14 @@ const AppInner = (props: any) => {
     if (user) {
       socket.connect();
 
+      socketApi.auth({ user_id: user.id });
+
       pingInterval = setInterval(() => {
         socketApi.userPing({ user_id: user.id });
-      }, 10 * 1000);
+      }, 30 * 1000);
 
       socketApi.onlineUsers((data: Array<string>) => {
-        console.log(data);
+        //console.log(data);
         setOnlineUsers(data);
       });
 

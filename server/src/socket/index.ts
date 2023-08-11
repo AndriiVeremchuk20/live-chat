@@ -24,15 +24,20 @@ redisClient.connect();
 
 const DEFAULT_MESSAGES_LIMIT = 20;
 
+const usersSockets = new Map<string, string>();
+
 // socket io
 io.on(SocketEvents.connection, (socket) => {
   // user connected event
   logger.info("User connected, Socket ID:" + socket.id);
+  socket.on(SocketEvents.auth, ({ user_id }: { user_id: string }) => {
+    usersSockets.set(socket.id, user_id);
+  });
 
   socket.on(SocketEvents.ping, async ({ user_id }: { user_id: string }) => {
     console.log("User ONLINE " + user_id);
     try {
-      await redisClient.set(getUserKey(user_id), "online", { EX: 10 });
+      await redisClient.set(getUserKey(user_id), "online", { EX: 30 });
 
       const onlineUsers = await redisClient.keys("user:*");
       console.table(onlineUsers);
@@ -199,8 +204,11 @@ io.on(SocketEvents.connection, (socket) => {
 
   //on user disconnect
   socket.on("disconnect", async () => {
-    //console.log("user disconnect " + user_id);
-    //await redisClient.del(getUserKey(user_id));
+    const disconectedUser = usersSockets.get(socket.id);
+    if (disconectedUser) {
+      redisClient.del(getUserKey(disconectedUser));
+      usersSockets.delete(socket.id);
+    }
   });
 });
 

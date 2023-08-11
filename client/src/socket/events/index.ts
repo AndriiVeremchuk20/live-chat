@@ -16,6 +16,7 @@ const SocketEvents = {
     typing: "typing",
     typing_response: "typing_response",
   },
+  auth: "auth",
   ping: "user_ping",
   error: "socket_error",
 };
