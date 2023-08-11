@@ -15,6 +15,8 @@ import Loader from "@/components/Loader";
 import LocalStorageKeys from "@/config/localStorageKeys";
 import socket from "@/socket";
 import socketApi from "@/socket/actions";
+import SocketEvents from "@/socket/events";
+import SocketError from "@/types/socket/socketError.type";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -79,8 +81,8 @@ const AppInner = (props: any) => {
         setOnlineUsers(data);
       });
 
-      socket.on("socket_error", (data) => {
-        alert(data.message);
+      socket.on(SocketEvents.error, (err: SocketError) => {
+        alert(err.message);
       });
     }
     return () => {
