@@ -4,6 +4,7 @@ import client from "..";
 
 const URLs = {
   base: "/chat",
+	getChatMetadata: (id: string)=>`/chat/${id}`,
 };
 
 const getUserChats = async() => {
@@ -19,4 +20,12 @@ const getChat = async (payload: { receiverId: string }) => {
   return response.data;
 };
 
-export default { getChat, getUserChats };
+const getChatMetadata = async (payload: {chat_id: string})=>{
+ const response = await client.get<BaseResponse<Chat>>(
+    URLs.getChatMetadata(payload.chat_id),
+  );
+  return response.data;
+
+}
+
+export default { getChat, getUserChats, getChatMetadata };

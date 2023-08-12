@@ -15,9 +15,11 @@ import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
 import { ChatMessage } from "@/components/ChatMessage";
 import socketApi from "@/socket/actions";
-import Chat from "@/types/chat.type";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import ChatsList from "@/components/ChatsList";
+import { useMutation } from "react-query";
+import ChatApi from "@/api/chat";
 
 interface FormFields {
   message: string;
@@ -38,19 +40,30 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
 
-    const onShowEmojiClick = useCallback(() => {
-      setShowEmoji((state) => !state);
-    }, []);
+  const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
+    onSuccess: (data) => {
+      //console.log(data);
+	  setReceiver(data.data.receiver);
+	  setMessages(data.data.messages);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const onShowEmojiClick = useCallback(() => {
+    setShowEmoji((state) => !state);
+  }, []);
 
   const onEmojiClick = useCallback((emoji: any) => {
-    console.log(emoji)
-	const text = getValues("message");
+    console.log(emoji);
+    const text = getValues("message");
     setValue("message", text + emoji.native);
   }, []);
 
-  const onClickOutsideEmojiPicker = useCallback(()=>{
-	setShowEmoji(false);
-  },[])
+  const onClickOutsideEmojiPicker = useCallback(() => {
+    setShowEmoji(false);
+  }, []);
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
@@ -88,14 +101,16 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (user) {
+      getChatMetadataMutation.mutate({ chat_id: chat_id });
+
       // joit to chat
-      socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
+      //socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
 
       // get chat metadata
-      socketApi.joinChatResponse((chat: Chat) => {
-        setReceiver(chat.receiver);
-        setMessages(chat.messages);
-      });
+      // socketApi.joinChatResponse((chat: Chat) => {
+      //   setReceiver(chat.receiver);
+      //   setMessages(chat.messages);
+      // });
 
       // receive message
       socketApi.onReseiveMessage((message) => {
@@ -110,7 +125,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
         }
       });
 
-      socket.on("socket_error", (data) => {
+	  socket.on("socket_error", (data) => {
         router.replace(routes.home);
       });
     }
@@ -121,11 +136,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
-// scroll chat to bottom
+  // scroll chat to bottom
   useEffect(() => {
     if (messgesBlock.current) {
       messgesBlock.current.scrollTo({
-        top: 4000,
+        top:4000,
         behavior: "smooth",
       });
     }
@@ -137,7 +152,9 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className=" flex flex-col justify-between border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:h-full phone:w-full tablet:w-full desktop:m-1 desktop:my-5 desktop:h-[90%] desktop:w-2/3 desktop:rounded-lg desktop:border-2">
+      <div className="flex flex-col justify-between border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800 phone:h-full phone:w-full tablet:w-full desktop:m-1 desktop:my-5 desktop:h-[90%] desktop:w-2/3 desktop:rounded-lg desktop:border-2">
+        <ChatsList />
+
         <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
           <div className="flex items-center gap-3">
             {isTyping ? (
@@ -178,13 +195,17 @@ const Chat = ({ params }: { params: { id: string } }) => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col"
         >
-          {
-			showEmoji?
-			<div className="z-10 absolute bottom-[5%] desktop:right-[20%] phone:right-3">
-			 <Picker data={data} onEmojiSelect={onEmojiClick} onClickOutside={onClickOutsideEmojiPicker} theme={currTheme}/>
-			</div>:null
-		  }
-		  <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
+          {showEmoji ? (
+            <div className="absolute bottom-[5%] z-10 phone:right-3 desktop:right-[20%]">
+              <Picker
+                data={data}
+                onEmojiSelect={onEmojiClick}
+                onClickOutside={onClickOutsideEmojiPicker}
+                theme={currTheme}
+              />
+            </div>
+          ) : null}
+          <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
             <textarea
               onKeyUp={onMessageTyping}
               className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"

@@ -64,7 +64,7 @@ io.on(SocketEvents.connection, (socket) => {
         },
       });
 
-      console.table(usersWithChatTarget);
+      //console.table(usersWithChatTarget);
 
       const onlineUsersResponse = usersWithChatTarget
         .map((chat) => chat.users[0])
@@ -93,33 +93,33 @@ io.on(SocketEvents.connection, (socket) => {
             },
           },
         },
-        select: {
-          id: true,
-          users: {
-            where: {
-              NOT: [{ user_id: user_id }],
-            },
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  first_name: true,
-                  last_name: true,
-                  email: true,
-                  role: true,
-                  created_at: true,
-                  profile: true,
-                },
-              },
-            },
-          },
-          messages: {
-            orderBy: {
-              created_at: "desc",
-            },
-            take: DEFAULT_MESSAGES_LIMIT,
-          },
-        },
+       // select: {
+        //  id: true,
+        //  users: {
+         //   where: {
+         //     NOT: [{ user_id: user_id }],
+         //   },
+         //   select: {
+         //     user: {
+         //       select: {
+         //         id: true,
+         //         first_name: true,
+          //        last_name: true,
+          //        email: true,
+          //        role: true,
+          //        created_at: true,
+          //        profile: true,
+          //      },
+          //    },
+          //  },
+         // },
+         // messages: {
+         //   orderBy: {
+         //     created_at: "desc",
+         //   },
+         //   take: DEFAULT_MESSAGES_LIMIT,
+         // },
+        //},
       });
 
       // if user not found in chat return socket_error (Private chat);
@@ -127,11 +127,11 @@ io.on(SocketEvents.connection, (socket) => {
         return socket.emit(SocketEvents.error, { message: "Private chat" });
       }
 
-      const recponseChatMetadata = {
-        id: chatMetadata.id,
-        receiver: chatMetadata.users[0].user,
-        messages: chatMetadata.messages.reverse(),
-      };
+    //  const recponseChatMetadata = {
+     //   id: chatMetadata.id,
+     //   receiver: chatMetadata.users[0].user,
+     //   messages: chatMetadata.messages.reverse(),
+     // }
 
       // join user to chat
       logger.info(
@@ -139,7 +139,7 @@ io.on(SocketEvents.connection, (socket) => {
       );
 
       socket.join(chat_id);
-      socket.emit("response_user_join", { ...recponseChatMetadata });
+      //socket.emit("response_user_join", { ...recponseChatMetadata });
     }
   );
 
@@ -147,7 +147,7 @@ io.on(SocketEvents.connection, (socket) => {
   socket.on(
     SocketEvents.chat.leave,
     async ({ chat_id }: { chat_id: string }) => {
-      console.log("user leave from chat: " + socket.id);
+      //console.log("user leave from chat: " + socket.id);
       socket.leave(chat_id);
     }
   );

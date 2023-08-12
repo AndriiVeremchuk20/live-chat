@@ -3,10 +3,11 @@ import AppUser from "./user.type";
 interface Message {
   id: string;
   text: string;
+  isRead: boolean;
   sender_id: string;
-  sender: AppUser;
+  sender?: AppUser;
   reciver_id: string;
-  receiver: AppUser;
+  receiver?: AppUser;
   created_at: string;
 }
 

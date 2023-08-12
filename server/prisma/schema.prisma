@@ -51,24 +51,25 @@ model Profile {
 }
 
 model UsersOnChats {
-	user User @relation(fields: [user_id], references: [id])
-	user_id String
-	chat Chat @relation(fields: [chat_id], references: [id])
-	chat_id String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+  chat    Chat   @relation(fields: [chat_id], references: [id])
+  chat_id String
 
-	@@id([user_id, chat_id])
+  @@id([user_id, chat_id])
 }
 
 model Chat {
-  id       String    @id @default(cuid())
-  users    UsersOnChats[]
-  messages Message[]
-  created_at DateTime @default(now())
+  id         String         @id @default(cuid())
+  users      UsersOnChats[]
+  messages   Message[]
+  created_at DateTime       @default(now())
 }
 
 model Message {
   id         String   @id @default(cuid())
   text       String
+  isRead     Boolean  @default(true)
   created_at DateTime @default(now())
 
   chat    Chat   @relation(fields: [chat_id], references: [id])

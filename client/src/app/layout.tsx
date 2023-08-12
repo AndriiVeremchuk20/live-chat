@@ -7,7 +7,7 @@ import firebaseConfig from "@/config/firebase";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { authApi } from "@/api/auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
@@ -36,6 +36,7 @@ const AppInner = (props: any) => {
   const authMutation = useMutation(authApi.auth, {
     onSettled(data, errors) {
       if (data) {
+        console.log(data);
         setUser(data.data);
       }
       if (errors) {
@@ -72,6 +73,15 @@ const AppInner = (props: any) => {
     if (user) {
       socket.connect();
 
+      user.chats.forEach((chat) => {
+        socketApi.onJoinChat({ chat_id: chat, user_id: user.id });
+        
+      });
+
+socketApi.onReseiveMessage((message) => {
+          console.log(message);
+        });
+
       socketApi.auth({ user_id: user.id });
 
       pingInterval = setInterval(() => {
@@ -89,6 +99,9 @@ const AppInner = (props: any) => {
     }
     return () => {
       if (user) {
+        user.chats.forEach((chat) => {
+          socketApi.onLeaveChat({ chat_id: chat });
+        });
         clearInterval(pingInterval);
         console.log("emit disconnected user");
         socket.emit("disconnect_event", { user_id: user.id });

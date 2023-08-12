@@ -27,23 +27,31 @@ const getUserChats = async (
     },
     select: {
       id: true,
+      users: {
+        where: {
+          NOT: [{ user_id: user.uid }],
+        },
+        select: {
+          user: true,
+        },
+      },
       messages: {
         select: {
           id: true,
           text: true,
           sender: {
-			select: {
-				id: true,
-				first_name: true,
-				last_name: true,
-				email: true,
-				profile: true,
-				created_at: true,
-			}
-		  },
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              profile: true,
+              created_at: true,
+            },
+          },
           receiver: true,
-		  sender_id: true,
-		  receiver_id: true,
+          sender_id: true,
+          receiver_id: true,
           created_at: true,
         },
         orderBy: [{ created_at: "desc" }],
@@ -56,7 +64,7 @@ const getUserChats = async (
   const userChatsResponse = userChats.map((chat) => ({
     chat_id: chat.id,
     messages: chat.messages,
-    //receiver: chat.users[0],
+    receiver: chat.users[0],
   }));
 
   res
@@ -142,4 +150,74 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
     .send({ status: "success", message: "chat" });
 };
 
-export default { createChat, getUserChats };
+const getChatMetadata = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const {chat_id} = req.params;
+  const { user } = req;
+
+  if (!user) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ satus: "error", message: "User not found" });
+ }
+
+  const chatMetadata = await prisma.chat.findFirst({
+    where: {
+      id: chat_id,
+      users: {
+        some: {
+          user_id: user.uid,
+        },
+      },
+    },
+    select: {
+      id: true,
+      users: {
+        where: {
+          NOT: [{ user_id: user.uid }],
+        },
+        select: {
+          user: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              role: true,
+              created_at: true,
+              profile: true,
+            },
+          },
+        },
+      },
+      messages: {
+        orderBy: {
+          created_at: "desc",
+        },
+        // take: DEFAULT_MESSAGES_LIMIT,
+      },
+    },
+  });
+
+  // if user not found in chat return socket_error (Private chat);
+  if (!chatMetadata) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ status: "not found", message: "chat not found" });
+  }
+
+  const responseChatMetadata = {
+    id: chatMetadata.id,
+    receiver: chatMetadata.users[0].user,
+    messages: chatMetadata.messages.reverse(),
+  };
+
+  return res
+    .status(StatusCodes.OK)
+    .send({ status: "OK", message: "chat found", data: { ...responseChatMetadata } });
+};
+
+export default { createChat, getUserChats, getChatMetadata };

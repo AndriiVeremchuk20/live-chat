@@ -7,6 +7,7 @@ interface AppUser {
   email: string;
   isOnline: boolean;
   profile: Profile | null;
+  chats: Array<string>;
 }
 
 export default AppUser;

@@ -34,70 +34,82 @@ const registration = async (
 const auth = async (req: Request, res: Response) => {
   const { user } = req;
   //console.log(user);
-  if (user) {
-    try {
-      const foundUser = await prisma.user.findFirstOrThrow({
-        where: { id: user.uid },
-      });
-
-      const foundUserProfile = await prisma.profile.findFirst({
-        where: { user_id: user.uid },
-      });
-
-      return res.status(StatusCodes.OK).send({
-        status: "success",
-        message: "auth success",
-        data: { ...foundUser, profile: foundUserProfile },
-      });
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send({ status: "error", message: "user not found, try later" });
-    }
+  if (!user) {
+    return res
+      .status(401)
+      .send({ status: "error", message: "permission denied" });
   }
-  return res
-    .status(401)
-    .send({ status: "error", message: "permission denied" });
+  try {
+    const foundUser = await prisma.user.findFirstOrThrow({
+      where: { id: user.uid },
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+        created_at: true,
+        profile: true,
+        chats: {
+          select: {
+            chat_id: true,
+          },
+        },
+      },
+    });
+
+    return res.status(StatusCodes.OK).send({
+      status: "success",
+      message: "auth success",
+      data: {
+        ...foundUser,
+        chats: foundUser.chats.map((chat) => chat.chat_id),
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ status: "error", message: "user not found, try later" });
+  }
 };
 
 const authWithGoogle = async (req: Request, res: Response) => {
   //add middleware to check auth type
   const { user } = req;
 
-  if (user) {
-    const checkUser = await prisma.user.findFirst({
-      where: { id: user.uid },
-    });
-
-    if (checkUser) {
-      // user auth
-      return res.status(StatusCodes.OK).send({
-        status: "success",
-        message: "auth with google success",
-        data: { ...checkUser },
-      });
-    } else {
-      // create a new user
-      const newUser = await prisma.user.create({
-        data: {
-          id: user.uid,
-          first_name: user?.name.split(" ")[0] as string,
-          last_name: user?.name.split(" ")[1] as string,
-          email: user.email as string,
-        },
-      });
-
-      return res.status(StatusCodes.CREATED).send({
-        status: "success",
-        message: "auth with google success",
-        data: { ...newUser },
-      });
-    }
-  } else {
-    res
+  if (!user) {
+    return res
       .status(StatusCodes.BAD_REQUEST)
       .send({ status: "error", message: "auth error, try later" });
+  }
+
+  const checkUser = await prisma.user.findFirst({
+    where: { id: user.uid },
+  });
+
+  if (checkUser) {
+    // user auth
+    return res.status(StatusCodes.OK).send({
+      status: "success",
+      message: "auth with google success",
+      data: { ...checkUser },
+    });
+  } else {
+    // create a new user
+    const newUser = await prisma.user.create({
+      data: {
+        id: user.uid,
+        first_name: user?.name.split(" ")[0] as string,
+        last_name: user?.name.split(" ")[1] as string,
+        email: user.email as string,
+      },
+    });
+
+    return res.status(StatusCodes.CREATED).send({
+      status: "success",
+      message: "auth with google success",
+      data: { ...newUser },
+    });
   }
 };
 
