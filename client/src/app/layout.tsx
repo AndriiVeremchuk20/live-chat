@@ -7,7 +7,7 @@ import firebaseConfig from "@/config/firebase";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { authApi } from "@/api/auth";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
 import routes from "@/config/appRoutes";
@@ -17,6 +17,10 @@ import socket from "@/socket";
 import socketApi from "@/socket/actions";
 import SocketEvents from "@/socket/events";
 import SocketError from "@/types/socket/socketError.type";
+import { toast, ToastContainer } from "react-toastify";
+
+// toast notification styles
+import 'react-toastify/dist/ReactToastify.css';
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -28,9 +32,8 @@ const AppWrapper = (props: any) => {
 
 const AppInner = (props: any) => {
   const auth = getAuth();
-  const { user, setUser, setTheme } = useAppStore();
-  const { isAppLoading, setAppStartLoading, setAppEndLoading, setOnlineUsers } =
-    useAppStore();
+  const { user, setUser, currTheme, setTheme } = useAppStore();
+  const { isAppLoading, setAppEndLoading, setOnlineUsers } = useAppStore();
   const router = useRouter();
 
   const authMutation = useMutation(authApi.auth, {
@@ -78,9 +81,24 @@ const AppInner = (props: any) => {
       });
 
       socketApi.onReseiveMessage((message) => {
-		if(message.sender_id!==user.id)
-		alert("New message from:" + message.sender?.first_name); 
-		console.log(message);
+        if (message.sender_id !== user.id) {
+          toast(
+            `New message\n ${
+              message.sender?.first_name + "" + message.sender?.last_name
+            }: ${message.text.slice(0, 10)}`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: currTheme,
+            },
+          );
+        }
+        //console.log(message);
       });
 
       socketApi.auth({ user_id: user.id });
@@ -132,6 +150,7 @@ export default function App({ children }: { children: React.ReactNode }) {
         <AppWrapper>
           <AppInner>
             <Header />
+            <ToastContainer  draggablePercent={60}/>
             {children}
           </AppInner>
         </AppWrapper>
