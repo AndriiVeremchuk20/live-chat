@@ -21,6 +21,9 @@ import { toast, ToastContainer } from "react-toastify";
 
 // toast notification styles
 import 'react-toastify/dist/ReactToastify.css';
+import Message from "@/types/message.type";
+import UserAvatar from "@/components/UserAvatar";
+import NewMessageNotification from "@/components/toast/NewMessageNotification";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -80,12 +83,14 @@ const AppInner = (props: any) => {
         socketApi.onJoinChat({ chat_id: chat, user_id: user.id });
       });
 
+		
+	// show notifications to new messages
       socketApi.onReseiveMessage((message) => {
         if (message.sender_id !== user.id) {
-          toast(
-            `New message\n ${
-              message.sender?.first_name + "" + message.sender?.last_name
-            }: ${message.text.slice(0, 10)}`,
+          
+
+		  toast(
+            <NewMessageNotification message={message}/>,
             {
               position: "top-right",
               autoClose: 5000,
