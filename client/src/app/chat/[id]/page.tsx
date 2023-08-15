@@ -128,21 +128,18 @@ const Chat = ({ params }: { params: { id: string } }) => {
 	  socket.on("socket_error", (data) => {
         router.replace(routes.home);
       });
-    }
-    return () => {
-      if (user) {
-        socketApi.onLeaveChat({ chat_id: chat_id });
-      }
-    };
+
+	}
   }, []);
 
   // scroll chat to bottom
   useEffect(() => {
     if (messgesBlock.current) {
-      messgesBlock.current.scrollTo({
-        top:4000,
-        behavior: "smooth",
-      });
+      messgesBlock.current.scrollIntoView({ behavior: 'smooth' });;
+	  //messgesBlock.current.scrollTo({
+      //  top: ,
+       // behavior: "smooth",
+     // });
     }
   }, [messages.length]);
 
@@ -184,12 +181,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
         <div
-          className="my-3 flex h-full flex-col gap-3 overflow-auto"
-          ref={messgesBlock}
-        >
+          className="my-3 flex h-full flex-col gap-3 overflow-auto" >
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />
           ))}
+		  <div className="hidden" ref={messgesBlock}></div>
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}

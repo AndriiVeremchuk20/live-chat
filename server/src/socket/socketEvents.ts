@@ -10,6 +10,10 @@ const SocketEvents = {
     receive: "receive_message",
     delete: "delete_message",
     edit: "edit_message",
+	read:{
+		onRead: "read_message",
+		onReadResponse: "read_message_response",
+	}
   },
   online: "online",
   typingMessage: {

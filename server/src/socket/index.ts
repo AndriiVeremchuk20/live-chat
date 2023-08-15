@@ -35,12 +35,15 @@ io.on(SocketEvents.connection, (socket) => {
   });
 
   socket.on(SocketEvents.ping, async ({ user_id }: { user_id: string }) => {
-    console.log("User ONLINE " + user_id);
-    try {
+
+	  //console.log("User ONLINE " + user_id);
+    
+	  try {
       await redisClient.set(getUserKey(user_id), "online", { EX: 30 });
 
       const onlineUsers = await redisClient.keys("user:*");
-      console.table(onlineUsers);
+      
+	  //console.table(onlineUsers);
 
       const usersWithChatTarget = await prisma.chat.findMany({
         where: {
@@ -93,32 +96,32 @@ io.on(SocketEvents.connection, (socket) => {
             },
           },
         },
-       // select: {
+        // select: {
         //  id: true,
         //  users: {
-         //   where: {
-         //     NOT: [{ user_id: user_id }],
-         //   },
-         //   select: {
-         //     user: {
-         //       select: {
-         //         id: true,
-         //         first_name: true,
-          //        last_name: true,
-          //        email: true,
-          //        role: true,
-          //        created_at: true,
-          //        profile: true,
-          //      },
-          //    },
-          //  },
-         // },
-         // messages: {
-         //   orderBy: {
-         //     created_at: "desc",
-         //   },
-         //   take: DEFAULT_MESSAGES_LIMIT,
-         // },
+        //   where: {
+        //     NOT: [{ user_id: user_id }],
+        //   },
+        //   select: {
+        //     user: {
+        //       select: {
+        //         id: true,
+        //         first_name: true,
+        //        last_name: true,
+        //        email: true,
+        //        role: true,
+        //        created_at: true,
+        //        profile: true,
+        //      },
+        //    },
+        //  },
+        // },
+        // messages: {
+        //   orderBy: {
+        //     created_at: "desc",
+        //   },
+        //   take: DEFAULT_MESSAGES_LIMIT,
+        // },
         //},
       });
 
@@ -127,11 +130,11 @@ io.on(SocketEvents.connection, (socket) => {
         return socket.emit(SocketEvents.error, { message: "Private chat" });
       }
 
-    //  const recponseChatMetadata = {
-     //   id: chatMetadata.id,
-     //   receiver: chatMetadata.users[0].user,
-     //   messages: chatMetadata.messages.reverse(),
-     // }
+      //  const recponseChatMetadata = {
+      //   id: chatMetadata.id,
+      //   receiver: chatMetadata.users[0].user,
+      //   messages: chatMetadata.messages.reverse(),
+      // }
 
       // join user to chat
       logger.info(
@@ -173,12 +176,62 @@ io.on(SocketEvents.connection, (socket) => {
           sender_id,
           receiver_id,
           text,
+          isRead: false,
+        },
+        select: {
+          id: true,
+          chat_id: true,
+          text: true,
+          created_at: true,
+          isRead: true,
+          sender: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              created_at: true,
+              profile: true,
+            },
+          },
+          receiver_id: true,
+          sender_id: true,
         },
       });
       console.table({ chat_id, sender_id, receiver_id, text });
 
       // send message to chat
       io.to(chat_id).emit(SocketEvents.message.receive, { ...newMessage });
+    }
+  );
+
+  // on read message
+  socket.on(
+    SocketEvents.message.read.onRead,
+    async ({ message_id }: { message_id: string }) => {
+      try {
+        const messageWithUpdateIsReadStatus = await prisma.message.update({
+          where: { id: message_id },
+          data: {
+            isRead: true,
+          },
+          select: {
+            id: true,
+            chat_id: true,
+            isRead: true,
+          },
+        });
+
+        io.to(messageWithUpdateIsReadStatus.chat_id).emit(
+          SocketEvents.message.read.onReadResponse,
+          { ...messageWithUpdateIsReadStatus }
+        );
+      } catch (error) {
+        socket.emit(SocketEvents.error, {
+          type: "error",
+          message: "server error",
+        });
+      }
     }
   );
 

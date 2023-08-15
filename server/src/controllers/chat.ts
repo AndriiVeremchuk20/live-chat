@@ -39,6 +39,7 @@ const getUserChats = async (
         select: {
           id: true,
           text: true,
+		  isRead: true,
           sender: {
             select: {
               id: true,

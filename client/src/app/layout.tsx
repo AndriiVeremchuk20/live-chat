@@ -75,12 +75,13 @@ const AppInner = (props: any) => {
 
       user.chats.forEach((chat) => {
         socketApi.onJoinChat({ chat_id: chat, user_id: user.id });
-        
       });
 
-socketApi.onReseiveMessage((message) => {
-          console.log(message);
-        });
+      socketApi.onReseiveMessage((message) => {
+		if(message.sender_id!==user.id)
+		alert("New message from:" + message.sender?.first_name); 
+		console.log(message);
+      });
 
       socketApi.auth({ user_id: user.id });
 

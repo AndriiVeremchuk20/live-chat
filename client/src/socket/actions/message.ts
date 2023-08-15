@@ -15,4 +15,12 @@ const onReseiveMessage = (callback: (message: Message) => void) => {
   socket.on(SocketEvents.message.receive, callback);
 };
 
-export { onSendMessage, onReseiveMessage };
+const onReadMessage = ({message_id}: {message_id: string}) => {
+	socket.emit(SocketEvents.message.read.onRead, {message_id});
+};
+
+const onReadMessageResponse = (callback: ({id, isRead}:{id: string, isRead: boolean})=>void) => {
+	socket.on(SocketEvents.message.read.onReadResponse, callback);
+};
+
+export { onSendMessage, onReseiveMessage, onReadMessage, onReadMessageResponse };
