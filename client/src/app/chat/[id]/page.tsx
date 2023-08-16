@@ -101,21 +101,13 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (user) {
-      getChatMetadataMutation.mutate({ chat_id: chat_id });
-
-      // joit to chat
-      //socketApi.onJoinChat({ chat_id: chat_id, user_id: user.id });
-
-      // get chat metadata
-      // socketApi.joinChatResponse((chat: Chat) => {
-      //   setReceiver(chat.receiver);
-      //   setMessages(chat.messages);
-      // });
+	  getChatMetadataMutation.mutate({ chat_id: chat_id });
 
       // receive message
       socketApi.onReseiveMessage((message) => {
         //console.log(data);
         setMessages((prev) => [...prev, message]);
+		
       });
 
       // typing response status
@@ -134,13 +126,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   // scroll chat to bottom
   useEffect(() => {
-    if (messgesBlock.current) {
-      messgesBlock.current.scrollIntoView({ behavior: 'smooth' });;
-	  //messgesBlock.current.scrollTo({
-      //  top: ,
-       // behavior: "smooth",
-     // });
-    }
+      messgesBlock.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length]);
 
   if (!receiver) {
@@ -180,12 +166,13 @@ const Chat = ({ params }: { params: { id: string } }) => {
             />
           </div>
         </div>
-        <div
+        {/*show chat messages*/}
+		<div
           className="my-3 flex h-full flex-col gap-3 overflow-auto" >
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />
           ))}
-		  <div className="hidden" ref={messgesBlock}></div>
+		  <div ref={messgesBlock}/>
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
