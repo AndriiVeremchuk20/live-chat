@@ -50,7 +50,16 @@ const getUserChats = async (
               created_at: true,
             },
           },
-          receiver: true,
+          receiver: {
+			select:{
+				id: true,
+				first_name: true,
+				last_name: true,
+				email: true,
+				created_at: true,
+				profile: true,
+			}
+		  },
           sender_id: true,
           receiver_id: true,
           created_at: true,
@@ -65,7 +74,7 @@ const getUserChats = async (
   const userChatsResponse = userChats.map((chat) => ({
     chat_id: chat.id,
     messages: chat.messages,
-    receiver: chat.users[0],
+    receiver: chat.users[0].user,
   }));
 
   res

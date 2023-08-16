@@ -4,16 +4,12 @@ import useAppStore from "@/store";
 import Chat from "@/types/chat.type";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
-import ChatApi from "../api/chat";
-
-
-const ChatItem = () =>{
-	return (<div>Chat</div>)
-}
+import ChatApi from "@/api/chat";
+import ChatListItem from "./ChatListItem";
 
 const ChatsList = () => {
   const { user } = useAppStore();
-  const [chats, setChats] = useState<Array<Omit<Chat, "users">>>([]);
+  const [chats, setChats] = useState<Array<Chat>>([]);
 
   const getChatsMutation = useMutation(ChatApi.getUserChats, {
     onSuccess: (data) => {
@@ -39,7 +35,7 @@ const ChatsList = () => {
 
   return (<div>
 	<div>
-		{chats.map(chat=><div key={chat.chat_id}>{chat.chat_id}</div>)}
+		{chats.map(chat=><ChatListItem key={chat.chat_id} chat={chat}/>)}
 	</div>
   </div>);
 };

@@ -247,10 +247,12 @@ io.on(SocketEvents.connection, (socket) => {
       sender_id: string;
       isTyping: boolean;
     }) => {
+
       //console.log("user typing")
       io.to(chat_id).emit(SocketEvents.typingMessage.typing_response, {
         sender_id,
-        isTyping,
+        chat_id,
+		isTyping,
       });
     }
   );

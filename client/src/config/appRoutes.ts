@@ -1,4 +1,4 @@
-const routes = {
+const AppRoutes = {
   home: "/",
   auth: {
     login: "/auth/login",
@@ -17,8 +17,9 @@ const routes = {
     resetPassword: "/help/resetPassword",
   },
   chat: {
-    base: (id: string) => `/chat/${id}`,
+	base: "/chat",
+    toChat: (id: string) => `/chat/${id}`,
   },
 };
 
-export default routes;
+export default AppRoutes;

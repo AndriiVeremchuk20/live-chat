@@ -1,6 +1,7 @@
 "use client";
 
 import userActions from "@/api/userActions";
+import ChatsList from "@/components/Chat/ChatsList";
 import Header from "@/components/Header";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
@@ -43,6 +44,7 @@ export default function Home() {
     <div className="">
       <div>Text</div>
       <div>
+	  <ChatsList/>
         {userRecommendations.map((item) => (
           <Link
             key={item.id}

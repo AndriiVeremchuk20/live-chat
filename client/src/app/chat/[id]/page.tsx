@@ -43,8 +43,8 @@ const Chat = ({ params }: { params: { id: string } }) => {
   const getChatMetadataMutation = useMutation(ChatApi.getChatMetadata, {
     onSuccess: (data) => {
       //console.log(data);
-	  setReceiver(data.data.receiver);
-	  setMessages(data.data.messages);
+      setReceiver(data.data.receiver);
+      setMessages(data.data.messages);
     },
     onError: (error) => {
       console.log(error);
@@ -101,32 +101,31 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (user) {
-	  getChatMetadataMutation.mutate({ chat_id: chat_id });
+      getChatMetadataMutation.mutate({ chat_id: chat_id });
 
       // receive message
       socketApi.onReseiveMessage((message) => {
-        //console.log(data);
-        setMessages((prev) => [...prev, message]);
-		
+        if (message.chat_id === chat_id) {
+          setMessages((prev) => [...prev, message]);
+        }
       });
 
       // typing response status
       socketApi.onTypingResponse((data) => {
-        if (data.sender_id !== user.id) {
+		if (data.sender_id !== user.id && data.chat_id === chat_id) {
           setIsTyping(data.isTyping);
         }
       });
 
-	  socket.on("socket_error", (data) => {
+      socket.on("socket_error", (data) => {
         router.replace(routes.home);
       });
-
-	}
+    }
   }, []);
 
   // scroll chat to bottom
   useEffect(() => {
-      messgesBlock.current?.scrollIntoView({ behavior: 'smooth' });
+    messgesBlock.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
   if (!receiver) {
@@ -167,12 +166,11 @@ const Chat = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
         {/*show chat messages*/}
-		<div
-          className="my-3 flex h-full flex-col gap-3 overflow-auto" >
+        <div className="my-3 flex h-full flex-col gap-3 overflow-auto">
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />
           ))}
-		  <div ref={messgesBlock}/>
+          <div ref={messgesBlock} />
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
