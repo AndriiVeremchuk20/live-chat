@@ -32,14 +32,23 @@ const getUserChats = async (
           NOT: [{ user_id: user.uid }],
         },
         select: {
-          user: true,
+          user: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              profile: true,
+              created_at: true,
+            },
+          },
         },
       },
       messages: {
         select: {
           id: true,
           text: true,
-		  isRead: true,
+          isRead: true,
           sender: {
             select: {
               id: true,
@@ -51,15 +60,15 @@ const getUserChats = async (
             },
           },
           receiver: {
-			select:{
-				id: true,
-				first_name: true,
-				last_name: true,
-				email: true,
-				created_at: true,
-				profile: true,
-			}
-		  },
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              created_at: true,
+              profile: true,
+            },
+          },
           sender_id: true,
           receiver_id: true,
           created_at: true,
@@ -165,14 +174,14 @@ const getChatMetadata = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {chat_id} = req.params;
+  const { chat_id } = req.params;
   const { user } = req;
 
   if (!user) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .send({ satus: "error", message: "User not found" });
- }
+  }
 
   const chatMetadata = await prisma.chat.findFirst({
     where: {
@@ -227,7 +236,11 @@ const getChatMetadata = async (
 
   return res
     .status(StatusCodes.OK)
-    .send({ status: "OK", message: "chat found", data: { ...responseChatMetadata } });
+    .send({
+      status: "OK",
+      message: "chat found",
+      data: { ...responseChatMetadata },
+    });
 };
 
 export default { createChat, getUserChats, getChatMetadata };

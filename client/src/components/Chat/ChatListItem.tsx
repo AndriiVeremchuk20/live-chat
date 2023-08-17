@@ -15,6 +15,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ chat }) => {
 
   const lastMessage = chat.messages[0];
   const receiver = chat.receiver;
+  const receiverAvatar = receiver.profile?.avatar_path;
 
   const router = useRouter();
 
@@ -24,7 +25,15 @@ const ChatListItem: React.FC<PropChatListItem> = ({ chat }) => {
 
   return (
     <div className="flex items-center" onClick={onChatClick}>
-      <UserAvatar size={60} user_id={receiver.id} />{" "}
+      <UserAvatar
+        image={
+          receiverAvatar
+            ? { src: receiverAvatar, alt: receiver.first_name }
+            : undefined
+        }
+        size={60}
+        user_id={receiver.id}
+      />{" "}
       <div className="flex flex-col items-start">
         <span>{`${receiver.first_name} ${receiver.last_name}`}</span>{" "}
         {/*check if message sender current user display "you:" else sender name.*/}
