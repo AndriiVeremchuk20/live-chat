@@ -77,6 +77,7 @@ const getUserChats = async (
         take: 1,
       },
     },
+	orderBy: [{created_at: "desc"}],
     take: 20,
   });
 
