@@ -3,6 +3,7 @@ import useAppStore from "@/store";
 import AppUser from "@/types/user.type";
 import React, { useEffect, useState } from "react";
 import UserAvatar from "../UserAvatar";
+import {MdOutlineArrowBack} from "react-icons/md";
 
 interface PropChatHeader {
   receiver: AppUser;
@@ -26,8 +27,11 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
   }, [user]);
 
   return (
-    <div className="flex justify-end bg-violet-400 p-2 dark:bg-violet-700">
-      <div className="flex items-center gap-3">
+    <div className="flex justify-between items-center bg-violet-400 p-2 dark:bg-violet-700">
+      <div className="mx-10">
+		<MdOutlineArrowBack size={30}/>
+	  </div>
+	  <div className="flex items-center gap-3">
         {isTyping ? (
           <div className="flex text-xl">
             Typing{" "}
@@ -43,7 +47,8 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
         </span>
         <UserAvatar
           size={50}
-          image={
+          user_id={receiver.id}
+		  image={
             receiver.profile?.avatar_path
               ? {
                   src: receiver.profile.avatar_path,

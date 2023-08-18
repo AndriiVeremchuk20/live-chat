@@ -1,6 +1,7 @@
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
 import Link from "next/link";
+import {usePathname, useRouter} from "next/navigation";
 import { useEffect } from "react";
 import { TbMessages } from "react-icons/tb";
 import Navbar from "./Navbar";
@@ -10,10 +11,22 @@ import UserAvatar from "./UserAvatar";
 
 const Header = () => {
   const { user } = useAppStore();
+	const pathname = usePathname();
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  const hideHeaderRoutes = ["/chat"];
+
+ const shouldHideHeader = hideHeaderRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+if(shouldHideHeader){
+	return null;
+}
+	
+
+  //useEffect(() => {
+  //  console.log(user);
+  //}, [user]);
 
   return (
     <div className="flex h-[120px] flex-col content-center justify-between bg-violet-400 dark:bg-violet-700">

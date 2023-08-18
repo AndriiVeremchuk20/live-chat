@@ -1,4 +1,4 @@
-import ChatsList from "@/components/ChatsList";
+import ChatsList from "@/components/Chat/ChatsList";
 
 const ChatPage = () => {
   return (

@@ -1,19 +1,14 @@
 import AppUser from "@/types/user.type";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import socket from "@/socket";
-import Message from "@/types/message.type";
-import routes from "@/config/appRoutes";
 import { useRouter } from "next/navigation";
 import socketApi from "@/socket/actions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { useMutation } from "react-query";
-import ChatApi from "@/api/chat";
 
 interface PropSendMessageForm {
   chat_id: string;
@@ -29,8 +24,6 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const { currTheme } = useAppStore();
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
-
-  const router = useRouter();
 
   const onShowEmojiClick = useCallback(() => {
     setShowEmoji((state) => !state);
@@ -114,3 +107,4 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
 };
 
 export default SendMessageForm;
+

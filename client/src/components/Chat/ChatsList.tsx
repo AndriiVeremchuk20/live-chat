@@ -28,16 +28,16 @@ const ChatsList = () => {
   }, [user]);
 
   if(chats.length <= 0){
-	return <div>
+	return <div className="w-full border-2 border-violet-500">
 		Chats not found
 	</div>
   }
 
-  return (<div>
-	<div>
+// add search bar
+  return (
+	<div className="w-full border-2 border-violet-500">
 		{chats.map(chat=><ChatListItem key={chat.chat_id} chat={chat}/>)}
-	</div>
-  </div>);
+	</div>);
 };
 
 export default ChatsList;
