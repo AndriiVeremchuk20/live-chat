@@ -1,8 +1,7 @@
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
 import Link from "next/link";
-import {usePathname, useRouter} from "next/navigation";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { TbMessages } from "react-icons/tb";
 import Navbar from "./Navbar";
 import SetTheme from "./SetTheme";
@@ -11,22 +10,17 @@ import UserAvatar from "./UserAvatar";
 
 const Header = () => {
   const { user } = useAppStore();
-	const pathname = usePathname();
+  const pathname = usePathname();
 
-  const hideHeaderRoutes = ["/chat"];
+  const hideHeaderRoutes = ["/chat/"];
 
- const shouldHideHeader = hideHeaderRoutes.some((route) =>
-    pathname.startsWith(route)
+  const shouldHideHeader = hideHeaderRoutes.some((route) =>
+    pathname.startsWith(route),
   );
 
-if(shouldHideHeader){
-	return null;
-}
-	
-
-  //useEffect(() => {
-  //  console.log(user);
-  //}, [user]);
+  if (shouldHideHeader) {
+    return null;
+  }
 
   return (
     <div className="flex h-[120px] flex-col content-center justify-between bg-violet-400 dark:bg-violet-700">
@@ -43,11 +37,11 @@ if(shouldHideHeader){
             {user.profile?.avatar_path ? (
               <UserAvatar
                 size={50}
-				user_id={user.id}
+                user_id={user.id}
                 image={{ src: user.profile.avatar_path, alt: user.first_name }}
               />
             ) : (
-              <UserAvatar size={50} user_id={user.id}/>
+              <UserAvatar size={50} user_id={user.id} />
             )}
             <span>{user.first_name}</span> <SignOutButton />
           </div>

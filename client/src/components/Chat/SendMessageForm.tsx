@@ -76,7 +76,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col">
       {showEmoji ? (
-        <div className="absolute bottom-[5%] z-10 phone:right-3 desktop:right-[20%]">
+        <div className="absolute bottom-[10%] z-10 right-5">
           <Picker
             data={data}
             onEmojiSelect={onEmojiClick}
