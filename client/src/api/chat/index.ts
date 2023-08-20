@@ -1,5 +1,6 @@
 import BaseResponse from "@/types/api/response.type";
 import Chat from "@/types/chat.type";
+import Message from "@/types/message.type";
 import client from "..";
 
 const URLs = {
@@ -8,7 +9,7 @@ const URLs = {
 };
 
 const getUserChats = async() => {
-	const response = await client.get<BaseResponse<Array<Omit<Chat, "users">>>>(URLs.base);
+	const response = await client.get<BaseResponse<Array<Message>>>(URLs.base);
 	return response.data;
 }
 

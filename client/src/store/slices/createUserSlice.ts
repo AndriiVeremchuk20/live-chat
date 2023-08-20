@@ -1,4 +1,5 @@
 import Profile from "@/types/profile.type";
+import Theme from "@/types/theme.type";
 import AppUser from "@/types/user.type";
 import { StateCreator } from "zustand";
 
@@ -6,6 +7,7 @@ export interface UserSlice {
   user: AppUser | null;
   setUser: (user: AppUser) => void;
   setUserProfile: (profile: Profile) => void;
+  setUserTheme: (theme: Theme) => void;
   setIsOnline: (isOnline: boolean) => void;
   deleteUser: () => void;
 }
@@ -25,6 +27,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
     const user = get().user;
     if (user) {
       set({ user: { ...user, isOnline } });
+    }
+  },
+  setUserTheme: (theme: Theme)=>{
+    const user = get().user;
+    if (user) {
+      set({ user: { ...user, theme } });
     }
   },
   deleteUser: () => {

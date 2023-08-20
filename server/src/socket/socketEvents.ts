@@ -4,6 +4,7 @@ const SocketEvents = {
   chat: {
     join: "join_chat",
     leave: "leave_chat",
+	newChat: "new_chat",
   },
   message: {
     send: "send_message",

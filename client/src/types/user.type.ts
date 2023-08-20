@@ -1,4 +1,5 @@
 import Profile from "./profile.type";
+import Theme from "./theme.type";
 
 interface AppUser {
   id: string;
@@ -8,6 +9,7 @@ interface AppUser {
   isOnline: boolean;
   profile: Profile | null;
   chats: Array<string>;
+  theme: Theme;
 }
 
 export default AppUser;

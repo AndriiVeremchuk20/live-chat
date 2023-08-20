@@ -35,16 +35,10 @@ io.on(SocketEvents.connection, (socket) => {
   });
 
   socket.on(SocketEvents.ping, async ({ user_id }: { user_id: string }) => {
-
-	  //console.log("User ONLINE " + user_id);
-    
-	  try {
+    try {
       await redisClient.set(getUserKey(user_id), "online", { EX: 30 });
 
       const onlineUsers = await redisClient.keys("user:*");
-      
-	  //console.table(onlineUsers);
-
       const usersWithChatTarget = await prisma.chat.findMany({
         where: {
           users: {
@@ -67,15 +61,15 @@ io.on(SocketEvents.connection, (socket) => {
         },
       });
 
-      //console.table(usersWithChatTarget);
-
       const onlineUsersResponse = usersWithChatTarget
         .map((chat) => chat.users[0])
         .filter(Boolean)
         .map((user) => user.user_id);
+
       return socket.emit(SocketEvents.online, onlineUsersResponse);
     } catch (error) {
       logger.error(error);
+
       socket.emit(SocketEvents.error, {
         status: "error",
         message: "server error",
@@ -96,33 +90,6 @@ io.on(SocketEvents.connection, (socket) => {
             },
           },
         },
-        // select: {
-        //  id: true,
-        //  users: {
-        //   where: {
-        //     NOT: [{ user_id: user_id }],
-        //   },
-        //   select: {
-        //     user: {
-        //       select: {
-        //         id: true,
-        //         first_name: true,
-        //        last_name: true,
-        //        email: true,
-        //        role: true,
-        //        created_at: true,
-        //        profile: true,
-        //      },
-        //    },
-        //  },
-        // },
-        // messages: {
-        //   orderBy: {
-        //     created_at: "desc",
-        //   },
-        //   take: DEFAULT_MESSAGES_LIMIT,
-        // },
-        //},
       });
 
       // if user not found in chat return socket_error (Private chat);
@@ -130,19 +97,37 @@ io.on(SocketEvents.connection, (socket) => {
         return socket.emit(SocketEvents.error, { message: "Private chat" });
       }
 
-      //  const recponseChatMetadata = {
-      //   id: chatMetadata.id,
-      //   receiver: chatMetadata.users[0].user,
-      //   messages: chatMetadata.messages.reverse(),
-      // }
-
       // join user to chat
-      logger.info(
-        `user ${user_id} join to chat ${chat_id} with socket ${socket.id}`
-      );
+      //logger.info(
+      //  `user ${user_id} join to chat ${chat_id} with socket ${socket.id}`
+      //);
 
       socket.join(chat_id);
-      //socket.emit("response_user_join", { ...recponseChatMetadata });
+    }
+  );
+
+  // --> created a new chat
+  socket.on(
+    SocketEvents.chat.newChat,
+    async ({
+      chat_id,
+      receiver_id,
+    }: {
+      chat_id: string;
+      sender_id: string;
+      receiver_id: string;
+    }) => {
+      const receivesSocketId = [...usersSockets.entries()]
+        .filter(({ 1: v }) => v === receiver_id)
+        .map(([k]) => k);
+
+      logger.warn(receivesSocketId);
+
+      if (receivesSocketId) {
+        logger.info("joined to new chat");
+        io.to(receivesSocketId).socketsJoin(chat_id);
+        socket.join(chat_id);
+      }
     }
   );
 
@@ -185,6 +170,16 @@ io.on(SocketEvents.connection, (socket) => {
           created_at: true,
           isRead: true,
           sender: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+              created_at: true,
+              profile: true,
+            },
+          },
+          receiver: {
             select: {
               id: true,
               first_name: true,
@@ -247,12 +242,11 @@ io.on(SocketEvents.connection, (socket) => {
       sender_id: string;
       isTyping: boolean;
     }) => {
-
       //console.log("user typing")
       io.to(chat_id).emit(SocketEvents.typingMessage.typing_response, {
         sender_id,
         chat_id,
-		isTyping,
+        isTyping,
       });
     }
   );

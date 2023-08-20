@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { useMutation } from "react-query";
 import ChatApi from "@/api/chat";
+import socketApi from "@/socket/actions";
 
 const ProfilePage = ({ params }: { params: { id: string } }) => {
   const userId = params.id;
@@ -32,9 +33,15 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
 
   const getChatMutation = useMutation(ChatApi.getChat, {
     onSuccess(data) {
+      if (!user?.chats.includes(data.data.chat_id) && userInfo && user) {
+        socketApi.onNewChat({
+          chat_id: data.data.chat_id,
+          receiver_id: userInfo.id,
+        });
+      }
       //setChatId(data.data.chat_id);
       console.log(data);
-      router.push(routes.chat.base(data.data.chat_id));
+      router.push(routes.chat.toChat(data.data.chat_id));
     },
     onError(error) {
       console.log(error);
@@ -60,7 +67,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
             <UserAvatar
               size={200}
               user_id={params.id}
-			  image={
+              image={
                 userInfo.profile?.avatar_path
                   ? {
                       src: userInfo.profile.avatar_path,

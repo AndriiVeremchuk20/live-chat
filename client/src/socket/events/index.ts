@@ -2,8 +2,9 @@ const SocketEvents = {
   connection: "connection",
   chat: {
     join: "join_chat",
-    response: "response_user_join",
     leave: "leave_chat",
+	newChat: "new_chat",
+	newChatResponse: "new_chat_response",
   },
   message: {
     send: "send_message",

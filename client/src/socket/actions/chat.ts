@@ -1,4 +1,3 @@
-import Chat from "@/types/chat.type";
 import socket from "..";
 import SocketEvents from "../events";
 
@@ -12,12 +11,12 @@ const onJoinChat = ({
   socket.emit(SocketEvents.chat.join, { chat_id: chat_id, user_id: user_id });
 };
 
-const joinChatResponse = (callback: (chat: Chat)=>void) => {
-	socket.on(SocketEvents.chat.response, callback);
-} 
-
 const onLeaveChat = ({ chat_id }: { chat_id: string }) => {
   socket.emit(SocketEvents.chat.leave, { chat_id: chat_id });
 };
 
-export { onJoinChat, onLeaveChat, joinChatResponse };
+const onNewChat = ({chat_id, receiver_id}: {chat_id: string, receiver_id: string}) => {
+ socket.emit(SocketEvents.chat.newChat, {chat_id, receiver_id});
+};
+
+export { onJoinChat, onLeaveChat, onNewChat };

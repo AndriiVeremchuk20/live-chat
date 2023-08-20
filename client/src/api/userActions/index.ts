@@ -1,11 +1,12 @@
 import BaseResponse from "@/types/api/response.type";
+import Theme from "@/types/theme.type";
 import AppUser from "@/types/user.type";
-import { async } from "@firebase/util";
 import client from "..";
 
 const URLs = {
   getById: (id: string) => `/user-actions/${id}`,
   getUserRecommendations: "/user-actions/",
+  setUserTheme: "/user-actions/theme",
 };
 
 const getUserRecommendations = async () => {
@@ -20,4 +21,9 @@ const getProfileById = async (id: string) => {
   return response.data;
 };
 
-export default { getUserRecommendations, getProfileById };
+const setUserTheme = async (payload:{theme: Theme})=>{
+  const response = await client.post<BaseResponse<{theme: Theme}>>(URLs.setUserTheme,payload);
+  return response.data;
+};
+
+export default { getUserRecommendations, getProfileById, setUserTheme };

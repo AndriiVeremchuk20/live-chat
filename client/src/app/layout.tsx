@@ -10,7 +10,6 @@ import { authApi } from "@/api/auth";
 import React, { useEffect } from "react";
 import useAppStore from "@/store";
 import { useRouter } from "next/navigation";
-import routes from "@/config/appRoutes";
 import Loader from "@/components/Loader";
 import LocalStorageKeys from "@/config/localStorageKeys";
 import socket from "@/socket";
@@ -21,8 +20,6 @@ import { toast, ToastContainer } from "react-toastify";
 
 // toast notification styles
 import 'react-toastify/dist/ReactToastify.css';
-import Message from "@/types/message.type";
-import UserAvatar from "@/components/UserAvatar";
 import NewMessageNotification from "@/components/toast/NewMessageNotification";
 
 // Initialize Firebase App
@@ -37,7 +34,6 @@ const AppInner = (props: any) => {
   const auth = getAuth();
   const { user, setUser, currTheme, setTheme } = useAppStore();
   const { isAppLoading, setAppEndLoading, setOnlineUsers } = useAppStore();
-  const router = useRouter();
 
   const authMutation = useMutation(authApi.auth, {
     onSettled(data, errors) {
@@ -65,12 +61,12 @@ const AppInner = (props: any) => {
 
   useEffect(() => {
     const localStorageValue = localStorage.getItem(LocalStorageKeys.Theme);
-    if (localStorageValue && localStorageValue === "dark") {
-      setTheme("dark");
+    if (localStorageValue && localStorageValue === "DARK") {
+      setTheme("DARK");
       document.documentElement.classList.add("dark");
       return;
     }
-    setTheme("light");
+    setTheme("LIGHT");
     document.documentElement.classList.remove("dark");
   }, []);
 
@@ -83,11 +79,9 @@ const AppInner = (props: any) => {
         socketApi.onJoinChat({ chat_id: chat, user_id: user.id });
       });
 
-		
 	// show notifications to new messages
       socketApi.onReseiveMessage((message) => {
-        if (message.sender_id !== user.id) {
-          
+        if (message.sender_id !== user.id) {       
 
 		  toast(
             <NewMessageNotification message={message}/>,
@@ -99,7 +93,7 @@ const AppInner = (props: any) => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: currTheme,
+              theme: currTheme==="DARK"?"dark":"light",
             },
           );
         }

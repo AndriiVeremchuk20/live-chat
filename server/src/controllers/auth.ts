@@ -49,6 +49,7 @@ const auth = async (req: Request, res: Response) => {
         email: true,
         created_at: true,
         profile: true,
+		theme: true,
         chats: {
           select: {
             chat_id: true,

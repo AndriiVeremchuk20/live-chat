@@ -2,26 +2,43 @@ import LocalStorageKeys from "@/config/localStorageKeys";
 import useAppStore from "@/store";
 import { useCallback, useEffect } from "react";
 import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { useMutation } from "react-query";
+import userActionsApi from "@/api/userActions";
 
 const SetTheme = () => {
-  const { currTheme, setTheme } = useAppStore();
+  const { user, currTheme, setTheme, setUserTheme } = useAppStore();
+
+  const onSetUserThemeMutation = useMutation(userActionsApi.setUserTheme, {
+    onSuccess(data) {
+      setUserTheme(data.data.theme);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
 
   const onChangeThemeClick = useCallback(() => {
     switch (currTheme) {
-      case "light":
-        setTheme("dark");
+      case "LIGHT":
+        setTheme("DARK");
         document.documentElement.classList.add("dark");
         break;
-      case "dark":
-        setTheme("light");
+      case "DARK":
+        setTheme("LIGHT");
         document.documentElement.classList.remove("dark");
         break;
     }
   }, [currTheme]);
 
+  useEffect(()=>{
+    if (user) {
+      onSetUserThemeMutation.mutate({ theme: currTheme });
+    }
+  },[currTheme]);
+
   return (
     <button onClick={onChangeThemeClick} className="">
-      {currTheme === "light" ? (
+      {currTheme === "LIGHT" ? (
         <MdDarkMode size={30} />
       ) : (
         <MdOutlineLightMode size={30} />

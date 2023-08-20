@@ -19,35 +19,21 @@ const getUserChats = async (
       .send({ status: "error", message: "user not found" });
   }
 
-  const userChats = await prisma.chat.findMany({
+  const lastmessagesOfUserChats = await prisma.chat.findMany({
     where: {
       users: {
         some: { user_id: user.uid },
       },
+      messages: {
+        some: {},
+      },
     },
     select: {
-      id: true,
-      users: {
-        where: {
-          NOT: [{ user_id: user.uid }],
-        },
-        select: {
-          user: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-              profile: true,
-              created_at: true,
-            },
-          },
-        },
-      },
       messages: {
         select: {
           id: true,
           text: true,
+		  chat_id: true,
           isRead: true,
           sender: {
             select: {
@@ -77,19 +63,17 @@ const getUserChats = async (
         take: 1,
       },
     },
-	orderBy: [{created_at: "desc"}],
+    orderBy: [{ created_at: "desc" }],
     take: 20,
   });
 
-  const userChatsResponse = userChats.map((chat) => ({
-    chat_id: chat.id,
-    messages: chat.messages,
-    receiver: chat.users[0].user,
-  }));
+  const userResponse = lastmessagesOfUserChats
+    .map((message) => message.messages[0])
+    .filter(Boolean);
 
   res
     .status(StatusCodes.OK)
-    .send({ status: "OK", message: "chats found", data: userChatsResponse });
+    .send({ status: "OK", message: "chats found", data: userResponse });
 };
 
 const createChat = async (req: Request, res: Response, next: NextFunction) => {
@@ -235,13 +219,11 @@ const getChatMetadata = async (
     messages: chatMetadata.messages.reverse(),
   };
 
-  return res
-    .status(StatusCodes.OK)
-    .send({
-      status: "OK",
-      message: "chat found",
-      data: { ...responseChatMetadata },
-    });
+  return res.status(StatusCodes.OK).send({
+    status: "OK",
+    message: "chat found",
+    data: { ...responseChatMetadata },
+  });
 };
 
 export default { createChat, getUserChats, getChatMetadata };

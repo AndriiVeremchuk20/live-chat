@@ -21,16 +21,21 @@ enum Gender {
   BINARY
 }
 
+enum Theme {
+  LIGHT
+  DARK
+}
+
 model User {
-  id         String   @id @unique
-  role       Role     @default(USER)
+  id         String         @id @unique
+  role       Role           @default(USER)
   first_name String
   last_name  String
-  email      String   @unique
-  created_at DateTime @default(now())
+  email      String         @unique
+  created_at DateTime       @default(now())
   profile    Profile?
-
-  chats UsersOnChats[]
+  theme      Theme          @default(LIGHT)
+  chats      UsersOnChats[]
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
