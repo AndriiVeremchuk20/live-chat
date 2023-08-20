@@ -32,23 +32,21 @@ const ChatsList = () => {
     socketApi.onReseiveMessage((newMessage) => {
       console.info("new msg");
       console.info(newMessage);
-      console.log(
-        lastMessages.some((message) => message.chat_id === newMessage.chat_id),
-      );
-      console.log(lastMessages);
-      if (
-        lastMessages.some((message) => message.chat_id === newMessage.chat_id)
-      ) {
-        const updateLastMessagesList = lastMessages.map((message) => {
-          if (message.chat_id === newMessage.chat_id) {
-            return newMessage;
-          }
-          return message;
-        });
-        return setLastMessages(updateLastMessagesList);
-      } else {
-        return setLastMessages((prev) => [newMessage, ...prev]);
-      }
+      setLastMessages((prevLastMessages) => {
+        const updatedMessages = prevLastMessages.map((message) =>
+          message.chat_id === newMessage.chat_id ? newMessage : message,
+        );
+
+        if (
+          !updatedMessages.some(
+            (message) => message.chat_id === newMessage.chat_id,
+          )
+        ) {
+          updatedMessages.unshift(newMessage);
+        }
+
+        return updatedMessages;
+      });
     });
   }, [lastMessages]);
 
