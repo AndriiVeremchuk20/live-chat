@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import useAppStore from "@/store";
 import Message from "@/types/message.type";
 import socketApi from "@/socket/actions";
-import ChatsList from "@/components/Chat/ChatsList";
 import { useMutation } from "react-query";
 import ChatApi from "@/api/chat";
-import ChatHeader from "@/components/Chat/ChatHeader";
+import ChatHeader from "@/components/Chat/Header";
 import MessagesList from "@/components/Chat/MessagesList";
 import SendMessageForm from "@/components/Chat/SendMessageForm";
 

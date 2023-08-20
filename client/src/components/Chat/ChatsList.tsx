@@ -4,7 +4,7 @@ import useAppStore from "@/store";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import ChatApi from "@/api/chat";
-import ChatListItem from "./ChatListItem";
+import ChatListItem from "./ChatsListItem";
 import socketApi from "@/socket/actions";
 import Message from "@/types/message.type";
 

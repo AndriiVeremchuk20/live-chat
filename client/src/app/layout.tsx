@@ -9,7 +9,6 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { authApi } from "@/api/auth";
 import React, { useEffect } from "react";
 import useAppStore from "@/store";
-import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import LocalStorageKeys from "@/config/localStorageKeys";
 import socket from "@/socket";
@@ -19,8 +18,9 @@ import SocketError from "@/types/socket/socketError.type";
 import { toast, ToastContainer } from "react-toastify";
 
 // toast notification styles
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import NewMessageNotification from "@/components/toast/NewMessageNotification";
+import { usePathname } from "next/navigation";
 
 // Initialize Firebase App
 export const firebaseApp = initializeApp(firebaseConfig);
@@ -32,6 +32,7 @@ const AppWrapper = (props: any) => {
 
 const AppInner = (props: any) => {
   const auth = getAuth();
+  const pathname = usePathname();
   const { user, setUser, currTheme, setTheme } = useAppStore();
   const { isAppLoading, setAppEndLoading, setOnlineUsers } = useAppStore();
 
@@ -79,23 +80,23 @@ const AppInner = (props: any) => {
         socketApi.onJoinChat({ chat_id: chat, user_id: user.id });
       });
 
-	// show notifications to new messages
+      // show notifications to new messages
       socketApi.onReseiveMessage((message) => {
-        if (message.sender_id !== user.id) {       
-
-		  toast(
-            <NewMessageNotification message={message}/>,
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: currTheme==="DARK"?"dark":"light",
-            },
-          );
+        // if the current user is not the sender and the current user is not in a chat with the sender
+        if (
+          message.sender_id !== user.id &&
+          !pathname.includes(message.sender_id)
+        ) {
+          toast(<NewMessageNotification message={message} />, {
+			position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: currTheme === "DARK" ? "dark" : "light",
+          });
         }
         //console.log(message);
       });
@@ -149,7 +150,7 @@ export default function App({ children }: { children: React.ReactNode }) {
         <AppWrapper>
           <AppInner>
             <Header />
-            <ToastContainer  draggablePercent={60}/>
+            <ToastContainer draggablePercent={60} />
             {children}
           </AppInner>
         </AppWrapper>

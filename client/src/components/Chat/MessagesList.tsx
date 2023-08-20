@@ -1,6 +1,6 @@
 import Message from "@/types/message.type";
 import React, { useEffect, useRef } from "react";
-import { ChatMessage } from "./ChatMessage";
+import { ChatMessage } from "./Message";
 
 interface PropMessagesList {
   messages: Array<Message>;
