@@ -28,13 +28,13 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
 
   return (
     <div
-      className={`flex ${
+      className={`text-white flex drop-shadow-2xl ${
         message.sender_id === user?.id ? "justify-end" : "justify-start"
       }`}
     >
       <div
         className={`mx-2 flex flex-col rounded-md phone:p-1 desktop:p-2 ${
-          message.sender_id === user?.id ? "bg-violet-200" : "bg-violet-400"
+          message.sender_id === user?.id ? "bg-purple-500 dark:bg-purple-700" : "bg-violet-500 dark:bg-violet-700"
         }`}
       >
         <div className="flex min-w-fit max-w-xs flex-col  text-lg">
@@ -44,8 +44,8 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
             </p>
           ))}
         </div>
-        <div className={`flex ${message.sender_id===user?.id?"flex-row":"flex-row-reverse"} justify-between gap-2 text-sm text-neutral-500 text-opacity-70`}>
-          <div>{chatMessage.isRead ? <MdDoneAll /> : <MdDone />}</div>
+        <div className={`flex ${message.sender_id===user?.id?"flex-row":"flex-row-reverse"} justify-between gap-2 text-sm font-bold text-neutral-300 text-opacity-70`}>
+          <div>{chatMessage.isRead ? <MdDoneAll size={15} /> : <MdDone size={15}/>}</div>
           <span>
             {getContentDate(message.created_at)}
           </span>

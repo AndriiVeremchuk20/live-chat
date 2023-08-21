@@ -5,7 +5,6 @@ import { FiPaperclip } from "react-icons/fi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import socketApi from "@/socket/actions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -74,7 +73,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col drop-shadow-2xl">
       {showEmoji ? (
         <div className="absolute bottom-[10%] z-10 right-5">
           <Picker
@@ -85,7 +84,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
           />
         </div>
       ) : null}
-      <div className="mt-2 flex bg-opacity-20 text-black dark:text-white">
+      <div className="text-xl mt-2 flex text-black dark:text-white">
         <textarea
           onKeyUp={onMessageTyping}
           className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
@@ -93,13 +92,13 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
           placeholder="Send message"
         ></textarea>
         <button onClick={onShowEmojiClick} type="button" className="p-2">
-          <BsEmojiSmileUpsideDown size={25} />
+          <BsEmojiSmileUpsideDown size={30} />
         </button>
         <button className="p-2" type="button">
-          <FiPaperclip size={25} />
+          <FiPaperclip size={30} />
         </button>
         <button type="submit" className="p-2">
-          <BiSolidSend size={25} />
+          <BiSolidSend size={30} />
         </button>
       </div>
     </form>

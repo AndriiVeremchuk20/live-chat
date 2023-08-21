@@ -33,7 +33,7 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
   }, [user]);
 
   return (
-    <div className="flex items-center justify-between bg-violet-400 p-2 dark:bg-violet-700">
+    <div className="flex items-center justify-between bg-indigo-400 p-2 dark:bg-indigo-700">
       <div className="ml-5" onClick={onBackClick}>
         <MdOutlineArrowBack size={30} />
       </div>
