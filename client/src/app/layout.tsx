@@ -88,7 +88,7 @@ const AppInner = (props: any) => {
           !pathname.includes(message.sender_id)
         ) {
           toast(<NewMessageNotification message={message} />, {
-			position: "top-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -144,9 +144,14 @@ const AppInner = (props: any) => {
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
+  const { currTheme } = useAppStore();
   return (
     <html lang="en">
-      <body className="max-h-fit min-h-screen bg-gradient-to-r from-neutral-300 via-white to-neutral-200 dark:from-neutral-900 dark:to-neutral-800">
+      <body
+        className={`max-h-fit min-h-screen bg-cover bg-no-repeat ${
+          currTheme === "LIGHT" ? "bg-image-light" : "bg-image-dark"
+        }`}
+      >
         <AppWrapper>
           <AppInner>
             <Header />

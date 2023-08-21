@@ -6,7 +6,6 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-
     screens: {
       phone: "375px",
       // => @media (min-width: 375px) { ... }

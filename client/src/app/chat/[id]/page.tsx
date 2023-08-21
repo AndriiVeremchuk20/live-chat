@@ -48,7 +48,7 @@ const Chat = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="h-screen">
-      <div className="flex h-full w-full border-2 border-violet-600 bg-neutral-300 bg-opacity-80 dark:bg-gray-800">
+      <div className="flex h-full w-full border-2 border-violet-600">
         <div className="flex h-full w-full flex-col">
           <ChatHeader receiver={receiver} chat_id={chat_id} />
           <MessagesList messages={messages} />
