@@ -84,18 +84,18 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
       </div>
       {/*context menu*/}
       {isContextMenuVisible ? (
-        <div ref={contextMenuRef} className="">
-          {message.sender_id === user?.id ? (
-            <>
-              <div>Edit</div>
-              <div>Delete</div>
-            </>
-          ) : (
-            <>
-              <div>Repty</div>
-            </>
-          )}
-        </div>
+          <div ref={contextMenuRef} className="w-[100px] animate-slow-slide">
+            {message.sender_id === user?.id ? (
+              <>
+                <div>Edit</div>
+                <div>Delete</div>
+              </>
+            ) : (
+              <>
+                <div>Repty</div>
+              </>
+            )}
+          </div>
       ) : null}
     </div>
   );

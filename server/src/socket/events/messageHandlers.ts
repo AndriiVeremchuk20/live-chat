@@ -74,19 +74,53 @@ const messageHandler = (io: Server, socket: Socket) => {
       });
 
       io.to(messageWithUpdateIsReadStatus.chat_id).emit(
-        SocketEvents.message.read.onReadResponse,
+        SocketEvents.message.read,
         { ...messageWithUpdateIsReadStatus }
       );
     } catch (error) {
       socket.emit(SocketEvents.error, {
-        type: "error",
+        status: "error",
         message: "server error",
       });
     }
   };
 
+  const onDeleteMessage = async ({
+    message_id,
+    chat_id,
+    deleter_id,
+  }: {
+    message_id: string;
+    chat_id: string;
+    deleter_id: string;
+  }) => {
+    const checkMessageSender = await prisma.message.findUnique({
+      where: {
+        id: message_id,
+      },
+    });
+
+    if (!checkMessageSender || checkMessageSender.sender_id !== deleter_id) {
+      return socket.emit(SocketEvents.error, {
+        status: "error",
+        message: "Only the sender can delete the message.",
+      });
+    }
+
+    const deletedMessage = await prisma.message.delete({
+      where: {
+        id: message_id,
+      },
+    });
+
+    io.to(chat_id).emit(SocketEvents.message.delete, {
+      message_id: deletedMessage.id,
+    });
+  };
+
   socket.on(SocketEvents.message.send, onSendMessage);
-  socket.on(SocketEvents.message.read.onRead, onReadMessage);
+  socket.on(SocketEvents.message.delete, onDeleteMessage);
+  socket.on(SocketEvents.message.read, onReadMessage);
 };
 
 export default messageHandler;

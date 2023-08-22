@@ -2,26 +2,20 @@ const SocketEvents = {
   connection: "connection",
   auth: "auth",
   chat: {
-    join: "join_chat",
-    leave: "leave_chat",
-	newChat: "new_chat",
+    join: "chat:join",
+    leave: "chat:leave",
+    new: "chat:new",
   },
   message: {
-    send: "send_message",
-    receive: "receive_message",
-    delete: "delete_message",
-    edit: "edit_message",
-	read:{
-		onRead: "read_message",
-		onReadResponse: "read_message_response",
-	}
+    send: "message:send",
+    receive: "message:receive",
+    delete: "message:delete",
+    edit: "message:edit",
+    read: "message:read",
   },
   online: "online",
-  typingMessage: {
-    typing: "typing",
-    typing_response: "typing_response",
-  },
-  ping: "user_ping",
+  typing: "typing",
+  ping: "ping",
   error: "socket_error",
 };
 

@@ -56,7 +56,7 @@ const chatHandlers = (io: Server, socket: Socket) => {
   };
 
   socket.on(SocketEvents.chat.join, onJoinToChat);
-  socket.on(SocketEvents.chat.newChat, onNewChat);
+  socket.on(SocketEvents.chat.new, onNewChat);
   socket.on(SocketEvents.chat.leave, onLeave);
 };
 

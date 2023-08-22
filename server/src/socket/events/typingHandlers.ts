@@ -17,13 +17,10 @@ const typingHandlers = (io: Server, socket: Socket) => {
       isTyping,
     };
 
-    io.to(chat_id).emit(
-      SocketEvents.typingMessage.typing_response,
-      typingResponse
-    );
+    io.to(chat_id).emit(SocketEvents.typing, typingResponse);
   };
 
-  socket.on(SocketEvents.typingMessage.typing, onTypingMessage);
+  socket.on(SocketEvents.typing, onTypingMessage);
 };
 
 export default typingHandlers;

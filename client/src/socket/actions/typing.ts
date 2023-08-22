@@ -10,7 +10,7 @@ const onTyping = ({
   sender_id: string;
   isTyping: boolean;
 }) => {
-  socket.emit(SocketEvents.typingMessage.typing, {
+  socket.emit(SocketEvents.typing, {
     chat_id,
     sender_id,
     isTyping,
@@ -21,14 +21,14 @@ const onTypingResponse = (
   callback: ({
     sender_id,
     chat_id,
-	isTyping,
+    isTyping,
   }: {
-    sender_id: string,
-	chat_id: string,
-    isTyping: boolean,
+    sender_id: string;
+    chat_id: string;
+    isTyping: boolean;
   }) => void,
 ) => {
-  socket.on(SocketEvents.typingMessage.typing_response, callback);
+  socket.on(SocketEvents.typing, callback);
 };
 
 export { onTyping, onTypingResponse };
