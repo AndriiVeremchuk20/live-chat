@@ -4,7 +4,7 @@ import useAppStore from "@/store";
 import Message from "@/types/message.type";
 import getContentDate from "@/utils/getContentDate";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MdDone, MdDoneAll } from "react-icons/md";
+import { MdDone, MdDoneAll, MdDelete, MdEdit, MdReply } from "react-icons/md";
 
 interface ChatMessageProp {
   message: Message;
@@ -29,6 +29,17 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
     setIsContextMenuVisible(false);
   }, []);
 
+  const onDeleteClick = useCallback(() => {
+    if (user) {
+      const payload = {
+        message_id: message.id,
+        deleter_id: user.id,
+        chat_id: message.chat_id,
+      };
+      socketApi.onDeleteMessage(payload);
+    }
+  }, [chatMessage]);
+
   useOutsideClick({
     ref: contextMenuRef,
     onOutsideClick: onClickOutsideContextMenu,
@@ -41,7 +52,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
 
     socketApi.onReadMessageResponse(({ id, isRead }) => {
       if (chatMessage.id === id) {
-        setChatMessage((prev) => ({ ...chatMessage, isRead }));
+        setChatMessage((prev) => ({ ...prev, isRead }));
       }
     });
   }, []);
@@ -84,18 +95,30 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
       </div>
       {/*context menu*/}
       {isContextMenuVisible ? (
-          <div ref={contextMenuRef} className="w-[100px] animate-slow-slide">
-            {message.sender_id === user?.id ? (
-              <>
-                <div>Edit</div>
-                <div>Delete</div>
-              </>
-            ) : (
-              <>
-                <div>Repty</div>
-              </>
-            )}
-          </div>
+        <div
+          ref={contextMenuRef}
+          className="m-1 h-fit w-fit animate-slow-slide rounded-md border border-purple-700 bg-neutral-600 bg-opacity-50 p-2"
+        >
+          {message.sender_id === user?.id ? (
+            <>
+              <div className="flex cursor-pointer items-center hover:text-violet-600">
+                <MdEdit size={20} /> Edit
+              </div>
+              <div
+                className="flex cursor-pointer items-center hover:text-violet-600"
+                onClick={onDeleteClick}
+              >
+                <MdDelete size={20} /> Delete
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex cursor-pointer items-center hover:text-violet-600">
+                <MdReply size={20} /> Repty
+              </div>
+            </>
+          )}
+        </div>
       ) : null}
     </div>
   );
