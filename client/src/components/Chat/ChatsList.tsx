@@ -58,7 +58,7 @@ const ChatsList = () => {
 
   // add search bar
   return (
-    <div className="h-4/5 w-full border-2 border-violet-500">
+    <div className="h-full bg-indigo-950 bg-opacity-50 w-full border-2 border-violet-500">
       {lastMessages.map((message) => (
         <ChatListItem key={message.id} lastChatMessage={message} />
       ))}

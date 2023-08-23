@@ -41,7 +41,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
   return (
     <div
-      className="flex h-[80px] cursor-pointer items-center justify-between  border-b-2 border-violet-700 bg-neutral-300 hover:opacity-50 dark:bg-cyan-950"
+      className="flex h-[80px] bg-opacity-50 cursor-pointer items-center justify-between  border-b-2 border-violet-700 bg-neutral-300 hover:opacity-90 dark:bg-stone-400 dark:bg-opacity-90"
       onClick={onChatClick}
     >
       <div className="flex cursor-pointer items-center">
