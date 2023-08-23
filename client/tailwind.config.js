@@ -22,12 +22,12 @@ module.exports = {
     extend: {
       keyframes: {
         "slow-slide": {
-          "0%": { transform: "translateX(-100%)" },
+          "0%": { transform: "translateX(-30%)" },
           "100%": { transform: "translateX(0)" },
         },
       },
       animation: {
-        "slow-slide": "slow-slide 0.4s ease-out",
+        "slow-slide": "slow-slide 0.3s ease-out",
         "pulse-slow": "pulse 1s infinite alternate", // custom animation pulse-slow
         "bounce-slow": "bounce 0.6s infinite alternate",
       },

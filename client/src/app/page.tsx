@@ -1,12 +1,10 @@
 "use client";
 
 import userActions from "@/api/userActions";
-import ChatsList from "@/components/Chat/ChatsList";
-import Header from "@/components/Header";
+import ChatList from "@/components/Chat/ChatList";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
 import AppUser from "@/types/user.type";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
@@ -44,7 +42,7 @@ export default function Home() {
     <div className="">
       <div>Text</div>
       <div>
-	  <ChatsList/>
+	  <ChatList/>
         {userRecommendations.map((item) => (
           <Link
             key={item.id}

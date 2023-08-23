@@ -9,9 +9,9 @@ import socketApi from "@/socket/actions";
 import { useMutation } from "react-query";
 import ChatApi from "@/api/chat";
 import ChatHeader from "@/components/Chat/Header";
-import MessagesList from "@/components/Chat/MessagesList";
+import MessageList from "@/components/Chat/MessageList";
 import SendMessageForm from "@/components/Chat/SendMessageForm";
-import ChatsList from "@/components/Chat/ChatsList";
+import ChatList from "@/components/Chat/ChatList";
 
 const Chat = ({ params }: { params: { id: string } }) => {
   const chat_id = params.id;
@@ -50,10 +50,10 @@ const Chat = ({ params }: { params: { id: string } }) => {
   return (
     <div className="h-screen backdrop-blur">
       <div className="flex h-full w-full">
-        <div className="h-full w-1/3 phone:hidden desktop:block tablet:hidden"><ChatsList/></div>
+        <div className="h-full w-1/3 phone:hidden desktop:block tablet:hidden"><ChatList/></div>
 		<div className="flex h-full w-full flex-col">
           <ChatHeader receiver={receiver} chat_id={chat_id} />
-          <MessagesList messages={messages} />
+          <MessageList messages={messages} />
           <SendMessageForm receiver={receiver} chat_id={chat_id} />
         </div>
       </div>
