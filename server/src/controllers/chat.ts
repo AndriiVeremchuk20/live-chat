@@ -33,7 +33,7 @@ const getUserChats = async (
         select: {
           id: true,
           text: true,
-		  chat_id: true,
+          chat_id: true,
           isRead: true,
           sender: {
             select: {
@@ -198,6 +198,17 @@ const getChatMetadata = async (
         },
       },
       messages: {
+        select: {
+          id: true,
+          text: true,
+          chat_id: true,
+          created_at: true,
+          sender: true,
+          receiver: true,
+          sender_id: true,
+          receiver_id: true,
+          isRead: true,
+        },
         orderBy: {
           created_at: "desc",
         },
@@ -206,7 +217,7 @@ const getChatMetadata = async (
     },
   });
 
-  // if user not found in chat return socket_error (Private chat);
+  // if user not found in chat response error;
   if (!chatMetadata) {
     return res
       .status(StatusCodes.NOT_FOUND)

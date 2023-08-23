@@ -4,14 +4,14 @@ import useAppStore from "@/store";
 import Message from "@/types/message.type";
 import getContentDate from "@/utils/getContentDate";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MdDone, MdDoneAll, MdDelete, MdEdit, MdReply } from "react-icons/md";
+import { MdDone, MdDoneAll, MdDelete, MdReply } from "react-icons/md";
 
 interface ChatMessageProp {
   message: Message;
 }
 
 export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
-  const { user } = useAppStore();
+  const { user, setReplyMessage, removeReplyMessage } = useAppStore();
   const [chatMessage, setChatMessage] = useState<Message>(message);
   const [isContextMenuVisible, setIsContextMenuVisible] =
     useState<boolean>(false);
@@ -30,7 +30,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
   }, []);
 
   const onDeleteClick = useCallback(() => {
-    if (user) {
+	if (user) {
       const payload = {
         message_id: message.id,
         deleter_id: user.id,
@@ -39,6 +39,13 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
       socketApi.onDeleteMessage(payload);
     }
   }, [chatMessage]);
+
+  const onReplyClick = useCallback(() => {
+    setReplyMessage(message);
+
+    // hide context menu
+    setIsContextMenuVisible(false);
+  }, []);
 
   useOutsideClick({
     ref: contextMenuRef,
@@ -55,6 +62,10 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
         setChatMessage((prev) => ({ ...prev, isRead }));
       }
     });
+
+    return () => {
+      removeReplyMessage();
+    };
   }, []);
 
   return (
@@ -99,25 +110,23 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
           ref={contextMenuRef}
           className="m-1 h-fit w-fit animate-slow-slide rounded-md border border-purple-700 bg-neutral-600 bg-opacity-50 p-2"
         >
-          {message.sender_id === user?.id ? (
-            <>
-              <div className="flex cursor-pointer items-center hover:text-violet-600">
-                <MdEdit size={20} /> Edit
-              </div>
+          <>
+            <div
+              className="flex cursor-pointer items-center hover:text-violet-600"
+              onClick={onReplyClick}
+            >
+              <MdReply size={20} /> Repty
+            </div>
+
+            {message.sender_id === user?.id ? (
               <div
                 className="flex cursor-pointer items-center hover:text-violet-600"
                 onClick={onDeleteClick}
               >
                 <MdDelete size={20} /> Delete
               </div>
-            </>
-          ) : (
-            <>
-              <div className="flex cursor-pointer items-center hover:text-violet-600">
-                <MdReply size={20} /> Repty
-              </div>
-            </>
-          )}
+            ) : null}
+          </>
         </div>
       ) : null}
     </div>

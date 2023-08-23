@@ -8,24 +8,17 @@ interface PropMessageList {
 }
 
 const MessageList: React.FC<PropMessageList> = ({ messages }) => {
-  const [messageList, setMessageList] = useState<Array<Message>>(messages);
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messageList.length]);
-
-  useEffect(() => {
-    socketApi.onDeleteMessageResponse(({ message_id }) => {
-		setMessageList(prev=>prev.filter(message=>message.id!==message_id));
-	});
-  }, []);
+  }, [messages.length]);
 
   return (
     <div className="my-3 flex h-full flex-col gap-3 overflow-auto">
-      {messageList.map((message) => (
+      {messages.map((message) => (
         <ChatMessage message={message} key={message.id} />
       ))}
       <div ref={lastMessageRef} />

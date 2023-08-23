@@ -2,6 +2,7 @@ import AppUser from "@/types/user.type";
 import React, { useCallback, useState } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import { FiPaperclip } from "react-icons/fi";
+import { MdClose } from "react-icons/md";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import useAppStore from "@/store";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -18,8 +19,11 @@ interface FormFields {
   message: string;
 }
 
-const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) => {
-  const { user } = useAppStore();
+const SendMessageForm: React.FC<PropSendMessageForm> = ({
+  chat_id,
+  receiver,
+}) => {
+  const { user, replyMessage, removeReplyMessage } = useAppStore();
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const { currTheme } = useAppStore();
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
@@ -72,38 +76,63 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({ chat_id, receiver }) =
     });
   };
 
+  const onCloseReplyMessage = useCallback(() => {
+    removeReplyMessage();
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col drop-shadow-2xl">
-      {showEmoji ? (
-        <div className="absolute bottom-[10%] z-10 right-5">
-          <Picker
-            data={data}
-            onEmojiSelect={onEmojiClick}
-            onClickOutside={onClickOutsideEmojiPicker}
-            theme={currTheme}
-          />
+    <div>
+      {replyMessage ? (
+        <div className="mx-5 flex items-center justify-between text-black dark:text-white ">
+          <div>
+            <div className="text-lg font-semibold">
+              {replyMessage.sender?.first_name}
+            </div>
+            <div className="">{replyMessage.text}</div>
+          </div>
+
+          <div
+            className="rounded-full bg-neutral-300 bg-opacity-30 hover:bg-opacity-90 p-1 cursor-pointer"
+            onClick={onCloseReplyMessage}
+          >
+            <MdClose size={25} />
+          </div>
         </div>
       ) : null}
-      <div className="text-xl mt-2 flex text-black dark:text-white">
-        <textarea
-          onKeyUp={onMessageTyping}
-          className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
-          {...register("message", { minLength: 1, maxLength: 252 })}
-          placeholder="Send message"
-        ></textarea>
-        <button onClick={onShowEmojiClick} type="button" className="p-2">
-          <BsEmojiSmileUpsideDown size={30} />
-        </button>
-        <button className="p-2" type="button">
-          <FiPaperclip size={30} />
-        </button>
-        <button type="submit" className="p-2">
-          <BiSolidSend size={30} />
-        </button>
-      </div>
-    </form>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full flex-col drop-shadow-2xl"
+      >
+        {showEmoji ? (
+          <div className="absolute bottom-[10%] right-5 z-10">
+            <Picker
+              data={data}
+              onEmojiSelect={onEmojiClick}
+              onClickOutside={onClickOutsideEmojiPicker}
+              theme={currTheme}
+            />
+          </div>
+        ) : null}
+        <div className="mt-2 flex text-xl text-black dark:text-white">
+          <textarea
+            onKeyUp={onMessageTyping}
+            className="m-1 w-full resize-none rounded-lg bg-opacity-75 px-2 py-1 outline-none dark:bg-neutral-800"
+            {...register("message", { minLength: 1, maxLength: 252 })}
+            placeholder="Send message"
+          ></textarea>
+          <button onClick={onShowEmojiClick} type="button" className="p-2">
+            <BsEmojiSmileUpsideDown size={30} />
+          </button>
+          <button className="p-2" type="button">
+            <FiPaperclip size={30} />
+          </button>
+          <button type="submit" className="p-2">
+            <BiSolidSend size={30} />
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
 export default SendMessageForm;
-

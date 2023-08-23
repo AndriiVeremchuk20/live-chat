@@ -33,13 +33,21 @@ const Chat = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     if (user) {
       getChatMetadataMutation.mutate({ chat_id: chat_id });
-
-      // receive message
-      socketApi.onReseiveMessage((message) => {
+      
+	  socketApi.onReseiveMessage((message) => {
         if (message.chat_id === chat_id) {
-          setMessages((prev) => [...prev, message]);
+          console.log("Receive message");
+		  setMessages((prev) => [...prev, message]);
         }
       });
+
+      socketApi.onDeleteMessageResponse(({ message_id }) => {
+        console.log("Delete message");
+		setMessages((prev) =>
+          prev.filter((message) => message.id !== message_id),
+        );
+      });
+
     }
   }, []);
 
@@ -50,8 +58,10 @@ const Chat = ({ params }: { params: { id: string } }) => {
   return (
     <div className="h-screen backdrop-blur">
       <div className="flex h-full w-full">
-        <div className="h-full w-1/3 phone:hidden desktop:block tablet:hidden"><ChatList/></div>
-		<div className="flex h-full w-full flex-col">
+        <div className="h-full w-1/3 phone:hidden tablet:hidden desktop:block">
+          <ChatList />
+        </div>
+        <div className="flex h-full w-full flex-col">
           <ChatHeader receiver={receiver} chat_id={chat_id} />
           <MessageList messages={messages} />
           <SendMessageForm receiver={receiver} chat_id={chat_id} />
