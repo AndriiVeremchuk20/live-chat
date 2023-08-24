@@ -22,15 +22,15 @@ enum Gender {
 }
 
 model User {
-  id         String         @id @unique
-  role       Role           @default(USER)
+  id         String   @id @unique
+  role       Role     @default(USER)
   first_name String
   last_name  String
-  email      String         @unique
-  created_at DateTime       @default(now())
+  email      String   @unique
+  created_at DateTime @default(now())
   profile    Profile?
-  
-  chats      UsersOnChats[]
+
+  chats UsersOnChats[]
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
@@ -71,6 +71,10 @@ model Message {
   text       String
   isRead     Boolean  @default(true)
   created_at DateTime @default(now())
+
+  reply_to_message_id String?
+  reply_to            Message?  @relation("replyMessage", fields: [reply_to_message_id], references: [id])
+  replied_messages    Message[] @relation("replyMessage")
 
   chat    Chat   @relation(fields: [chat_id], references: [id])
   chat_id String

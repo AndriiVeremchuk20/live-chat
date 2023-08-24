@@ -8,6 +8,7 @@ const onSendMessage = (payload: {
   sender_id: string;
   receiver_id: string;
   text: string;
+  reply_to_message_id: string|null;
 }) => {
   socket.emit(SocketEvents.message.send, { ...payload });
 };

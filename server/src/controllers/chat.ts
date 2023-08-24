@@ -208,6 +208,7 @@ const getChatMetadata = async (
           sender_id: true,
           receiver_id: true,
           isRead: true,
+		  reply_to: true,
         },
         orderBy: {
           created_at: "desc",

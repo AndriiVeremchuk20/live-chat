@@ -8,11 +8,13 @@ const messageHandler = (io: Server, socket: Socket) => {
     sender_id,
     receiver_id,
     text,
+	reply_to_message_id,
   }: {
     chat_id: string;
     sender_id: string;
     receiver_id: string;
     text: string;
+	reply_to_message_id: string | null;
   }) => {
     // add message to db
     const newMessage = await prisma.message.create({
@@ -20,14 +22,15 @@ const messageHandler = (io: Server, socket: Socket) => {
         chat_id,
         sender_id,
         receiver_id,
-        text,
+		reply_to_message_id,
+		text,
         isRead: false,
       },
       select: {
         id: true,
         chat_id: true,
         text: true,
-        created_at: true,
+		created_at: true,
         isRead: true,
         sender: {
           select: {
@@ -51,6 +54,7 @@ const messageHandler = (io: Server, socket: Socket) => {
         },
         receiver_id: true,
         sender_id: true,
+		reply_to: true,
       },
     });
     console.table({ chat_id, sender_id, receiver_id, text });

@@ -53,11 +53,15 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
       sender_id: user.id,
       receiver_id: receiver.id,
       text: data.message,
+      reply_to_message_id: replyMessage?.id ?? null,
     };
 
     // send message
     socketApi.onSendMessage(userMessage);
     setValue("message", ""); //clear input message form
+	
+	//remove reply_to message
+	removeReplyMessage();	
 
     // end typing
     socketApi.onTyping({
@@ -92,7 +96,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
           </div>
 
           <div
-            className="rounded-full bg-neutral-300 bg-opacity-30 hover:bg-opacity-90 p-1 cursor-pointer"
+            className="cursor-pointer rounded-full bg-neutral-300 bg-opacity-30 p-1 hover:bg-opacity-90"
             onClick={onCloseReplyMessage}
           >
             <MdClose size={25} />

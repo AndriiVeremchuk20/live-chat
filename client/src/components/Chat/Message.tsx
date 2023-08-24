@@ -30,7 +30,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
   }, []);
 
   const onDeleteClick = useCallback(() => {
-	if (user) {
+    if (user) {
       const payload = {
         message_id: message.id,
         deleter_id: user.id,
@@ -82,7 +82,19 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
             : "bg-violet-500 dark:bg-violet-700"
         }`}
       >
-        <div className="flex min-w-fit max-w-xs flex-col  text-lg">
+        {message.reply_to ? (
+          <div
+            className={`text-md py-1 px-2 ${
+              message.sender_id === user?.id ? "border-l-2" : "border-r-2"
+            }
+		border-neutral-200`}
+          >
+			<div className="font-semibold">{message.sender?.first_name}</div>
+            <div>{message.reply_to.text}</div>
+          </div>
+        ) : null}
+
+        <div className="flex min-w-fit max-w-xs flex-col text-lg">
           {lines.map((line, index) => (
             <p className="break-all" key={index}>
               {line}
