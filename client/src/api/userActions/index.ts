@@ -21,9 +21,4 @@ const getProfileById = async (id: string) => {
   return response.data;
 };
 
-const setUserTheme = async (payload:{theme: Theme})=>{
-  const response = await client.post<BaseResponse<{theme: Theme}>>(URLs.setUserTheme,payload);
-  return response.data;
-};
-
-export default { getUserRecommendations, getProfileById, setUserTheme };
+export default { getUserRecommendations, getProfileById };

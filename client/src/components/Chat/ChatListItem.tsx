@@ -15,7 +15,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
   const { user } = useAppStore();
 
   const [lastMessage, setLastMessage] = useState<Message>(lastChatMessage);
-  
+
   const receiver =
     lastMessage.reciver_id === user?.id
       ? lastMessage.receiver
@@ -41,7 +41,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
   return (
     <div
-      className="flex h-[80px] bg-opacity-50 cursor-pointer items-center justify-between  border-b-2 border-violet-700 bg-neutral-300 hover:opacity-90 dark:bg-stone-400 dark:bg-opacity-90"
+      className="mx-3 flex h-[90px] cursor-pointer items-center justify-between py-1 text-black hover:rounded-xl hover:bg-neutral-600 hover:bg-opacity-40 dark:text-white"
       onClick={onChatClick}
     >
       <div className="flex cursor-pointer items-center">
@@ -58,12 +58,10 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
           user_id={receiver?.id}
         />
         <div className="flex flex-col items-start">
-          <span>{`${receiver?.first_name} ${receiver?.last_name}`}</span>{" "}
+          <span className="font-semibold">{`${receiver?.first_name} ${receiver?.last_name}`}</span>{" "}
           {/*check if message sender current user display "you:" else sender name.*/}
           <span>{`${
-            user?.id === lastMessage.sender_id
-              ? "You"
-              : receiver?.first_name
+            user?.id === lastMessage.sender_id ? "You" : receiver?.first_name
           }: ${lastMessage.text}`}</span>
         </div>
       </div>

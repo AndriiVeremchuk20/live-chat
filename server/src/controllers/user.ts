@@ -59,26 +59,7 @@ const getUserRecommendations = async (
     .send({ status: "success", message: "users found", data: [...users] });
 };
 
-const setUserChoosedTheme = async(req: Request, res: Response, next: NextFunction)=>{
-	const {user} = req;
-	const {theme} = req.body;
-
-	if(!user){
-	return res.status(404).send({status: "error", message: "user not found"});
-	}
-
-	const choosedTheme = theme === "dark"?Theme.DARK:Theme.LIGHT;
-
-	await prisma.user.update({
-		where:{id: user.uid},
-		data: {theme: choosedTheme},
-	});
-
-	res.status(201).send({status: "success", message: "theme update", data: {theme: choosedTheme}})
-}
-
 export default {
   getUserById,
   getUserRecommendations,
-  setUserChoosedTheme,
 };

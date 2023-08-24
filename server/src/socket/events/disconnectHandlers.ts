@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { usersSockets } from "../usersSockets";
 import redisClient from "../../redis";
 import getUserKey from "../../utils/getUserKey";
+import SocketEvents from "../socketEvents";
 
 const disconnectHandlers = (io: Server, socket: Socket) => {
   const onDisconnect = async () => {
@@ -11,7 +12,7 @@ const disconnectHandlers = (io: Server, socket: Socket) => {
       usersSockets.delete(socket.id);
     }
   };
-  socket.on("disconnect", onDisconnect);
+  socket.on(SocketEvents.disconnect, onDisconnect);
 };
 
 export default disconnectHandlers;

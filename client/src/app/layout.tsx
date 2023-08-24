@@ -62,7 +62,8 @@ const AppInner = (props: any) => {
 
   useEffect(() => {
     const localStorageValue = localStorage.getItem(LocalStorageKeys.Theme);
-    if (localStorageValue && localStorageValue === "DARK") {
+    
+	if (localStorageValue && localStorageValue === "DARK") {
       setTheme("DARK");
       document.documentElement.classList.add("dark");
       return;
@@ -122,8 +123,7 @@ const AppInner = (props: any) => {
           socketApi.onLeaveChat({ chat_id: chat });
         });
         clearInterval(pingInterval);
-        console.log("emit disconnected user");
-        socket.emit("disconnect_event", { user_id: user.id });
+        socketApi.onDisconnect();
       }
     };
   }, [user]);

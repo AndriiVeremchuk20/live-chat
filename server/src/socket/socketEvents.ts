@@ -17,6 +17,7 @@ const SocketEvents = {
   typing: "typing",
   ping: "ping",
   error: "socket_error",
+  disconnect: "disconnect",
 };
 
 export default SocketEvents;

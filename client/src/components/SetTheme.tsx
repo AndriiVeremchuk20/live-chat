@@ -8,15 +8,6 @@ import userActionsApi from "@/api/userActions";
 const SetTheme = () => {
   const { user, currTheme, setTheme, setUserTheme } = useAppStore();
 
-  const onSetUserThemeMutation = useMutation(userActionsApi.setUserTheme, {
-    onSuccess(data) {
-      setUserTheme(data.data.theme);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
-
   const onChangeThemeClick = useCallback(() => {
     switch (currTheme) {
       case "LIGHT":
@@ -29,12 +20,6 @@ const SetTheme = () => {
         break;
     }
   }, [currTheme]);
-
-  useEffect(()=>{
-    if (user) {
-      onSetUserThemeMutation.mutate({ theme: currTheme });
-    }
-  },[currTheme]);
 
   return (
     <button onClick={onChangeThemeClick} className="">
