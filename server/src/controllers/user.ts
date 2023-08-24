@@ -1,4 +1,3 @@
-import {Theme} from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
