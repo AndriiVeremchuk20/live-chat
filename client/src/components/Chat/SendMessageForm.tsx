@@ -1,5 +1,5 @@
 import AppUser from "@/types/user.type";
-import React, { useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import { FiPaperclip } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import socketApi from "@/socket/actions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import Image from "next/image";
 
 interface PropSendMessageForm {
   chat_id: string;
@@ -17,6 +18,7 @@ interface PropSendMessageForm {
 
 interface FormFields {
   message: string;
+  image: File | null;
 }
 
 const SendMessageForm: React.FC<PropSendMessageForm> = ({
@@ -27,6 +29,9 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const { currTheme } = useAppStore();
   const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
+
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const [imagePreview, setFilePreview] = useState<string | null>(null);
 
   const onShowEmojiClick = useCallback(() => {
     setShowEmoji((state) => !state);
@@ -60,6 +65,9 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
     socketApi.onSendMessage(userMessage);
     setValue("message", ""); //clear input message form
 
+    //clear preview file
+    setFilePreview(null);
+
     //remove reply_to message
     removeReplyMessage();
 
@@ -84,8 +92,37 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
     removeReplyMessage();
   }, []);
 
+  const onChooseFileClick = useCallback(() => {
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
+  }, []);
+
+  const onFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      setValue("image", file);
+      const previewImageURL = URL.createObjectURL(file);
+      setFilePreview(previewImageURL);
+    }
+  }, []);
+
+  const onRemoveFileClick = useCallback(() => {
+    setValue("image", null);
+    setFilePreview(null);
+  }, []);
+
   return (
     <div>
+      {/* user can send only images (.jpg .png .gif)*/}
+      <input
+        type="file"
+        hidden
+        accept="image/*"
+        ref={inputFileRef}
+        onClick={onChooseFileClick}
+        onChange={onFileChange}
+      />
       {replyMessage ? (
         <div className="mx-5 flex items-center justify-between text-black dark:text-white ">
           <div>
@@ -100,6 +137,22 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
             onClick={onCloseReplyMessage}
           >
             <MdClose size={25} />
+          </div>
+        </div>
+      ) : null}
+      {imagePreview ? (
+        <div>
+          <div className="flex items-center justify-between bg-neutral-500 bg-opacity-40 p-3">
+            <div className="flex items-end gap-3">
+              <Image width={300} height={300} src={imagePreview} alt="image" />
+              <span>{getValues("image")?.name}</span>
+            </div>
+            <div
+              onClick={onRemoveFileClick}
+              className="mx-5 cursor-pointer rounded-full bg-neutral-400 bg-opacity-25"
+            >
+              <MdClose size={30} />
+            </div>
           </div>
         </div>
       ) : null}
@@ -127,7 +180,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
           <button onClick={onShowEmojiClick} type="button" className="p-2">
             <BsEmojiSmileUpsideDown size={30} />
           </button>
-          <button className="p-2" type="button">
+          <button onClick={onChooseFileClick} className="p-2" type="button">
             <FiPaperclip size={30} />
           </button>
           <button type="submit" className="p-2">
