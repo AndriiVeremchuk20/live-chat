@@ -93,7 +93,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
             }`}
           ></div>
         </div>
-        <div className="text-sm text-opacity-50">
+        <div className="p-1 text-sm text-opacity-50">
           {/* Дата в конце снизу */}
           {getContentDate(lastMessage.created_at)}
         </div>

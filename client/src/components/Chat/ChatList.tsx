@@ -39,20 +39,13 @@ const ChatList = () => {
 
   useEffect(() => {
     socketApi.onReseiveMessage((newMessage) => {
-      console.info("new msg");
-      console.info(newMessage);
       setLastMessages((prevLastMessages) => {
-        const updatedMessages = prevLastMessages.map((message) =>
-          message.chat_id === newMessage.chat_id ? newMessage : message,
+        // filter messages to remove old messages
+        const updatedMessages = prevLastMessages.filter(
+          (message) => message.chat_id !== newMessage.chat_id,
         );
-
-        if (
-          !updatedMessages.some(
-            (message) => message.chat_id === newMessage.chat_id,
-          )
-        ) {
-          updatedMessages.unshift(newMessage);
-        }
+        //add new message to the beginning
+        updatedMessages.unshift(newMessage);
 
         return updatedMessages;
       });
