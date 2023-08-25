@@ -62,8 +62,8 @@ const AppInner = (props: any) => {
 
   useEffect(() => {
     const localStorageValue = localStorage.getItem(LocalStorageKeys.Theme);
-    
-	if (localStorageValue && localStorageValue === "DARK") {
+
+    if (localStorageValue && localStorageValue === "DARK") {
       setTheme("DARK");
       document.documentElement.classList.add("dark");
       return;

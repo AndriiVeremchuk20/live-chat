@@ -2,6 +2,7 @@ import AppRoutes from "@/config/appRoutes";
 import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
 import Message from "@/types/message.type";
+import AppUser from "@/types/user.type";
 import getContentDate from "@/utils/getContentDate";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -16,8 +17,14 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
   const [lastMessage, setLastMessage] = useState<Message>(lastChatMessage);
 
+  // const [receiver, setReceiver] = useState<AppUser | null>(
+  //   lastMessage.reciver_id !== user?.id
+  //     ? lastMessage.receiver
+  //     : lastMessage.sender,
+  // );
+
   const receiver =
-    lastMessage.reciver_id === user?.id
+    lastMessage.reciver_id !== user?.id
       ? lastMessage.receiver
       : lastMessage.sender;
 
@@ -26,6 +33,8 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
   const onChatClick = useCallback(() => {
     router.push(AppRoutes.chat.toChat(lastChatMessage.chat_id));
   }, []);
+
+  useEffect(() => {}, [lastChatMessage]);
 
   useEffect(() => {
     socketApi.onReadMessageResponse(({ id, isRead }) => {
@@ -41,7 +50,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
   return (
     <div
-      className="mx-3 flex h-[90px] cursor-pointer items-center justify-between py-1 text-black hover:rounded-xl hover:bg-neutral-600 hover:bg-opacity-40 dark:text-white"
+      className="mx-3 my-1 flex h-[90px] cursor-pointer items-center justify-between py-1 text-black hover:rounded-xl hover:bg-neutral-600 hover:bg-opacity-40 dark:text-white"
       onClick={onChatClick}
     >
       <div className="flex cursor-pointer items-center">
@@ -65,13 +74,21 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
           }: ${lastMessage.text}`}</span>
         </div>
       </div>
-      <div className="m-2 flex h-full items-end justify-end">
-        <div
-          className={`h-3 w-3 self-center rounded-full ${
-            lastMessage.isRead ? "bg-neutral-500 bg-opacity-30" : "bg-green-400"
-          }`}
-        ></div>
-        <div className="self-end text-sm text-opacity-50">
+
+      <div className="flex h-full flex-col items-center justify-between">
+        <div></div>
+		<div className="flex items-center justify-center">
+          {/* Точка в конце по средине */}
+          <div
+            className={`h-3 w-3 rounded-full ${
+              lastMessage.isRead
+                ? "bg-neutral-500 bg-opacity-30"
+                : "bg-green-400"
+            }`}
+          ></div>
+        </div>
+        <div className="text-sm text-opacity-50">
+          {/* Дата в конце снизу */}
           {getContentDate(lastMessage.created_at)}
         </div>
       </div>

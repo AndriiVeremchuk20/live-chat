@@ -6,12 +6,11 @@ interface Message {
   chat_id: string;
   isRead: boolean;
   sender_id: string;
-  sender?: AppUser;
+  sender: AppUser | null;
   reciver_id: string;
-  receiver?: AppUser;
+  receiver: AppUser | null;
   created_at: string;
-  reply_to: Message|null;
+  reply_to: Message | null;
 }
 
 export default Message;
-

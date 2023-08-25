@@ -1,8 +1,14 @@
 import { createUserSlice, UserSlice } from "./slices/createUserSlice";
 import { createAppSlice, AppSlice } from "./slices/createAppSlice";
-import { createOnlineUsers, OnlineUsersSlice } from "./slices/createOnlineUsersSlice";
+import {
+  createOnlineUsers,
+  OnlineUsersSlice,
+} from "./slices/createOnlineUsersSlice";
 import { create } from "zustand";
-import {createReplyMessageSlice, ReplyMessageSlice} from "./slices/createReplyMessageSlice";
+import {
+  createReplyMessageSlice,
+  ReplyMessageSlice,
+} from "./slices/createReplyMessageSlice";
 
 type StoreState = UserSlice & AppSlice & OnlineUsersSlice & ReplyMessageSlice;
 

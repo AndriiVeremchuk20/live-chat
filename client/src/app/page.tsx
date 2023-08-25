@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 
-
 export default function Home() {
   const { user } = useAppStore();
   const [userRecommendations, setUserRecommendations] = useState<
@@ -42,7 +41,7 @@ export default function Home() {
     <div className="">
       <div>Text</div>
       <div>
-	  <ChatList/>
+        <ChatList />
         {userRecommendations.map((item) => (
           <Link
             key={item.id}

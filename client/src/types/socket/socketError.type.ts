@@ -1,6 +1,6 @@
 interface SocketError {
-	status: string;
-	message: string;
+  status: string;
+  message: string;
 }
 
 export default SocketError;

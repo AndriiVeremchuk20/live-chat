@@ -16,14 +16,16 @@ interface propUserAvatar {
 
 const UserAvatar: React.FC<propUserAvatar> = ({ image, size, user_id }) => {
   const { user, onlineUsers } = useAppStore();
-  const [isOnline, setIsOnline] = useState<boolean>(onlineUsers.some(id=>user_id === id));
+  const [isOnline, setIsOnline] = useState<boolean>(
+    onlineUsers.some((id) => user_id === id),
+  );
 
-useEffect(()=>{
-	//console.log(isOnline)
-	//console.log(onlineUsers)
-	//console.log(user_id)
-	setIsOnline(onlineUsers.some(id=>id===user_id));
-},[onlineUsers]);
+  useEffect(() => {
+    //console.log(isOnline)
+    //console.log(onlineUsers)
+    //console.log(user_id)
+    setIsOnline(onlineUsers.some((id) => id === user_id));
+  }, [onlineUsers]);
 
   if (image) {
     return (

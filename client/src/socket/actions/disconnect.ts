@@ -1,9 +1,8 @@
-import {disconnect} from "process"
-import socket from ".."
+import { disconnect } from "process";
+import socket from "..";
 
-const onDisconnect  = () => {
-	socket.disconnect();
-}
+const onDisconnect = () => {
+  socket.disconnect();
+};
 
-export {onDisconnect}
-
+export { onDisconnect };

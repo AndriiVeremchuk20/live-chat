@@ -1,4 +1,3 @@
-
 const SocketEvents = {
   connection: "connection",
   auth: "auth",
@@ -17,7 +16,7 @@ const SocketEvents = {
   online: "online",
   typing: "typing",
   ping: "ping",
-  error: "socket_error", 
+  error: "socket_error",
 };
 
 export default SocketEvents;

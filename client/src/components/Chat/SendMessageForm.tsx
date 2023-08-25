@@ -59,9 +59,9 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
     // send message
     socketApi.onSendMessage(userMessage);
     setValue("message", ""); //clear input message form
-	
-	//remove reply_to message
-	removeReplyMessage();	
+
+    //remove reply_to message
+    removeReplyMessage();
 
     // end typing
     socketApi.onTyping({

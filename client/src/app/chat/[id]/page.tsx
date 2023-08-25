@@ -33,21 +33,20 @@ const Chat = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     if (user) {
       getChatMetadataMutation.mutate({ chat_id: chat_id });
-      
-	  socketApi.onReseiveMessage((message) => {
+
+      socketApi.onReseiveMessage((message) => {
         if (message.chat_id === chat_id) {
           console.log("Receive message");
-		  setMessages((prev) => [...prev, message]);
+          setMessages((prev) => [...prev, message]);
         }
       });
 
       socketApi.onDeleteMessageResponse(({ message_id }) => {
         console.log("Delete message");
-		setMessages((prev) =>
+        setMessages((prev) =>
           prev.filter((message) => message.id !== message_id),
         );
       });
-
     }
   }, []);
 

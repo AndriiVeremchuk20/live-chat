@@ -5,13 +5,13 @@ import client from "..";
 
 const URLs = {
   base: "/chat",
-	getChatMetadata: (id: string)=>`/chat/${id}`,
+  getChatMetadata: (id: string) => `/chat/${id}`,
 };
 
-const getUserChats = async() => {
-	const response = await client.get<BaseResponse<Array<Message>>>(URLs.base);
-	return response.data;
-}
+const getUserChats = async () => {
+  const response = await client.get<BaseResponse<Array<Message>>>(URLs.base);
+  return response.data;
+};
 
 const getChat = async (payload: { receiverId: string }) => {
   const response = await client.post<BaseResponse<{ chat_id: string }>>(
@@ -21,12 +21,11 @@ const getChat = async (payload: { receiverId: string }) => {
   return response.data;
 };
 
-const getChatMetadata = async (payload: {chat_id: string})=>{
- const response = await client.get<BaseResponse<Chat>>(
+const getChatMetadata = async (payload: { chat_id: string }) => {
+  const response = await client.get<BaseResponse<Chat>>(
     URLs.getChatMetadata(payload.chat_id),
   );
   return response.data;
-
-}
+};
 
 export default { getChat, getUserChats, getChatMetadata };

@@ -15,8 +15,14 @@ const onLeaveChat = ({ chat_id }: { chat_id: string }) => {
   socket.emit(SocketEvents.chat.leave, { chat_id: chat_id });
 };
 
-const onNewChat = ({chat_id, receiver_id}: {chat_id: string, receiver_id: string}) => {
- socket.emit(SocketEvents.chat.new, {chat_id, receiver_id});
+const onNewChat = ({
+  chat_id,
+  receiver_id,
+}: {
+  chat_id: string;
+  receiver_id: string;
+}) => {
+  socket.emit(SocketEvents.chat.new, { chat_id, receiver_id });
 };
 
 export { onJoinChat, onLeaveChat, onNewChat };

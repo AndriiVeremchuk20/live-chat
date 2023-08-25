@@ -84,12 +84,12 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
       >
         {message.reply_to ? (
           <div
-            className={`text-md py-1 px-2 ${
+            className={`text-md mb-1 px-2 py-1 ${
               message.sender_id === user?.id ? "border-l-2" : "border-r-2"
             }
 		border-neutral-200`}
           >
-			<div className="font-semibold">{message.sender?.first_name}</div>
+            <div className="font-semibold">{message.sender?.first_name}</div>
             <div>{message.reply_to.text}</div>
           </div>
         ) : null}

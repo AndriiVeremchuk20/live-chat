@@ -17,7 +17,7 @@ const AppRoutes = {
     resetPassword: "/help/resetPassword",
   },
   chat: {
-	base: "/chat",
+    base: "/chat",
     toChat: (id: string) => `/chat/${id}`,
   },
 };

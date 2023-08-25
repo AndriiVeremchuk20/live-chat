@@ -1,7 +1,7 @@
 "use client";
 
 import useAppStore from "@/store";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import ChatApi from "@/api/chat";
 import ChatListItem from "./ChatListItem";
@@ -12,6 +12,7 @@ import { MdOutlineSearch } from "react-icons/md";
 const ChatList = () => {
   const { user } = useAppStore();
   const [lastMessages, setLastMessages] = useState<Array<Message>>([]);
+  const [searchText, setSearchText] = useState<string>("");
 
   const getChatsMutation = useMutation(ChatApi.getUserChats, {
     onSuccess: (data) => {
@@ -22,6 +23,13 @@ const ChatList = () => {
       console.log(error);
     },
   });
+
+  const onSearchInput = useCallback(
+    (event: any) => {
+      setSearchText(event.target.value);
+    },
+    [searchText],
+  );
 
   useEffect(() => {
     if (user) {
@@ -67,18 +75,22 @@ const ChatList = () => {
         >
           <input
             autoComplete="off"
+            onChange={onSearchInput}
+            value={searchText}
             type="text"
             id="search-chat"
             placeholder="Search.."
             className="w-full bg-inherit text-xl outline-none placeholder:italic placeholder:text-neutral-300"
           />
-          <MdOutlineSearch size={25}/>
+          <MdOutlineSearch size={25} />
         </label>
       </div>
       <div className="overflow-y-auto">
-        {lastMessages.map((message) => (
-          <ChatListItem key={message.id} lastChatMessage={message} />
-        ))}
+        {lastMessages
+          .filter((message: Message) => message.text.includes(searchText))
+          .map((message) => (
+            <ChatListItem key={message.id} lastChatMessage={message} />
+          ))}
       </div>
     </div>
   );

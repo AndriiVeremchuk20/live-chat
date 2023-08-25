@@ -29,7 +29,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       set({ user: { ...user, isOnline } });
     }
   },
-  setUserTheme: (theme: Theme)=>{
+  setUserTheme: (theme: Theme) => {
     const user = get().user;
     if (user) {
       set({ user: { ...user, theme } });
