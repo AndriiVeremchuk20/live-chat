@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import UserAvatar from "../UserAvatar";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import AppRoutes from "@/config/appRoutes";
 
 interface PropChatHeader {
   receiver: AppUser;
@@ -17,7 +18,7 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
   const router = useRouter();
 
   const onBackClick = useCallback(() => {
-    router.back();
+    router.push(AppRoutes.chat.base);
   }, []);
 
   useEffect(() => {
@@ -33,24 +34,11 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
   }, [user]);
 
   return (
-    <div className="flex items-center justify-between bg-indigo-400 p-2 dark:bg-indigo-700">
-      <div className="ml-5" onClick={onBackClick}>
+    <div className="flex flex-row-reverse items-center justify-between bg-indigo-400 p-2 dark:bg-indigo-700">
+      <div className="mr-5 bg-neutral-200 bg-opacity-10 rounded-full p-1 hover:bg-opacity-20" onClick={onBackClick}>
         <MdOutlineArrowBack size={30} />
       </div>
       <div className="flex items-center gap-3">
-        {isTyping ? (
-          <div className="flex text-xl">
-            Typing{" "}
-            <div className="flex">
-              <div className="animate-bounce">.</div>{" "}
-              <div className="animate-bounce-slow">.</div>{" "}
-              <div className="animate-bounce">.</div>
-            </div>
-          </div>
-        ) : null}
-        <span className="font-semibold">
-          {receiver.first_name + " " + receiver.last_name}
-        </span>
         <UserAvatar
           size={50}
           user_id={receiver.id}
@@ -63,6 +51,20 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
               : undefined
           }
         />
+        <span className="font-semibold">
+          {receiver.first_name + " " + receiver.last_name}
+        </span>
+
+        {isTyping ? (
+          <div className="flex text-xl">
+            Typing{" "}
+            <div className="flex">
+              <div className="animate-bounce">.</div>{" "}
+              <div className="animate-bounce-slow">.</div>{" "}
+              <div className="animate-bounce">.</div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
