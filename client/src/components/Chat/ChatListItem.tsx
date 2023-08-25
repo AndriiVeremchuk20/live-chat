@@ -17,16 +17,16 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
   const [lastMessage, setLastMessage] = useState<Message>(lastChatMessage);
 
-  // const [receiver, setReceiver] = useState<AppUser | null>(
-  //   lastMessage.reciver_id !== user?.id
-  //     ? lastMessage.receiver
-  //     : lastMessage.sender,
-  // );
-
-  const receiver =
+  const [receiver, setReceiver] = useState<AppUser | null>(
     lastMessage.reciver_id !== user?.id
       ? lastMessage.receiver
-      : lastMessage.sender;
+      : lastMessage.sender,
+  );
+
+  //const receiver =
+  //  lastMessage.reciver_id !== user?.id
+  //   ? lastMessage.receiver
+  //   : lastMessage.sender;
 
   const router = useRouter();
 
@@ -34,7 +34,13 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
     router.push(AppRoutes.chat.toChat(lastChatMessage.chat_id));
   }, []);
 
-  useEffect(() => {}, [lastChatMessage]);
+  useEffect(() => {
+    setReceiver(
+      lastChatMessage.sender_id === user?.id
+        ? lastChatMessage.receiver
+        : lastMessage.sender,
+    );
+  }, [lastChatMessage]);
 
   useEffect(() => {
     socketApi.onReadMessageResponse(({ id, isRead }) => {
@@ -77,7 +83,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
 
       <div className="flex h-full flex-col items-center justify-between">
         <div></div>
-		<div className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           {/* Точка в конце по средине */}
           <div
             className={`h-3 w-3 rounded-full ${
