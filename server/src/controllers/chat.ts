@@ -63,8 +63,7 @@ const getUserChats = async (
         take: 1,
       },
     },
-    orderBy: [{ created_at: "desc" }],
-    take: 20,
+    orderBy: [{ created_at: "asc" }],
   });
 
   const userResponse = lastmessagesOfUserChats
