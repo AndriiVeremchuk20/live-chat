@@ -3,6 +3,7 @@ import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
 import Message from "@/types/message.type";
 import getContentDate from "@/utils/getContentDate";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MdDone, MdDoneAll, MdDelete, MdReply } from "react-icons/md";
 
@@ -93,7 +94,12 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
             <div>{message.reply_to.text}</div>
           </div>
         ) : null}
-
+        {
+          // show image
+        }
+        {message.image_url ? (
+          <Image height={400} width={400} alt="image" src={message.image_url} />
+        ) : null}
         <div className="flex min-w-fit max-w-xs flex-col text-lg">
           {lines.map((line, index) => (
             <p className="break-all" key={index}>

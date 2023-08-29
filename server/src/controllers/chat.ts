@@ -33,6 +33,7 @@ const getUserChats = async (
         select: {
           id: true,
           text: true,
+		  image_url: true,
           chat_id: true,
           isRead: true,
           sender: {
@@ -202,6 +203,7 @@ const getChatMetadata = async (
           text: true,
           chat_id: true,
           created_at: true,
+		  image_url: true,
           sender: true,
           receiver: true,
           sender_id: true,

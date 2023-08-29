@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import prisma from "../../../prisma";
 import SocketEvents from "../socketEvents";
+import { v4 as uuid } from "uuid";
+import uploadToGCS from "../../googleStorageCloud/fileOperations/uploadToGCS";
 
 const messageHandler = (io: Server, socket: Socket) => {
   const onSendMessage = async ({
@@ -8,29 +10,41 @@ const messageHandler = (io: Server, socket: Socket) => {
     sender_id,
     receiver_id,
     text,
-	reply_to_message_id,
+    image,
+    reply_to_message_id,
   }: {
     chat_id: string;
     sender_id: string;
     receiver_id: string;
     text: string;
-	reply_to_message_id: string | null;
+    image: Buffer | null;
+    reply_to_message_id: string | null;
   }) => {
+    // check if the message is being sent
+    let imageUrl: any;
+    if (image) {
+      console.log("upload message image");
+      imageUrl = await uploadToGCS(image, "chatImages", `${uuid()}.png`);
+    }
+
+    console.log("adding a new message");
     // add message to db
     const newMessage = await prisma.message.create({
       data: {
         chat_id,
         sender_id,
         receiver_id,
-		reply_to_message_id,
-		text,
+        reply_to_message_id,
+        text,
+        image_url: imageUrl as string, 
         isRead: false,
       },
       select: {
         id: true,
         chat_id: true,
         text: true,
-		created_at: true,
+        image_url: true,
+        created_at: true,
         isRead: true,
         sender: {
           select: {
@@ -54,7 +68,7 @@ const messageHandler = (io: Server, socket: Socket) => {
         },
         receiver_id: true,
         sender_id: true,
-		reply_to: true,
+        reply_to: true,
       },
     });
     console.table({ chat_id, sender_id, receiver_id, text });

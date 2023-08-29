@@ -28,7 +28,8 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
   const { user, replyMessage, removeReplyMessage } = useAppStore();
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const { currTheme } = useAppStore();
-  const { register, setValue, getValues, handleSubmit } = useForm<FormFields>();
+  const { reset, register, setValue, getValues, handleSubmit } =
+    useForm<FormFields>();
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const [imagePreview, setFilePreview] = useState<string | null>(null);
@@ -58,12 +59,16 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
       sender_id: user.id,
       receiver_id: receiver.id,
       text: data.message,
+      image: data.image,
       reply_to_message_id: replyMessage?.id ?? null,
     };
 
     // send message
     socketApi.onSendMessage(userMessage);
-    setValue("message", ""); //clear input message form
+    // reset form data.
+    reset();
+    // setValue("message", ""); //clear input message form
+    // setValue("")
 
     //clear preview file
     setFilePreview(null);

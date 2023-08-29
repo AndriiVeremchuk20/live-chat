@@ -69,6 +69,7 @@ model Chat {
 model Message {
   id         String   @id @default(cuid())
   text       String
+  image_url		String? 
   isRead     Boolean  @default(true)
   created_at DateTime @default(now())
 
