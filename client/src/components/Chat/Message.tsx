@@ -6,6 +6,7 @@ import getContentDate from "@/utils/getContentDate";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MdDone, MdDoneAll, MdDelete, MdReply } from "react-icons/md";
+import ChatImage from "./Image";
 
 interface ChatMessageProp {
   message: Message;
@@ -83,6 +84,9 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
             : "bg-violet-500 dark:bg-violet-700"
         }`}
       >
+        {
+          // reply to message
+        }
         {message.reply_to ? (
           <div
             className={`text-md mb-1 px-2 py-1 ${
@@ -90,6 +94,16 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
             }
 		border-neutral-200`}
           >
+            {
+              // if reply message has image
+              message.reply_to.image_url ? (
+                <ChatImage
+                  width={50}
+                  height={50}
+                  src={message.reply_to.image_url}
+                />
+              ) : null
+            }
             <div className="font-semibold">{message.sender?.first_name}</div>
             <div>{message.reply_to.text}</div>
           </div>
@@ -98,7 +112,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
           // show image
         }
         {message.image_url ? (
-          <Image height={400} width={400} alt="image" src={message.image_url} />
+          <ChatImage width={400} height={400} src={message.image_url} />
         ) : null}
         <div className="flex min-w-fit max-w-xs flex-col text-lg">
           {lines.map((line, index) => (

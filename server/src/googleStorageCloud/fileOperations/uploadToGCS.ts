@@ -1,7 +1,4 @@
-import path from "path";
 import cloudBucket from "..";
-import deleteFromTempFolder from "./deleteFromTempFolder";
-import { saveToTempFolder } from "./saveToTempFolder";
 
 const uploadToGCS = async (
   buffer: Buffer,

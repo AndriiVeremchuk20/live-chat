@@ -10,6 +10,7 @@ import socketApi from "@/socket/actions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import Image from "next/image";
+import ChatImage from "./Image";
 
 interface PropSendMessageForm {
   chat_id: string;
@@ -130,11 +131,23 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
       />
       {replyMessage ? (
         <div className="mx-5 flex items-center justify-between text-black dark:text-white ">
-          <div>
-            <div className="text-lg font-semibold">
-              {replyMessage.sender?.first_name}
+          <div className="flex flex-col items-start">
+            {
+              // if message has image
+              replyMessage.image_url ? (
+                <ChatImage
+                  width={300}
+                  height={300}
+                  src={replyMessage.image_url}
+                />
+              ) : null
+            }
+            <div>
+              <div className="text-lg font-semibold">
+                {replyMessage.sender?.first_name}
+              </div>
+              <div className="">{replyMessage.text}</div>
             </div>
-            <div className="">{replyMessage.text}</div>
           </div>
 
           <div
