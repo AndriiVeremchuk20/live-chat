@@ -7,8 +7,8 @@ const onSendMessage = (payload: {
   chat_id: string;
   sender_id: string;
   receiver_id: string;
-  text: string;
-  image: File|null;
+  text: string | null;
+  image: File | null;
   reply_to_message_id: string | null;
 }) => {
   socket.emit(SocketEvents.message.send, { ...payload });

@@ -11,6 +11,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import Image from "next/image";
 import ChatImage from "./Image";
+import { toast } from "react-toastify";
 
 interface PropSendMessageForm {
   chat_id: string;
@@ -18,7 +19,7 @@ interface PropSendMessageForm {
 }
 
 interface FormFields {
-  message: string;
+  message: string | null;
   image: File | null;
 }
 
@@ -51,8 +52,14 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
-    if (!user?.id || !receiver?.id || !getValues("message")) {
+    if (!user?.id || !receiver?.id) {
       return;
+    }
+
+    if (!getValues("message") && !getValues("image")) {
+      return toast.warning("Message is Empty!", {
+        theme: currTheme === "LIGHT" ? "light" : "dark",
+      });
     }
 
     const userMessage = {

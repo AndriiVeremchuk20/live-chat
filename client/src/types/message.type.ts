@@ -2,7 +2,7 @@ import AppUser from "./user.type";
 
 interface Message {
   id: string;
-  text: string;
+  text: string | null;
   image_url: string | null;
   chat_id: string;
   isRead: boolean;

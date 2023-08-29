@@ -16,11 +16,19 @@ const messageHandler = (io: Server, socket: Socket) => {
     chat_id: string;
     sender_id: string;
     receiver_id: string;
-    text: string;
+    text: string | null;
     image: Buffer | null;
     reply_to_message_id: string | null;
   }) => {
-    // check if the message is being sent
+    // check for text or image
+    if (!text && !image) {
+      return socket.emit(SocketEvents.error, {
+        status: "error",
+        message: "message is empty",
+      });
+    }
+
+    // check if the image is being sent
     let imageUrl: any;
     if (image) {
       console.log("upload message image");
@@ -36,7 +44,7 @@ const messageHandler = (io: Server, socket: Socket) => {
         receiver_id,
         reply_to_message_id,
         text,
-        image_url: imageUrl as string, 
+        image_url: imageUrl as string,
         isRead: false,
       },
       select: {

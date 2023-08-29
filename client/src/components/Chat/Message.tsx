@@ -20,7 +20,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
 
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
 
-  const lines = message.text.split("\n");
+  const lines = message.text ? message.text.split("\n") : [];
 
   const onContextMenuClick = useCallback((event: any) => {
     event.preventDefault();
@@ -115,7 +115,7 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
           <ChatImage width={400} height={400} src={message.image_url} />
         ) : null}
         <div className="flex min-w-fit max-w-xs flex-col text-lg">
-          {lines.map((line, index) => (
+          {lines.map((line: string, index: number) => (
             <p className="break-all" key={index}>
               {line}
             </p>
