@@ -3,7 +3,6 @@ import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
 import Message from "@/types/message.type";
 import getContentDate from "@/utils/getContentDate";
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MdDone, MdDoneAll, MdDelete, MdReply } from "react-icons/md";
 import ChatImage from "./Image";
@@ -98,8 +97,8 @@ export const ChatMessage: React.FC<ChatMessageProp> = ({ message }) => {
               // if reply message has image
               message.reply_to.image_url ? (
                 <ChatImage
-                  width={50}
-                  height={50}
+                  width={400}
+                  height={400}
                   src={message.reply_to.image_url}
                 />
               ) : null

@@ -143,8 +143,8 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
               // if message has image
               replyMessage.image_url ? (
                 <ChatImage
-                  width={300}
-                  height={300}
+                  width={400}
+                  height={400}
                   src={replyMessage.image_url}
                 />
               ) : null
@@ -169,7 +169,7 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
         <div>
           <div className="flex items-center justify-between bg-neutral-500 bg-opacity-40 p-3">
             <div className="flex items-end gap-3">
-              <Image width={300} height={300} src={imagePreview} alt="image" />
+              <Image width={400} height={400} src={imagePreview} alt="image" />
               <span>{getValues("image")?.name}</span>
             </div>
             <div

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 interface PropChatImage {
   src: string;
@@ -8,10 +8,22 @@ interface PropChatImage {
 }
 
 const ChatImage: React.FC<PropChatImage> = ({ src, width, height }) => {
+  const [showImageLarge, setShowImageLagge] = useState<boolean>(false);
+
+  const onImageClick = useCallback(() => {
+    setShowImageLagge((prev) => !prev);
+  }, []);
+
   return (
-    <div>
-      <Image width={width} height={height} src={src} alt="Image" />
-    </div>
+  <div className={`${!showImageLarge? `w-[${width}px] h-[${height}]`:"w-full h-full"}`}>
+    <Image
+      width={800}
+      height={800}
+      src={src}
+      alt="Image"
+	  onClick={onImageClick}
+    />
+	</div>
   );
 };
 
