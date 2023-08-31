@@ -60,12 +60,13 @@ const getUserRecommendations = async (
 
 const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  const { query } = req.params;
+  const query = req.query.query as string;
 
   if (!query) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ status: "error", message: "bad request, missing query params" });
+    return res.status(StatusCodes.BAD_REQUEST).send({
+      status: "error",
+      message: "bad request, missing query params" + query,
+    });
   }
 
   const foundUsers = await prisma.user.findMany({
@@ -77,11 +78,19 @@ const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
         {
           first_name: {
             contains: query,
+            mode: "insensitive",
           },
         },
         {
           last_name: {
             contains: query,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: query,
+            mode: "insensitive",
           },
         },
       ],

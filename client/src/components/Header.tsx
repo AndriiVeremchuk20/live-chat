@@ -11,7 +11,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { GrClose } from "react-icons/gr";
 import AppRoutes from "@/config/appRoutes";
 import useOutsideClick from "@/hooks/useOutsideClick";
-import SearchBar from "./SearchBar";
+import SearchBar from "./Search/SearchBar";
 
 const Header = () => {
   const { user } = useAppStore();
