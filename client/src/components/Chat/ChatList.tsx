@@ -80,7 +80,7 @@ const ChatList = () => {
       </div>
       <div className="overflow-y-auto">
         {lastMessages
-          .filter((message: Message) => message.text.includes(searchText))
+          .filter((message: Message) => message.text?.includes(searchText))
           .map((message) => (
             <ChatListItem key={message.id} lastChatMessage={message} />
           ))}

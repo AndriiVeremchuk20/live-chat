@@ -1,16 +1,15 @@
 import BaseResponse from "@/types/api/response.type";
-import Theme from "@/types/theme.type";
 import AppUser from "@/types/user.type";
 import client from "..";
 
 const URLs = {
   getById: (id: string) => `/user-actions/${id}`,
   getUserRecommendations: "/user-actions/",
-  setUserTheme: "/user-actions/theme",
+  searchUsers: (query: string) => `/user-actions/search/?query=${query}`,
 };
 
 const getUserRecommendations = async () => {
-  const response = await client.get<BaseResponse<Array<AppUser>>>(
+  const response = await client.get<BaseResponse<AppUser[]>>(
     URLs.getUserRecommendations,
   );
   return response.data;
@@ -21,4 +20,11 @@ const getProfileById = async (id: string) => {
   return response.data;
 };
 
-export default { getUserRecommendations, getProfileById };
+const searchUsers = async ({ query }: { query: string }) => {
+  const response = await client.get<BaseResponse<AppUser[]>>(
+    URLs.searchUsers(query),
+  );
+  return response.data;
+};
+
+export default { getUserRecommendations, getProfileById, searchUsers };

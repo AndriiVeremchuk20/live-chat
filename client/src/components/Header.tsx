@@ -11,6 +11,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { GrClose } from "react-icons/gr";
 import AppRoutes from "@/config/appRoutes";
 import useOutsideClick from "@/hooks/useOutsideClick";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const { user } = useAppStore();
@@ -28,9 +29,9 @@ const Header = () => {
     setShowNavbar(true);
   }, []);
 
-  const onHideNavbarClick = useCallback(()=>{
-	setShowNavbar(false);
-  },[]);
+  const onHideNavbarClick = useCallback(() => {
+    setShowNavbar(false);
+  }, []);
 
   const onOutsideClick = () => {
     setShowNavbar(false);
@@ -52,6 +53,9 @@ const Header = () => {
           <span className="font-sans font-bold">100</span> <TbMessages />
         </Link>
         <SetTheme />
+        <div className="w-2/4">
+          <SearchBar />
+        </div>
         {user ? (
           <div className="flex items-center gap-2">
             <Link

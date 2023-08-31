@@ -58,7 +58,52 @@ const getUserRecommendations = async (
     .send({ status: "success", message: "users found", data: [...users] });
 };
 
+const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req;
+  const { query } = req.params;
+
+  if (!query) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ status: "error", message: "bad request, missing query params" });
+  }
+
+  const foundUsers = await prisma.user.findMany({
+    where: {
+      NOT: {
+        id: user?.uid,
+      },
+      OR: [
+        {
+          first_name: {
+            contains: query,
+          },
+        },
+        {
+          last_name: {
+            contains: query,
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+      email: true,
+      first_name: true,
+      last_name: true,
+      profile: true,
+    },
+  });
+
+  return res.status(StatusCodes.OK).send({
+    status: "success",
+    message: "search result",
+    data: [...foundUsers],
+  });
+};
+
 export default {
   getUserById,
   getUserRecommendations,
+  searchUsers,
 };
