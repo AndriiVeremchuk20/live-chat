@@ -1,12 +1,9 @@
-import LocalStorageKeys from "@/config/localStorageKeys";
 import useAppStore from "@/store";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
-import { useMutation } from "react-query";
-import userActionsApi from "@/api/userActions";
 
 const SetTheme = () => {
-  const { user, currTheme, setTheme, setUserTheme } = useAppStore();
+  const { currTheme, setTheme, setUserTheme } = useAppStore();
 
   const onChangeThemeClick = useCallback(() => {
     switch (currTheme) {
@@ -24,9 +21,9 @@ const SetTheme = () => {
   return (
     <button onClick={onChangeThemeClick} className="">
       {currTheme === "LIGHT" ? (
-        <MdDarkMode size={30} />
+        <MdDarkMode size={30} className="text-black" />
       ) : (
-        <MdOutlineLightMode size={30} />
+        <MdOutlineLightMode size={30} className="text-white" />
       )}
     </button>
   );

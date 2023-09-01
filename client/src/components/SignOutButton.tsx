@@ -12,9 +12,5 @@ export const SignOutButton = () => {
     });
   }, []);
 
-  return (
-    <button onClick={onSingOutClick}>
-      SingOut
-    </button>
-  );
+  return <button onClick={onSingOutClick}>SingOut</button>;
 };

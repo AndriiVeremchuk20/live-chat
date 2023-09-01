@@ -77,7 +77,7 @@ const SearchBar = () => {
       </form>
       {searchResult.length > 0 ? (
         <div className="absolute w-2/4">
-          <Tooltip users={searchResult} />
+          <Tooltip users={searchResult} onClick={onRemoveText} />
         </div>
       ) : null}
     </>

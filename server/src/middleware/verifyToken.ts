@@ -9,8 +9,8 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const idToken = header.split("Bearer ")[1]; // get token
     try {
       const decodedToken = await fireAuth.verifyIdToken(idToken); // verifyToken
-      console.log(decodedToken.email + "\n");
-	  req.user = decodedToken;
+      // console.log(decodedToken.email + "\n");
+      req.user = decodedToken;
     } catch (error) {
       console.log(error);
     }

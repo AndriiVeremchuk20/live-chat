@@ -11,7 +11,7 @@ import AppRoutes from "@/config/appRoutes";
 
 const Navbar = () => {
   return (
-    <nav className="flex h-full w-full flex-col gap-2 bg-purple-700 p-5 text-lg text-black dark:text-neutral-300">
+    <nav className="flex h-full w-full flex-col gap-2 bg-purple-600 p-5 text-lg text-black dark:bg-neutral-800 dark:text-neutral-300">
       <Link
         href={AppRoutes.home}
         className="flex w-full gap-1 p-3 hover:rounded-xl hover:bg-neutral-400"

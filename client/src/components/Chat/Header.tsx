@@ -35,7 +35,10 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
 
   return (
     <div className="flex flex-row-reverse items-center justify-between bg-indigo-400 p-2 dark:bg-indigo-700">
-      <div className="mr-5 bg-neutral-200 bg-opacity-10 rounded-full p-1 hover:bg-opacity-20" onClick={onBackClick}>
+      <div
+        className="mr-5 rounded-full bg-neutral-200 bg-opacity-10 p-1 hover:bg-opacity-20"
+        onClick={onBackClick}
+      >
         <MdOutlineArrowBack size={30} />
       </div>
       <div className="flex items-center gap-3">

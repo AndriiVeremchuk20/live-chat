@@ -15,15 +15,19 @@ const ChatImage: React.FC<PropChatImage> = ({ src, width, height }) => {
   }, []);
 
   return (
-  <div className={`${!showImageLarge? `w-[${width}px] h-[${height}]`:"w-full h-full"}`}>
-    <Image
-      width={800}
-      height={800}
-      src={src}
-      alt="Image"
-	  onClick={onImageClick}
-    />
-	</div>
+    <div
+      className={`${
+        !showImageLarge ? `w-[${width}px] h-[${height}]` : "h-full w-full"
+      }`}
+    >
+      <Image
+        width={800}
+        height={800}
+        src={src}
+        alt="Image"
+        onClick={onImageClick}
+      />
+    </div>
   );
 };
 

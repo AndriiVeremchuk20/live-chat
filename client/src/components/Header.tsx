@@ -12,6 +12,8 @@ import { GrClose } from "react-icons/gr";
 import AppRoutes from "@/config/appRoutes";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import SearchBar from "./Search/SearchBar";
+import Image from "next/image";
+import logo from "../../public/icon.png";
 
 const Header = () => {
   const { user } = useAppStore();
@@ -44,69 +46,55 @@ const Header = () => {
   useOutsideClick({ ref: navbarRef, onOutsideClick });
 
   return (
-    <div className="flex max-h-fit min-h-[100px] flex-col content-center justify-between bg-violet-400 dark:bg-violet-700">
+    <div className="flex h-[100px] flex-col items-center justify-between bg-violet-600 dark:bg-neutral-700">
       <div className="flex h-full w-full items-center justify-between">
         <Link
-          className="mx-4 flex gap-1 text-4xl text-white"
+          className="mx-4 flex items-center gap-1 text-xl text-white drop-shadow-2xl hover:drop-shadow-none phone:hidden tablet:hidden desktop:flex"
           href={routes.home}
         >
-          <span className="font-sans font-bold">100</span> <TbMessages />
+          <Image src={logo} width={50} height={50} alt="logo" />
+          <span className="font-semibold">Write Me</span>
         </Link>
-        <SetTheme />
-        <div className="w-2/4">
+        <div className=" phone:mx-4  phone:w-full tablet:w-full  desktop:w-2/4">
           <SearchBar />
         </div>
-        {user ? (
-          <div className="flex items-center gap-2">
-            <Link
-              href={AppRoutes.profile.profile}
-              className="flex items-center"
-            >
-              <span className="font-semibold">{user.first_name}</span>
-              {user.profile?.avatar_path ? (
-                <UserAvatar
-                  size={50}
-                  user_id={user.id}
-                  image={{
-                    src: user.profile.avatar_path,
-                    alt: user.first_name,
-                  }}
+
+        <div className="flex items-center">
+          <SetTheme />
+          {user ? (
+            <div className="text-dark flex items-center gap-2 dark:text-white">
+              {!showNavbar ? (
+                <RxHamburgerMenu
+                  size={40}
+                  className="mx-5 rounded-full bg-neutral-200 bg-opacity-20 p-2 hover:bg-opacity-50"
+                  onClick={onShowNavbarClick}
                 />
               ) : (
-                <UserAvatar size={50} user_id={user.id} />
+                <GrClose
+                  size={40}
+                  className="mx-5 rounded-full bg-neutral-200 bg-opacity-20 p-2 hover:bg-opacity-50"
+                  onClick={onHideNavbarClick}
+                />
               )}
-            </Link>
-            {!showNavbar ? (
-              <RxHamburgerMenu
-                size={40}
-                className="mx-5 rounded-full bg-neutral-200 bg-opacity-20 p-2 hover:bg-opacity-50"
-                onClick={onShowNavbarClick}
-              />
-            ) : (
-              <GrClose
-                size={40}
-                className="mx-5 rounded-full bg-neutral-200 bg-opacity-20 p-2 hover:bg-opacity-50"
-                onClick={onHideNavbarClick}
-              />
-            )}
-          </div>
-        ) : (
-          <div className="mx-3 text-xl">
-            <Link
-              href={routes.auth.login}
-              className="text-blue-600 underline hover:text-blue-300"
-            >
-              Login
-            </Link>
-            <span className="mx-1">or</span>
-            <Link
-              href={routes.auth.registrations}
-              className="text-blue-600 underline hover:text-blue-300"
-            >
-              Registration
-            </Link>
-          </div>
-        )}
+            </div>
+          ) : (
+            <div className="mx-3 text-xl">
+              <Link
+                href={routes.auth.login}
+                className="text-blue-600 underline hover:text-blue-300"
+              >
+                Login
+              </Link>
+              <span className="mx-1">or</span>
+              <Link
+                href={routes.auth.registrations}
+                className="text-blue-600 underline hover:text-blue-300"
+              >
+                Registration
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
       {showNavbar ? (
         <div
