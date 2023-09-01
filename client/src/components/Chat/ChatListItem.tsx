@@ -7,6 +7,7 @@ import getContentDate from "@/utils/getContentDate";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import UserAvatar from "../UserAvatar";
+import { BsCardImage } from "react-icons/bs";
 
 interface PropChatListItem {
   lastChatMessage: Message;
@@ -54,7 +55,7 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
       className="mx-3 my-1 flex h-[90px] cursor-pointer items-center justify-between py-1 text-black hover:rounded-xl hover:bg-neutral-600 hover:bg-opacity-40 dark:text-white"
       onClick={onChatClick}
     >
-      <div className="flex cursor-pointer items-center">
+      <div className="flex cursor-pointer items-center gap-2">
         <UserAvatar
           image={
             receiver?.profile?.avatar_path
@@ -70,9 +71,22 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
         <div className="flex flex-col items-start">
           <span className="font-semibold">{`${receiver?.first_name} ${receiver?.last_name}`}</span>{" "}
           {/*check if message sender current user display "you:" else sender name.*/}
-          <span>{`${
-            user?.id === lastMessage.sender_id ? "You" : receiver?.first_name
-          }: ${lastMessage.text}`}</span>
+          <div className="flex items-center gap-2">
+            <span>
+              {`${
+                user?.id === lastMessage.sender_id
+                  ? "You"
+                  : receiver?.first_name
+              } :`}
+            </span>
+
+            {lastMessage.image_url ? (
+              <div className="flex items-center gap-1">
+                <BsCardImage /> <span className="text-sm">Image</span>
+              </div>
+            ) : null}
+            <span>{lastMessage.text ? lastMessage.text : null}</span>
+          </div>
         </div>
       </div>
 
