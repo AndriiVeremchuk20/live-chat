@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import withAuth from "@/hooks/withAuth";
 import AppUser from "@/types/user.type";

@@ -23,11 +23,6 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
       : lastMessage.sender,
   );
 
-  //const receiver =
-  //  lastMessage.reciver_id !== user?.id
-  //   ? lastMessage.receiver
-  //   : lastMessage.sender;
-
   const router = useRouter();
 
   const onChatClick = useCallback(() => {

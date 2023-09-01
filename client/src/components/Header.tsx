@@ -39,11 +39,11 @@ const Header = () => {
     setShowNavbar(false);
   };
 
+  useOutsideClick({ ref: navbarRef, onOutsideClick });
+  
   if (shouldHideHeader) {
     return null;
   }
-
-  useOutsideClick({ ref: navbarRef, onOutsideClick });
 
   return (
     <div className="flex h-[100px] flex-col items-center justify-between bg-violet-600 dark:bg-neutral-700">

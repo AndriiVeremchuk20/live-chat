@@ -22,7 +22,7 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
   }, []);
 
   useEffect(() => {
-    console.log(chat_id);
+    //console.log(chat_id);
     if (user) {
       // typing response status
       socketApi.onTypingResponse((data) => {
