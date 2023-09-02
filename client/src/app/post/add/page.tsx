@@ -45,8 +45,8 @@ const AddNewPost = () => {
   };
 
   return (
-    <div className="max-h-auto mx-1 mt-5 flex min-h-[500px] justify-center rounded-xl">
-      <div className="grid rounded-xl bg-neutral-300 shadow-sm shadow-slate-950 drop-shadow-2xl dark:bg-neutral-700 dark:shadow-neutral-500 phone:w-full phone:grid-rows-2 tablet:w-3/4 tablet:grid-rows-2 desktop:w-2/4 desktop:grid-cols-2">
+    <div className="mx-1 mt-5 flex max-h-fit min-h-[500px] justify-center">
+      <div className="grid rounded-xl bg-neutral-300 shadow-sm shadow-slate-950 drop-shadow-2xl dark:bg-neutral-700 dark:shadow-neutral-500 phone:w-full phone:grid-cols-1 phone:grid-rows-2 tablet:w-3/4 desktop:w-2/4 desktop:grid-cols-2 desktop:grid-rows-1">
         <div
           className={`flex h-full w-full items-center justify-center rounded-l-xl bg-neutral-200 p-10 text-black dark:bg-neutral-600 dark:text-white`}
         >
@@ -77,7 +77,7 @@ const AddNewPost = () => {
           )}
         </div>
         <form
-          className="flex w-full flex-col p-5"
+          className="flex h-fit w-full flex-col justify-self-center p-5"
           onSubmit={handleSubmit(onSubmit)}
         >
           <input

@@ -34,6 +34,10 @@ model User {
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
+
+  posts   Post[] @relation("user_post")
+  likes	  Like[] @relation("user_likes")
+  comments Comment[] @relation("user_comments")
 }
 
 model Profile {
@@ -86,3 +90,42 @@ model Message {
   receiver    User   @relation("receiver", fields: [receiver_id], references: [id])
   receiver_id String
 }
+
+model Post {
+	id String @id @default(cuid())
+	file_path String
+	description String?
+	created_at  DateTime @default(now())
+
+	user_id String
+	user User @relation("user_post", fields: [user_id], references: [id])
+	
+	likes Like[]
+	comments Comment[]
+}
+
+model Like{
+	id String @id @default(cuid())
+	user_id String
+	user User @relation("user_likes", fields: [user_id], references: [id])
+	
+	post_id String
+	post Post @relation(fields: [post_id], references: [id])
+	
+	created_at DateTime @default(now())
+}
+
+model Comment{
+	id String @id @default(cuid())
+	text String
+
+	user_id String
+	user User @relation("user_comments", fields: [user_id], references: [id])
+
+	post_id String
+	post Post @relation(fields: [post_id], references: [id])
+	
+	created_at DateTime @default(now())
+}
+
+
