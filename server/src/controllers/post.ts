@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import uploadToGCS from "../googleStorageCloud/fileOperations/uploadToGCS";
 import { v4 as uuid } from "uuid";
 import prisma from "../../prisma";
+import {profile} from "console";
 
 const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
@@ -32,6 +33,14 @@ const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
         file_path: postUrl as string,
         description: description ? description : null,
       },
+	  select: {
+		id: true,
+		description: true,
+		file_path: true,
+		created_at: true,
+		user_id: true,
+		user: true, 
+	  }
     });
 
     return res

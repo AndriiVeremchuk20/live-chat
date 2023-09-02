@@ -1,9 +1,11 @@
 "use client";
+import postsApi from "@/api/userActions/post";
 import Image from "next/image";
 import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsFillImageFill } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 interface FormValues {
@@ -14,7 +16,16 @@ interface FormValues {
 const AddNewPost = () => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [postPreview, setPostPreview] = useState<string | null>(null);
-  const { register, setValue, getValues, handleSubmit } = useForm<FormValues>();
+  const { register, setValue, getValues, handleSubmit, reset } = useForm<FormValues>();
+
+  const addPostMutation = useMutation(postsApi.addPost, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const onOpenFileInput = useCallback(() => {
     if (!fileRef.current) {
@@ -37,11 +48,32 @@ const AddNewPost = () => {
     setPostPreview(null);
   }, []);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!data.post) {
-      toast.warn("Please add your post", { autoClose: 1000 });
+      return toast.warn("Please add your post", { autoClose: 1000 });
     }
     console.log(data);
+
+    const formData = new FormData();
+
+    formData.append("post", data.post),
+      formData.append("description", data.description ?? "");
+
+    const addPostPromise = addPostMutation.mutateAsync(formData);
+
+    const loadingToastId = toast.loading("Please wait");
+
+    await addPostPromise;
+
+    toast.update(loadingToastId, {
+      render: "Complete",
+      type: "success",
+      autoClose: 1000,
+      isLoading: false,
+      hideProgressBar: false,
+    });
+
+	reset();
   };
 
   return (
@@ -92,7 +124,10 @@ const AddNewPost = () => {
             placeholder="Add text to post"
             {...register("description")}
           />
-          <button className="my-2 self-end rounded-lg border border-neutral-300 bg-violet-500 px-3 py-1 text-xl font-bold text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700 ">
+          <button
+            type="submit"
+            className="my-2 self-end rounded-lg border border-neutral-300 bg-violet-500 px-3 py-1 text-xl font-bold text-white hover:bg-violet-600 focus:outline-none focus:ring focus:ring-violet-300 active:bg-violet-700 "
+          >
             Post
           </button>
         </form>
