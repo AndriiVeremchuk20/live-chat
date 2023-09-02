@@ -35,7 +35,7 @@ const CompleteProfile = () => {
     getValues,
     setFocus,
   } = useForm<FormValues>();
-  const { user, setUserProfile } = useAppStore();
+  const { user, setUser } = useAppStore();
   const { setAppStartLoading, setAppEndLoading } = useAppStore();
   const router = useRouter();
 
@@ -47,7 +47,7 @@ const CompleteProfile = () => {
     onSuccess(data) {
       setAppEndLoading();
       console.log(data);
-      setUserProfile(data.data);
+      setUser(data.data);
       router.push(routes.home);
     },
     onError(error) {
@@ -60,7 +60,7 @@ const CompleteProfile = () => {
     onSuccess(data) {
       setAppEndLoading();
       console.log(data);
-      setUserProfile(data.data);
+      setUser(data.data);
       router.push(routes.home);
     },
     onError(error) {
@@ -136,7 +136,7 @@ const CompleteProfile = () => {
         setValue("country", user.profile.country);
         setValue("about_self", user.profile.about_self);
         setValue("about_partner", user.profile.about_partner);
-        setPreviewAvatarSrc(user.profile.avatar_path);
+        setPreviewAvatarSrc(user.avatar_path);
       }
     }
   }, [user]);

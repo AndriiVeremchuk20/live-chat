@@ -9,7 +9,7 @@ interface propToolipItem {
 }
 
 const TooltipItem: React.FC<propToolipItem> = ({ user }) => {
-  const avatar = user.profile?.avatar_path;
+  const avatar = user.avatar_path;
   const router = useRouter();
 
   const onClick = useCallback(() => {

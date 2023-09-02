@@ -48,7 +48,8 @@ const auth = async (req: Request, res: Response) => {
         last_name: true,
         email: true,
         created_at: true,
-        profile: true,
+        avatar_path: true,
+		profile: true,
 		chats: {
           select: {
             chat_id: true,

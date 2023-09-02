@@ -8,13 +8,6 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const foundUser = await prisma.user.findFirstOrThrow({
       where: { id },
-      select: {
-        first_name: true,
-        last_name: true,
-        id: true,
-        email: true,
-        profile: true,
-      },
     });
 
     return res.status(StatusCodes.OK).send({
@@ -43,14 +36,6 @@ const getUserRecommendations = async (
 
   const users = await prisma.user.findMany({
     where: { NOT: { id: user.uid } },
-    select: {
-      id: true,
-      first_name: true,
-      last_name: true,
-      email: true,
-      created_at: true,
-      profile: true,
-    },
   });
 
   return res
@@ -94,13 +79,6 @@ const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
           },
         },
       ],
-    },
-    select: {
-      id: true,
-      email: true,
-      first_name: true,
-      last_name: true,
-      profile: true,
     },
   });
 

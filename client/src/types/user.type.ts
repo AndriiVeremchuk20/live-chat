@@ -7,6 +7,7 @@ interface AppUser {
   last_name: string;
   email: string;
   isOnline: boolean;
+  avatar_path: string | null;
   profile: Profile | null;
   chats: Array<string>;
   theme: Theme;

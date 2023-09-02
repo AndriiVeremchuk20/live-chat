@@ -27,6 +27,7 @@ model User {
   first_name String
   last_name  String
   email      String   @unique
+  avatar_path    String?
   created_at DateTime @default(now())
   profile    Profile?
 
@@ -45,7 +46,6 @@ model Profile {
   user    User   @relation(fields: [user_id], references: [id])
   user_id String @unique
 
-  avatar_path    String?
   age            Int
   country        String
   gender         Gender

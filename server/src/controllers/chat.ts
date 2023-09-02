@@ -36,26 +36,8 @@ const getUserChats = async (
 		  image_url: true,
           chat_id: true,
           isRead: true,
-          sender: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-              profile: true,
-              created_at: true,
-            },
-          },
-          receiver: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-              created_at: true,
-              profile: true,
-            },
-          },
+          sender: true,
+          receiver: true,
           sender_id: true,
           receiver_id: true,
           created_at: true,
@@ -184,17 +166,7 @@ const getChatMetadata = async (
           NOT: [{ user_id: user.uid }],
         },
         select: {
-          user: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-              role: true,
-              created_at: true,
-              profile: true,
-            },
-          },
+          user: true,
         },
       },
       messages: {

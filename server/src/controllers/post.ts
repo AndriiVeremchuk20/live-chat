@@ -3,7 +3,6 @@ import { StatusCodes } from "http-status-codes";
 import uploadToGCS from "../googleStorageCloud/fileOperations/uploadToGCS";
 import { v4 as uuid } from "uuid";
 import prisma from "../../prisma";
-import {profile} from "console";
 
 const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;

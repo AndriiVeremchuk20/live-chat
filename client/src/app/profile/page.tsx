@@ -25,8 +25,8 @@ const ProfilePage = () => {
             <UserAvatar
               size={200}
               image={
-                user.profile?.avatar_path
-                  ? { src: user.profile.avatar_path, alt: user.last_name }
+                user?.avatar_path
+                  ? { src: user.avatar_path, alt: user.last_name }
                   : undefined
               }
             />

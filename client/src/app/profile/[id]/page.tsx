@@ -68,9 +68,9 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
               size={200}
               user_id={params.id}
               image={
-                userInfo.profile?.avatar_path
+                userInfo?.avatar_path
                   ? {
-                      src: userInfo.profile.avatar_path,
+                      src: userInfo.avatar_path,
                       alt: userInfo.last_name,
                     }
                   : undefined
