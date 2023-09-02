@@ -5,35 +5,38 @@ import postsApi from "@/api/userActions/post";
 import ChatList from "@/components/Chat/ChatList";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
-import AppUser from "@/types/user.type";
-import Link from "next/link";
+import Post from "@/types/post.type";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 
-const Home = () =>  {
+const Home = () => {
   const { user } = useAppStore();
-	
- const getPostsMutation = useMutation(postsApi.getPosts, {
-	onSuccess: (data) => {
-		console.log(data);
-	},
-	onError: (error) => {
-		console.log(error)
-	}
- });
+  const [posts, setPosts] = useState<Array<Post>>([]);
 
- useEffect(()=>{
-	if(user){
-		getPostsMutation.mutate();
-	}
- },[]);
+  const getPostsMutation = useMutation(postsApi.getPosts, {
+    onSuccess: (data) => {
+      console.log(data);
+      setPosts(data.data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  useEffect(() => {
+    if (user) {
+      getPostsMutation.mutate();
+    }
+  }, [user]);
 
   return (
     <div className="">
       <div>Text</div>
-      <div></div>
+      <div>
+        {posts.map((post, index) => <div key={index}>{post.description}</div>)} 
+      </div>
     </div>
   );
-}
+};
 
 export default Home;

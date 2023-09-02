@@ -60,7 +60,7 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
 
   const posts = await prisma.post.findMany();
 
-  return res.status(StatusCodes.OK).send({status: "success", message: "posts found", data: [posts]});
+  return res.status(StatusCodes.OK).send({status: "success", message: "posts found", data: [...posts]});
 };
 
 export default { addNewPost, getPosts };

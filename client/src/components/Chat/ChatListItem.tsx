@@ -58,9 +58,9 @@ const ChatListItem: React.FC<PropChatListItem> = ({ lastChatMessage }) => {
       <div className="flex cursor-pointer items-center gap-2">
         <UserAvatar
           image={
-            receiver?.profile?.avatar_path
+            receiver?.avatar_path
               ? {
-                  src: receiver.profile.avatar_path,
+                  src: receiver.avatar_path,
                   alt: receiver.first_name,
                 }
               : undefined
