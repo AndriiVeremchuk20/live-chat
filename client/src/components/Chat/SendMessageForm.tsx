@@ -111,8 +111,8 @@ const SendMessageForm: React.FC<PropSendMessageForm> = ({
     }
   }, []);
 
-  const onFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+  const onFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
     if (file) {
       setValue("image", file);
       const previewImageURL = URL.createObjectURL(file);
