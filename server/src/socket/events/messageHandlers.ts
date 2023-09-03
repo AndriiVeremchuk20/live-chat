@@ -54,26 +54,8 @@ const messageHandler = (io: Server, socket: Socket) => {
         image_url: true,
         created_at: true,
         isRead: true,
-        sender: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            email: true,
-            created_at: true,
-            profile: true,
-          },
-        },
-        receiver: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            email: true,
-            created_at: true,
-            profile: true,
-          },
-        },
+        sender: true,
+        receiver: true,
         receiver_id: true,
         sender_id: true,
         reply_to: true,

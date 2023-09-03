@@ -46,9 +46,9 @@ const ChatHeader: React.FC<PropChatHeader> = ({ receiver, chat_id }) => {
           size={50}
           user_id={receiver.id}
           image={
-            receiver.profile?.avatar_path
+            receiver?.avatar_path
               ? {
-                  src: receiver.profile.avatar_path,
+                  src: receiver.avatar_path,
                   alt: receiver.first_name,
                 }
               : undefined

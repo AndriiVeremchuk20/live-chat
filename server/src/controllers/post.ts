@@ -32,14 +32,14 @@ const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
         file_path: postUrl as string,
         description: description ? description : null,
       },
-	  select: {
-		id: true,
-		description: true,
-		file_path: true,
-		created_at: true,
-		user_id: true,
-		user: true, 
-	  }
+      select: {
+        id: true,
+        description: true,
+        file_path: true,
+        created_at: true,
+        user_id: true,
+        user: true,
+      },
     });
 
     return res
@@ -58,9 +58,21 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
       .send({ status: "error", message: "user not found" });
   }
 
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({
+    select: {
+      id: true,
+      description: true,
+      file_path: true,
+      created_at: true,
+      user_id: true,
+      user: true,
+    },
+    orderBy: [{ created_at: "desc" }],
+  });
 
-  return res.status(StatusCodes.OK).send({status: "success", message: "posts found", data: [...posts]});
+  return res
+    .status(StatusCodes.OK)
+    .send({ status: "success", message: "posts found", data: [...posts] });
 };
 
 export default { addNewPost, getPosts };

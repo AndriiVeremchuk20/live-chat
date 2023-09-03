@@ -148,7 +148,7 @@ export default function App({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`max-h-fit min-h-screen bg-cover bg-no-repeat ${
+        className={`max-h-fit min-h-screen bg-cover bg-fixed bg-no-repeat ${
           currTheme === "LIGHT" ? "bg-image-light" : "bg-image-dark"
         }`}
       >

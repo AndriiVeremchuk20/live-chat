@@ -1,5 +1,5 @@
 import BaseResponse from "@/types/api/response.type";
-import Post from "@/types/post.type";
+import UserPost from "@/types/userPost.type";
 import client from "..";
 
 const URLs = {
@@ -7,14 +7,14 @@ const URLs = {
 };
 
 const addPost = async (payload: FormData) => {
-  const response = await client.post<BaseResponse<Post>>(URLs.base, payload, {
+  const response = await client.post<BaseResponse<UserPost>>(URLs.base, payload, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
 };
 
 const getPosts = async () => {
-  const response = await client.get<BaseResponse<Post[]>>(URLs.base);
+  const response = await client.get<BaseResponse<UserPost[]>>(URLs.base);
   return response.data;
 };
 

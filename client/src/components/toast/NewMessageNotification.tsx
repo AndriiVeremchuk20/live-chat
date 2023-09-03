@@ -30,9 +30,9 @@ const NewMessageNotification = ({ message }: { message: Message }) => {
           <UserAvatar
             size={30}
             image={
-              message.sender?.profile?.avatar_path
+              message.sender?.avatar_path
                 ? {
-                    src: message.sender.profile.avatar_path,
+                    src: message.sender.avatar_path,
                     alt: message.sender.first_name,
                   }
                 : undefined

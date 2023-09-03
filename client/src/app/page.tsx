@@ -3,15 +3,16 @@
 import userActions from "@/api/userActions";
 import postsApi from "@/api/userActions/post";
 import ChatList from "@/components/Chat/ChatList";
+import PostList from "@/components/Posts/PostList";
 import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
-import Post from "@/types/post.type";
+import UserPost from "@/types/userPost.type";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 
 const Home = () => {
   const { user } = useAppStore();
-  const [posts, setPosts] = useState<Array<Post>>([]);
+  const [posts, setPosts] = useState<Array<UserPost>>([]);
 
   const getPostsMutation = useMutation(postsApi.getPosts, {
     onSuccess: (data) => {
@@ -29,11 +30,17 @@ const Home = () => {
     }
   }, [user]);
 
+  if (!user) {
+    return <div>You are guest</div>;
+  }
+
   return (
-    <div className="">
-      <div>Text</div>
-      <div>
-        {posts.map((post, index) => <div key={index}>{post.description}</div>)} 
+    <div className="flex">
+      <div className="phone:hidden tablet:hidden desktop:block w-4/12 h-screen sticky top-0">
+        <ChatList />
+      </div>
+      <div className="my-5 default:w-8/12 phone:w-full tablet:w-full">
+        <PostList posts={posts} />
       </div>
     </div>
   );

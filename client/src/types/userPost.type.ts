@@ -1,6 +1,6 @@
 import AppUser from "./user.type";
 
-interface Post {
+interface UserPost {
   id: string;
   description: string | null;
   file_path: string;
@@ -9,4 +9,4 @@ interface Post {
   created_at: string;
 }
 
-export default Post;
+export default UserPost;

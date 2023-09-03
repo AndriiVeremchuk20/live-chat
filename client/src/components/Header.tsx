@@ -46,7 +46,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex h-[100px] flex-col items-center justify-between bg-violet-600 dark:bg-neutral-700">
+    <div className="w-full flex h-[100px] flex-col items-center justify-between bg-violet-600 dark:bg-neutral-700">
       <div className="flex h-full w-full items-center justify-between">
         <Link
           className="mx-4 flex items-center gap-1 text-xl text-white drop-shadow-2xl hover:drop-shadow-none phone:hidden tablet:hidden desktop:flex"
