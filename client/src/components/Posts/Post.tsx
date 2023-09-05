@@ -2,17 +2,23 @@ import UserPost from "@/types/userPost.type";
 import getContentDate from "@/utils/getContentDate";
 import Image from "next/image";
 import UserAvatar from "../UserAvatar";
-import {HiHeart, HiOutlineHeart, HiChat} from "react-icons/hi"
-
+import { HiHeart, HiOutlineHeart, HiChat } from "react-icons/hi";
+import {useCallback, useState} from "react";
 
 interface propPost {
   post: UserPost;
 }
 
 const Post: React.FC<propPost> = ({ post }) => {
-  console.log(post);
+	const [isLiked, setIsLiked] = useState<boolean>(false);
+
+	const onLikeclick = useCallback(()=>{
+		setIsLiked(prev => !prev);
+	}, []);
+
+
   return (
-    <div className="w-fit flex flex-col gap-2 rounded-lg bg-neutral-200 p-3 drop-shadow-2xl dark:bg-neutral-300">
+    <div className="flex w-fit flex-col gap-2 rounded-lg bg-neutral-200 p-3 drop-shadow-2xl dark:bg-neutral-300">
       <div className="flex items-center border-b border-neutral-400">
         <UserAvatar
           size={40}
@@ -22,22 +28,36 @@ const Post: React.FC<propPost> = ({ post }) => {
               : undefined
           }
         />
-        <div className="w-full flex justify-between">
-          <span className="font-semibold text-md">{`${post.user.first_name} ${post.user.last_name}`}</span>
+        <div className="flex w-full justify-between">
+          <span className="text-md font-semibold">{`${post.user.first_name} ${post.user.last_name}`}</span>
           <span className="text-sm">{getContentDate(post.created_at)}</span>
         </div>
       </div>
-      <div className="w-full flex flex-col gap-2">
+      <div className="flex w-full flex-col gap-2">
         <Image width={500} height={500} src={post.file_path} alt={`post`} />
         {post.description ? (
-          <div className="w-full break-all">
-            <span className="font-semibold text-md">{post.user.first_name}:</span>
-            <span className="w-fit break-all">{post.description}</span>
+          <div className="max-w-[500px] break-all">
+            <span className="text-md font-semibold">
+              {post.user.first_name}:
+            </span>
+            <div>{post.description}</div>
           </div>
         ) : null}
         <div className="flex justify-between">
-          <button><HiOutlineHeart size={30}/></button>
-          <button><HiChat size={30}/></button>
+          <div className="flex items-center gap-2">
+            <span className="text-neutral-600">40</span>
+			<button className="outline-none" onClick={onLikeclick}>
+              {isLiked?<HiHeart size={30} className="text-red-600 animate-like-pulse"/>:<HiOutlineHeart size={30}/>}
+            </button>
+            <span className="cursor-pointer hover:underline hover:text-neutral-700">Likes</span>
+          </div>
+
+          <button className="flex flex-row-reverse items-center gap-2 hover:text-neutral-700">
+            <HiChat size={30} />
+            <span className="text-neutral-600">
+              30
+            </span>
+          </button>
         </div>
       </div>
     </div>

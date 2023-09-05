@@ -25,11 +25,16 @@ module.exports = {
           "0%": { transform: "translateX(-30%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "like-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.2)" },
+        },
       },
       animation: {
         "slow-slide": "slow-slide 0.3s ease-out",
-        "pulse-slow": "pulse 1s infinite alternate", // custom animation pulse-slow
+        "pulse-slow": "pulse 1s infinite alternate",
         "bounce-slow": "bounce 0.6s infinite alternate",
+        "like-pulse": "like-pulse 1s ease-in-out alternate",
       },
     },
   },
