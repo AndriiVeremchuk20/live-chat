@@ -4,6 +4,7 @@ import * as typing from "./typing";
 import * as ping from "./ping";
 import * as auth from "./auth";
 import * as disconnect from "./disconnect";
+import * as postLike from "./like";
 
 const socketApi = {
   ...message,
@@ -12,6 +13,7 @@ const socketApi = {
   ...ping,
   ...auth,
   ...disconnect,
+  ...postLike,
 };
 
 export default socketApi;

@@ -13,6 +13,7 @@ const SocketEvents = {
     edit: "message:edit",
     read: "message:read",
   },
+  like: "like",
   online: "online",
   typing: "typing",
   ping: "ping",

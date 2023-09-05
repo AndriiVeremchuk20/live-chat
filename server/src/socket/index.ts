@@ -12,6 +12,7 @@ import chatHandlers from "./events/chatHandlers";
 import authHandler from "./events/authHandlers";
 import messageHandler from "./events/messageHandlers";
 import disconnectHandlers from "./events/disconnectHandlers";
+import likeHandler from "./events/likeHandler";
 
 const app = express();
 app.use(cors());
@@ -33,6 +34,7 @@ const onConnection = (socket: Socket) => {
   chatHandlers(io, socket);
   messageHandler(io, socket);
   typingHandlers(io, socket);
+  likeHandler(io, socket);
   disconnectHandlers(io, socket);
 };
 

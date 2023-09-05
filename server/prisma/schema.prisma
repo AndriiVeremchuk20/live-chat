@@ -105,14 +105,15 @@ model Post {
 }
 
 model Like{
-	id String @id @default(cuid())
-	user_id String
 	user User @relation("user_likes", fields: [user_id], references: [id])
+	user_id String
 	
-	post_id String
 	post Post @relation(fields: [post_id], references: [id])
-	
+	post_id String
+
 	created_at DateTime @default(now())
+
+	@@id([user_id, post_id])
 }
 
 model Comment{

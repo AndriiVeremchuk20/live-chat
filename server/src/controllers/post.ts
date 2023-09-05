@@ -66,13 +66,29 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
       created_at: true,
       user_id: true,
       user: true,
+      likes: true,
     },
     orderBy: [{ created_at: "desc" }],
   });
 
+  const postsResponse = posts.map((post) => {
+    const likes = post.likes.length;
+    const isLiked = post.likes.some((like) => like.user_id === user.uid);
+
+    return {
+      ...post,
+      likes,
+      isLiked,
+    };
+  });
+
   return res
     .status(StatusCodes.OK)
-    .send({ status: "success", message: "posts found", data: [...posts] });
+    .send({
+      status: "success",
+      message: "posts found",
+      data: [...postsResponse],
+    });
 };
 
 export default { addNewPost, getPosts };

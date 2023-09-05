@@ -3,19 +3,54 @@ import getContentDate from "@/utils/getContentDate";
 import Image from "next/image";
 import UserAvatar from "../UserAvatar";
 import { HiHeart, HiOutlineHeart, HiChat } from "react-icons/hi";
-import {useCallback, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
+import socketApi from "@/socket/actions";
+import useAppStore from "@/store";
+import { useMutation } from "react-query";
+import likesApi from "@/api/userActions/postLikes";
 
 interface propPost {
   post: UserPost;
 }
 
 const Post: React.FC<propPost> = ({ post }) => {
-	const [isLiked, setIsLiked] = useState<boolean>(false);
+  const { user } = useAppStore();
+  const [likes, setLikes] = useState<{ isLiked: boolean; numLikes: number }>({
+    isLiked: post.isLiked,
+    numLikes: post.likes,
+  });
 
-	const onLikeclick = useCallback(()=>{
-		setIsLiked(prev => !prev);
-	}, []);
+  const getUsersWhoLikedPostMutation = useMutation(likesApi.getPostLikes, {
+    onSuccess(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
 
+  const onLikeclick = useCallback(() => {
+    if (!user) return;
+    setLikes((prev) =>
+      prev.isLiked
+        ? { isLiked: false, numLikes: prev.numLikes - 1 }
+        : { isLiked: true, numLikes: prev.numLikes + 1 },
+    );
+
+    socketApi.onLikePost({ user_id: user.id, post_id: post.id });
+  }, []);
+
+  const onShowUserLikesClick = useCallback(async () => {
+    getUsersWhoLikedPostMutation.mutate({ post_id: post.id });
+  }, []);
+
+  useEffect(() => {
+    socketApi.onLikePostResponse(({ like }) => {
+      if (like.post_id === post.id) {
+        setLikes((prev) => ({ isLiked: true, numLikes: prev.numLikes + 1 }));
+      }
+    });
+  }, []);
 
   return (
     <div className="flex w-fit flex-col gap-2 rounded-lg bg-neutral-200 p-3 drop-shadow-2xl dark:bg-neutral-300">
@@ -45,18 +80,25 @@ const Post: React.FC<propPost> = ({ post }) => {
         ) : null}
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-neutral-600">40</span>
-			<button className="outline-none" onClick={onLikeclick}>
-              {isLiked?<HiHeart size={30} className="text-red-600 animate-like-pulse"/>:<HiOutlineHeart size={30}/>}
+            <span className="text-neutral-600">{likes.numLikes}</span>
+            <button className="outline-none" onClick={onLikeclick}>
+              {likes.isLiked ? (
+                <HiHeart
+                  size={30}
+                  className="animate-like-pulse text-red-600"
+                />
+              ) : (
+                <HiOutlineHeart size={30} />
+              )}
             </button>
-            <span className="cursor-pointer hover:underline hover:text-neutral-700">Likes</span>
+            <span className="cursor-pointer hover:text-neutral-700 hover:underline" onClick={onShowUserLikesClick}>
+              Likes
+            </span>
           </div>
 
           <button className="flex flex-row-reverse items-center gap-2 hover:text-neutral-700">
             <HiChat size={30} />
-            <span className="text-neutral-600">
-              30
-            </span>
+            <span className="text-neutral-600">30</span>
           </button>
         </div>
       </div>
