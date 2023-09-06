@@ -92,18 +92,11 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
               Personal information
             </span>
             <div>Email: {userInfo.email}</div>
-            <div>Your gender: {userInfo.profile.gender}</div>
-            <div>Partner gender: {userInfo.profile.partner_gender}</div>
+            <div>Gender: {userInfo.profile.gender}</div>
             <div className="flex flex-col">
               <span>About you:</span>
               <div className="break-all rounded-lg border-2 border-violet-300 bg-neutral-200 bg-opacity-75 p-3 dark:bg-neutral-600">
                 {userInfo.profile.about_self}
-              </div>
-            </div>
-            <div>
-              <span>About partner:</span>
-              <div className="break-all rounded-lg border-2 border-violet-300 bg-neutral-200 bg-opacity-75 p-3 dark:bg-neutral-600">
-                {userInfo.profile.about_partner}
               </div>
             </div>
             <div className="flex items-center justify-end"></div>

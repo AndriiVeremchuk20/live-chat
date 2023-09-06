@@ -36,10 +36,8 @@ const completeProfile = async (
     last_name,
     age,
     gender,
-    partner_gender,
     country,
     about_self,
-    about_partner,
   } = req.body;
 
   let avatar_path: string | null = null;
@@ -71,10 +69,8 @@ const completeProfile = async (
       user_id: user.uid,
       age: parseInt(age),
       gender: getGender(gender),
-      partner_gender: getGender(partner_gender),
       country,
       about_self,
-      about_partner,
     },
     select: {
       user: {
@@ -137,10 +133,8 @@ const updateProfile = async (
     last_name,
     age,
     gender,
-    partner_gender,
     country,
     about_self,
-    about_partner,
   } = req.body;
 
   let avatar_path: string | null = null;
@@ -175,10 +169,8 @@ const updateProfile = async (
       user_id: user.uid,
       age: parseInt(age),
       gender: getGender(gender),
-      partner_gender: getGender(partner_gender),
       country,
       about_self,
-      about_partner,
     },
     select: {
       user: {

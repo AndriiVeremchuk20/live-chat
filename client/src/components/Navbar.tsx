@@ -26,7 +26,7 @@ const Navbar = () => {
         <BiSolidUserCircle size={30} /> Profile
       </Link>
       <Link
-        href="#"
+        href={AppRoutes.post.add}
         className="flex w-full gap-1 p-3 hover:rounded-xl hover:bg-neutral-400"
       >
         <BiAddToQueue size={30} /> App Post

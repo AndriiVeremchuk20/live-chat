@@ -49,9 +49,7 @@ model Profile {
   age            Int
   country        String
   gender         Gender
-  partner_gender Gender
   about_self     String
-  about_partner  String
 }
 
 model UsersOnChats {

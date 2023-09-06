@@ -20,9 +20,7 @@ type FormValues = {
   age: number;
   country: string;
   gender: genderType;
-  partner_gender: genderType;
   about_self: string;
-  about_partner: string;
 };
 
 const CompleteProfile = () => {
@@ -132,10 +130,8 @@ const CompleteProfile = () => {
       if (user.profile) {
         setValue("age", user.profile.age);
         setValue("gender", user.profile.gender);
-        setValue("partner_gender", user.profile.partner_gender);
         setValue("country", user.profile.country);
         setValue("about_self", user.profile.about_self);
-        setValue("about_partner", user.profile.about_partner);
         setPreviewAvatarSrc(user.avatar_path);
       }
     }
@@ -288,24 +284,7 @@ const CompleteProfile = () => {
               <label htmlFor="partner_gender" className="text-lg">
                 Partner gender:
               </label>
-              <select
-                id="partner_gender"
-                autoFocus
-                className={`w-full rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
-                  errors?.age && "ring-2 ring-red-400"
-                }`}
-                {...register("partner_gender", {
-                  required: "Partner gender is required",
-                })}
-              >
-                <option hidden>Choose partner gender ⚥</option>
-                <option value={"MALE"}>Male</option>
-                <option value={"FEMALE"}>Female</option>
-                <option value={"BINARY"}>Gender binary</option>
-              </select>
-              {errors.partner_gender?.message && (
-                <Alert type="error" message={errors.partner_gender.message} />
-              )}
+            
             </div>
           </div>
           <div>
@@ -361,30 +340,6 @@ const CompleteProfile = () => {
               )}
             </div>
 
-            <div className="mb-2 flex flex-col">
-              <label htmlFor="about_partner" className="text-lg">
-                About your ideal partner:
-              </label>
-              <textarea
-                id="about_partner"
-                autoFocus
-                placeholder="Write 2-3 sentences about your ideal partner"
-                className={`h-[150px] w-full resize-none rounded-lg border border-neutral-300 px-2 py-1 text-xl text-black focus:border-blue-500 focus:shadow-lg focus:outline-none focus:ring focus:duration-300 dark:bg-neutral-500 dark:text-white ${
-                  errors?.age && "ring-2 ring-red-400"
-                }`}
-                {...register("about_partner", {
-                  required: "About partner is required",
-                  minLength: { value: 50, message: "Please write tonger text" },
-                  maxLength: {
-                    value: 150,
-                    message: "Please write shorted text",
-                  },
-                })}
-              />
-              {errors.about_partner?.message && (
-                <Alert type="error" message={errors.about_partner.message} />
-              )}
-            </div>
           </div>
           <div className="flex w-full justify-end gap-3">
             <button
