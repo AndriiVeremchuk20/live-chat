@@ -1,6 +1,6 @@
 import socketApi from "@/socket/actions";
 import UserPost from "@/types/userPost.type";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Post from "./Post";
 
 interface propPostList {
@@ -8,7 +8,6 @@ interface propPostList {
 }
 
 const PostList: React.FC<propPostList> = ({ posts }) => {
-
   return (
     <div className="flex w-full justify-center ">
       <div className="flex flex-col items-center gap-3 bg-neutral-600 bg-opacity-50 py-3 phone:w-full tablet:w-full desktop:w-10/12">
@@ -19,4 +18,5 @@ const PostList: React.FC<propPostList> = ({ posts }) => {
     </div>
   );
 };
+
 export default PostList;

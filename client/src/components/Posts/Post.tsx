@@ -8,7 +8,7 @@ import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
 import { useMutation } from "react-query";
 import likesApi from "@/api/userActions/postLikes";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import AppRoutes from "@/config/appRoutes";
 
 interface propPost {
@@ -17,17 +17,43 @@ interface propPost {
 
 const Post: React.FC<propPost> = ({ post }) => {
   const { user } = useAppStore();
-	const router = useRouter();
+  const router = useRouter();
+
+  const [postInfo, setPostInfo] = useState<UserPost>(post);
 
   const onLikeclick = useCallback(() => {
     if (!user) return;
-    //setPostInfo((prev) => ({ ...prev, isLiked: prev.isLiked }));
+
+    if (postInfo.isLiked) {
+      setPostInfo((prev) => ({
+        ...prev,
+        isLiked: false,
+        likes: prev.likes - 1,
+      }));
+    } else {
+      setPostInfo((prev) => ({
+        ...prev,
+        isLiked: true,
+        likes: prev.likes + 1,
+      }));
+    }
 
     socketApi.onLikePost({ user_id: user.id, post_id: post.id });
-  }, []);
+  }, [postInfo, setPostInfo]);
 
   const onShowUserLikesClick = useCallback(async () => {
     router.push(AppRoutes.post.getPostLikes(post.id));
+  }, []);
+
+  useEffect(() => {
+    socketApi.onLikePostResponse(({ like }) => {
+      if (like.post_id === postInfo.id) {
+        setPostInfo((prev) => ({
+          ...prev,
+          likes: prev.likes + 1,
+        }));
+      }
+    });
   }, []);
 
   return (
@@ -58,9 +84,9 @@ const Post: React.FC<propPost> = ({ post }) => {
         ) : null}
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-neutral-600">{post.likes}</span>
+            <span className="text-neutral-600">{postInfo.likes}</span>
             <button className="outline-none" onClick={onLikeclick}>
-              {post.isLiked ? (
+              {postInfo.isLiked ? (
                 <HiHeart
                   size={30}
                   className="animate-like-pulse text-red-600"

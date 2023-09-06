@@ -14,10 +14,10 @@ const getPostLikes = async (
     }
 
     const post_id = req.params.post_id as string;
-	
-	console.log(post_id);
 
-    const usersWhoLiked = await prisma.like.findMany({
+    console.log(post_id);
+
+    const likedUsers = await prisma.like.findMany({
       where: {
         post_id,
       },
@@ -26,15 +26,13 @@ const getPostLikes = async (
       },
     });
 
-	console.log(usersWhoLiked);
+    const likedUsersResponse = likedUsers.map((user) => user.user);
 
-    return res
-      .status(StatusCodes.OK)
-      .send({
-        status: "success",
-        message: "users found",
-        data: [...usersWhoLiked],
-      });
+    return res.status(StatusCodes.OK).send({
+      status: "success",
+      message: "users found",
+      data: [...likedUsersResponse],
+    });
   } catch (error) {
     next(error);
   }

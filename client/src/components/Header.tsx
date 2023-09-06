@@ -21,7 +21,7 @@ const Header = () => {
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const navbarRef = useRef<HTMLDivElement | null>(null);
 
-  const hideHeaderRoutes = ["/chat/"];
+  const hideHeaderRoutes = ["/chat/", "/post/"];
 
   const shouldHideHeader = hideHeaderRoutes.some((route) =>
     pathname.startsWith(route),
