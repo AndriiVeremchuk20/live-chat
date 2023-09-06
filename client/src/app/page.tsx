@@ -1,10 +1,8 @@
 "use client";
 
-import userActions from "@/api/userActions";
 import postsApi from "@/api/userActions/post";
 import ChatList from "@/components/Chat/ChatList";
 import PostList from "@/components/Posts/PostList";
-import routes from "@/config/appRoutes";
 import useAppStore from "@/store";
 import UserPost from "@/types/userPost.type";
 import { useEffect, useState } from "react";

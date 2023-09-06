@@ -8,6 +8,8 @@ import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
 import { useMutation } from "react-query";
 import likesApi from "@/api/userActions/postLikes";
+import {useRouter} from "next/navigation";
+import AppRoutes from "@/config/appRoutes";
 
 interface propPost {
   post: UserPost;
@@ -15,41 +17,17 @@ interface propPost {
 
 const Post: React.FC<propPost> = ({ post }) => {
   const { user } = useAppStore();
-  const [likes, setLikes] = useState<{ isLiked: boolean; numLikes: number }>({
-    isLiked: post.isLiked,
-    numLikes: post.likes,
-  });
-
-  const getUsersWhoLikedPostMutation = useMutation(likesApi.getPostLikes, {
-    onSuccess(data) {
-      console.log(data);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
+	const router = useRouter();
 
   const onLikeclick = useCallback(() => {
     if (!user) return;
-    setLikes((prev) =>
-      prev.isLiked
-        ? { isLiked: false, numLikes: prev.numLikes - 1 }
-        : { isLiked: true, numLikes: prev.numLikes + 1 },
-    );
+    //setPostInfo((prev) => ({ ...prev, isLiked: prev.isLiked }));
 
     socketApi.onLikePost({ user_id: user.id, post_id: post.id });
   }, []);
 
   const onShowUserLikesClick = useCallback(async () => {
-    getUsersWhoLikedPostMutation.mutate({ post_id: post.id });
-  }, []);
-
-  useEffect(() => {
-    socketApi.onLikePostResponse(({ like }) => {
-      if (like.post_id === post.id) {
-        setLikes((prev) => ({ isLiked: true, numLikes: prev.numLikes + 1 }));
-      }
-    });
+    router.push(AppRoutes.post.getPostLikes(post.id));
   }, []);
 
   return (
@@ -80,9 +58,9 @@ const Post: React.FC<propPost> = ({ post }) => {
         ) : null}
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-neutral-600">{likes.numLikes}</span>
+            <span className="text-neutral-600">{post.likes}</span>
             <button className="outline-none" onClick={onLikeclick}>
-              {likes.isLiked ? (
+              {post.isLiked ? (
                 <HiHeart
                   size={30}
                   className="animate-like-pulse text-red-600"
@@ -91,7 +69,10 @@ const Post: React.FC<propPost> = ({ post }) => {
                 <HiOutlineHeart size={30} />
               )}
             </button>
-            <span className="cursor-pointer hover:text-neutral-700 hover:underline" onClick={onShowUserLikesClick}>
+            <span
+              className="cursor-pointer hover:text-neutral-700 hover:underline"
+              onClick={onShowUserLikesClick}
+            >
               Likes
             </span>
           </div>

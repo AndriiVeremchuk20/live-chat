@@ -20,6 +20,10 @@ const AppRoutes = {
     base: "/chat",
     toChat: (id: string) => `/chat/${id}`,
   },
+  post: {
+    add: "/post/add",
+    getPostLikes: (post_id: string) => `/post/like/${post_id}`,
+  },
 };
 
 export default AppRoutes;
