@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
 import HttpError from "../error/HttpError";
-import getUser from "../utils/isUser";
+import getUser from "../utils/getUser";
 
 const DEFAULT_MESSAGES_LIMIT = 20;
 
@@ -69,9 +69,7 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
   const receiver = await getUser({ id: receiverId });
 
   if (!receiver || !currUser) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "errror", message: "users not found" });
+    return next(new HttpError("Permission denied", StatusCodes.NOT_FOUND));
   }
 
   const checkChat = await prisma.chat.findFirst({
@@ -120,8 +118,8 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-   // console.log("Create a new chat ");
-   // console.table(chat);
+    // console.log("Create a new chat ");
+    // console.table(chat);
 
     return res
       .status(StatusCodes.OK)
@@ -141,7 +139,7 @@ const getChatMetadata = async (
   const { chat_id } = req.params;
   const { user } = req;
 
- if (!user) {
+  if (!user) {
     return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 

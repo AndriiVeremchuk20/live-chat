@@ -8,6 +8,14 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const foundUser = await prisma.user.findFirstOrThrow({
       where: { id },
+	  select: {
+		id: true, 
+		first_name: true,
+		last_name: true,
+		email: true,
+		avatar_path: true,
+		profile: true,
+	  },
     });
 
     return res.status(StatusCodes.OK).send({

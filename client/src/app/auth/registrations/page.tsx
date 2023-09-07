@@ -118,7 +118,7 @@ const Registrations = () => {
 
   return (
     <div className="flex h-screen flex-row items-center justify-end bg-[url(/auth-bg.jpg)] bg-cover ">
-      <div className="flex h-screen flex-col items-center justify-center bg-violet-400 bg-opacity-20 phone:w-full desktop:w-1/2">
+      <div className="flex h-screen flex-col items-center justify-center bg-violet-700 bg-opacity-50 phone:w-full desktop:w-1/2">
         <form
           className="flex w-[400px] flex-col gap-3 rounded-lg border-[2px] border-violet-300 bg-neutral-100 px-2 text-xl shadow-md"
           autoComplete="off"
