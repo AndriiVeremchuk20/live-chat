@@ -9,10 +9,11 @@ import ProfileRoutes from "./routes/profile";
 import UserActionsRoute from "./routes/user";
 import AuthRoute from "./routes/auth";
 import ChatRoute from "./routes/chat";
+import { errorHandler } from "./error/errorHandler";
 
 const PORT = Number(process.env.PORT) || 5000;
 
-app.use(express.static("public"))
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 //add log error and error handler
@@ -29,9 +30,12 @@ app.use("/user-actions", UserActionsRoute);
 app.use("/chat", ChatRoute);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.send("Express Server");
 });
 
+// error handler
+app.use(errorHandler);
+
 server.listen(PORT, () => {
-  logger.info(`Server is running at http://localhost:${PORT}`);
+  logger.info(`⚡ Server is running at http://localhost:${PORT}`);
 });

@@ -14,6 +14,10 @@ const SocketEvents = {
     read: "message:read",
   },
   like: "like",
+  subscribe: {
+    subscribe: "subscribe",
+    unsubscribe: "unsubscribe",
+  },
   online: "online",
   typing: "typing",
   ping: "ping",

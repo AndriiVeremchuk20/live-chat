@@ -2,6 +2,7 @@ import { User, UsersOnChats } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
+import HttpError from "../error/HttpError";
 import getUser from "../utils/isUser";
 
 const DEFAULT_MESSAGES_LIMIT = 20;
@@ -14,9 +15,7 @@ const getUserChats = async (
   const { user } = req;
 
   if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "user not found" });
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const lastmessagesOfUserChats = await prisma.chat.findMany({
@@ -33,7 +32,7 @@ const getUserChats = async (
         select: {
           id: true,
           text: true,
-		  image_url: true,
+          image_url: true,
           chat_id: true,
           isRead: true,
           sender: true,
@@ -63,9 +62,7 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
   const { receiverId } = req.body;
 
   if (!user || !receiverId) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "errror", message: "user not found" });
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const currUser = await getUser({ id: user.uid });
@@ -123,8 +120,8 @@ const createChat = async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    console.log("Create a new chat ");
-    console.table(chat);
+   // console.log("Create a new chat ");
+   // console.table(chat);
 
     return res
       .status(StatusCodes.OK)
@@ -144,10 +141,8 @@ const getChatMetadata = async (
   const { chat_id } = req.params;
   const { user } = req;
 
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ satus: "error", message: "User not found" });
+ if (!user) {
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const chatMetadata = await prisma.chat.findFirst({
@@ -175,13 +170,13 @@ const getChatMetadata = async (
           text: true,
           chat_id: true,
           created_at: true,
-		  image_url: true,
+          image_url: true,
           sender: true,
           receiver: true,
           sender_id: true,
           receiver_id: true,
           isRead: true,
-		  reply_to: true,
+          reply_to: true,
         },
         orderBy: {
           created_at: "desc",

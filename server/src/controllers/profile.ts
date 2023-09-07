@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import prisma from "../../prisma";
 import getGender from "../utils/getGender";
 import uploadToGCS from "../googleStorageCloud/fileOperations/uploadToGCS";
+import HttpError from "../error/HttpError";
 
 const completeProfile = async (
   req: Request,
@@ -13,10 +14,9 @@ const completeProfile = async (
   next: NextFunction
 ) => {
   const { user } = req;
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "User not identified" });
+
+ if (!user) {
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   //check profile
@@ -109,10 +109,8 @@ const updateProfile = async (
 ) => {
   const { user } = req;
 
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "User not identified" });
+ if (!user) {
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   //check profile
@@ -120,10 +118,7 @@ const updateProfile = async (
     where: { user_id: user.uid },
   });
   if (!foundUserProfile) {
-    return res.status(StatusCodes.CONFLICT).send({
-      status: "error",
-      message: "profile not created, please crate your profile",
-    });
+	  return next(new HttpError("Profile not created", StatusCodes.CONFLICT));
   }
 
   const newAvatar = req.file;

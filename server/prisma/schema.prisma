@@ -22,23 +22,26 @@ enum Gender {
 }
 
 model User {
-  id         String   @id @unique
-  role       Role     @default(USER)
-  first_name String
-  last_name  String
-  email      String   @unique
-  avatar_path    String?
-  created_at DateTime @default(now())
-  profile    Profile?
+  id          String   @id @unique
+  role        Role     @default(USER)
+  first_name  String
+  last_name   String
+  email       String   @unique
+  avatar_path String?
+  created_at  DateTime @default(now())
+  profile     Profile?
 
   chats UsersOnChats[]
 
   sender   Message[] @relation("sender")
   receiver Message[] @relation("receiver")
 
-  posts   Post[] @relation("user_post")
-  likes	  Like[] @relation("user_likes")
+  posts    Post[]    @relation("user_post")
+  likes    Like[]    @relation("user_likes")
   comments Comment[] @relation("user_comments")
+
+  subscribers Subscription[] @relation("user_followers")
+  subscribedTo Subscription[] @relation("user_following")
 }
 
 model Profile {
@@ -46,10 +49,10 @@ model Profile {
   user    User   @relation(fields: [user_id], references: [id])
   user_id String @unique
 
-  age            Int
-  country        String
-  gender         Gender
-  about_self     String
+  age        Int
+  country    String
+  gender     Gender
+  about_self String
 }
 
 model UsersOnChats {
@@ -90,41 +93,52 @@ model Message {
 }
 
 model Post {
-	id String @id @default(cuid())
-	file_path String
-	description String?
-	created_at  DateTime @default(now())
+  id          String   @id @default(cuid())
+  file_path   String
+  description String?
+  created_at  DateTime @default(now())
 
-	user_id String
-	user User @relation("user_post", fields: [user_id], references: [id])
-	
-	likes Like[]
-	comments Comment[]
+  user_id String
+  user    User   @relation("user_post", fields: [user_id], references: [id])
+
+  likes    Like[]
+  comments Comment[]
 }
 
-model Like{
-	user User @relation("user_likes", fields: [user_id], references: [id])
-	user_id String
-	
-	post Post @relation(fields: [post_id], references: [id])
-	post_id String
+model Like {
+  user    User   @relation("user_likes", fields: [user_id], references: [id])
+  user_id String
 
-	created_at DateTime @default(now())
+  post    Post   @relation(fields: [post_id], references: [id])
+  post_id String
 
-	@@id([user_id, post_id])
+  created_at DateTime @default(now())
+
+  @@id([user_id, post_id])
 }
 
-model Comment{
-	id String @id @default(cuid())
-	text String
+model Comment {
+  id   String @id @default(cuid())
+  text String
 
-	user_id String
-	user User @relation("user_comments", fields: [user_id], references: [id])
+  user_id String
+  user    User   @relation("user_comments", fields: [user_id], references: [id])
 
-	post_id String
-	post Post @relation(fields: [post_id], references: [id])
-	
-	created_at DateTime @default(now())
+  post_id String
+  post    Post   @relation(fields: [post_id], references: [id])
+
+  created_at DateTime @default(now())
 }
 
+model Subscription {
+  subscriber_id  String
+  subscribedTo_id String
 
+  subscriber  User @relation("user_followers", fields: [subscriber_id], references: [id])
+  subscribedTo User @relation("user_following", fields: [subscribedTo_id], references: [id])
+
+  created_at DateTime @default(now())
+
+  @@id([subscriber_id, subscribedTo_id])
+  @@unique([subscriber_id, subscribedTo_id])
+}

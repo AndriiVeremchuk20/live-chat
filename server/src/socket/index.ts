@@ -6,13 +6,13 @@ import SocketEvents from "./socketEvents";
 import redisClient from "../redis";
 
 // import socket events
-import typingHandlers from "./events/typingHandlers";
-import pingHandlers from "./events/pingHandlers";
-import chatHandlers from "./events/chatHandlers";
-import authHandler from "./events/authHandlers";
-import messageHandler from "./events/messageHandlers";
-import disconnectHandlers from "./events/disconnectHandlers";
-import likeHandler from "./events/likeHandler";
+import typingHandlers from "./handlers/typing";
+import pingHandlers from "./handlers/ping";
+import chatHandlers from "./handlers/chat";
+import authHandler from "./handlers/auth";
+import messageHandler from "./handlers/message";
+import disconnectHandlers from "./handlers/disconnect";
+import likeHandler from "./handlers/like";
 
 const app = express();
 app.use(cors());

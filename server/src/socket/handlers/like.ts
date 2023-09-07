@@ -1,6 +1,7 @@
 import { Like } from "@prisma/client";
 import { Server, Socket } from "socket.io";
 import prisma from "../../../prisma";
+import getUserSocket from "../../utils/getUserSocket";
 import SocketEvents from "../socketEvents";
 import { usersSockets } from "../usersSockets";
 
@@ -41,9 +42,9 @@ const likeHandler = (io: Server, socket: Socket) => {
       },
     });
 
-    const postOwnerSocket = [...usersSockets.entries()]
-      .filter(({ 1: v }) => v === postOwner?.user_id)
-      .map(([k]) => k);
+	if(!postOwner) return;
+
+    const postOwnerSocket = getUserSocket({user_id: postOwner.user_id})
 
     const newLike = await prisma.like.create({
       data: {

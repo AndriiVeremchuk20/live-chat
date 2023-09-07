@@ -6,8 +6,6 @@ import { HiHeart, HiOutlineHeart, HiChat } from "react-icons/hi";
 import { useCallback, useEffect, useState } from "react";
 import socketApi from "@/socket/actions";
 import useAppStore from "@/store";
-import { useMutation } from "react-query";
-import likesApi from "@/api/userActions/postLikes";
 import { useRouter } from "next/navigation";
 import AppRoutes from "@/config/appRoutes";
 
@@ -105,7 +103,7 @@ const Post: React.FC<propPost> = ({ post }) => {
 
           <button className="flex flex-row-reverse items-center gap-2 hover:text-neutral-700">
             <HiChat size={30} />
-            <span className="text-neutral-600">30</span>
+            <span className="text-neutral-600">0</span>
           </button>
         </div>
       </div>

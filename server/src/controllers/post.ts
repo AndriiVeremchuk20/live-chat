@@ -3,23 +3,19 @@ import { StatusCodes } from "http-status-codes";
 import uploadToGCS from "../googleStorageCloud/fileOperations/uploadToGCS";
 import { v4 as uuid } from "uuid";
 import prisma from "../../prisma";
+import HttpError from "../error/HttpError";
 
 const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "user not found" });
+ if (!user) {
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const { description } = req.body;
   const post = req.file;
 
   if (!post || !post.buffer) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ status: "error", message: "post missing" });
+    return next(new HttpError("Post missing", StatusCodes.BAD_REQUEST));
   }
 
   const fileUniqueName = uuid() + ".png";
@@ -46,16 +42,14 @@ const addNewPost = async (req: Request, res: Response, next: NextFunction) => {
       .status(StatusCodes.OK)
       .send({ status: "success", message: "post added", data: { ...newPost } });
   } catch (error) {
-    return next(error);
+    return next( new HttpError("Server error", 500));
   }
 };
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "user not found" });
+   if (!user) {
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const posts = await prisma.post.findMany({

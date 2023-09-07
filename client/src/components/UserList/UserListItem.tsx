@@ -1,5 +1,6 @@
 import AppUser from "@/types/user.type";
 import React from "react";
+import SubscribeButton from "../SubscribeButton";
 import UserAvatar from "../UserAvatar";
 
 interface propUserListItem {
@@ -20,7 +21,7 @@ const UserListItem: React.FC<propUserListItem> = ({ user }) => {
         />
         <div className="font-semibold">{`${user.first_name} ${user.last_name}`}</div>
       </div>
-      <button>Subscribe</button>
+      <SubscribeButton isSubscribed={false} subscribeTo={user.id} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../prisma";
+import HttpError from "../error/HttpError";
 
 const getPostLikes = async (
   req: Request,
@@ -10,7 +11,7 @@ const getPostLikes = async (
   try {
     const { user } = req;
     if (!user) {
-      throw new Error("access denied");
+      return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
     }
 
     const post_id = req.params.post_id as string;
@@ -34,7 +35,7 @@ const getPostLikes = async (
       data: [...likedUsersResponse],
     });
   } catch (error) {
-    next(error);
+    return next(new HttpError("Server error", 500));
   }
 };
 

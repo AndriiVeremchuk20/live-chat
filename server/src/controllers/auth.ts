@@ -3,18 +3,19 @@ import prisma from "../../prisma";
 import checkSimilarEmails from "../middleware/checkEmail";
 import verifyToken from "../middleware/verifyToken";
 import { StatusCodes } from "http-status-codes";
+import logger from "../logger";
+import HttpError from "../error/HttpError";
 
 const registration = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  //get fields from request body
   const { first_name, last_name, email, uid } = req.body;
 
   console.log(req.body);
 
-  //try add a new user into bd
+  //add a new user into bd
   const createdUser = await prisma.user.create({
     data: {
       id: uid,
@@ -24,21 +25,20 @@ const registration = async (
     },
   });
 
-  console.info(`[!!!] CREATED A NEW USER ${createdUser}`);
+  logger.info(`[!!!] CREATED A NEW USER ${createdUser}`);
 
   res
     .status(StatusCodes.CREATED)
     .send({ status: "success", message: `REGISTRATION SUCCESSFUL` });
 };
 
-const auth = async (req: Request, res: Response) => {
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  //console.log(user);
+
   if (!user) {
-    return res
-      .status(401)
-      .send({ status: "error", message: "permission denied" });
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
+
   try {
     const foundUser = await prisma.user.findFirstOrThrow({
       where: { id: user.uid },
@@ -49,8 +49,8 @@ const auth = async (req: Request, res: Response) => {
         email: true,
         created_at: true,
         avatar_path: true,
-		profile: true,
-		chats: {
+        profile: true,
+        chats: {
           select: {
             chat_id: true,
           },
@@ -67,21 +67,19 @@ const auth = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ status: "error", message: "user not found, try later" });
+    return next(new HttpError("User not found", StatusCodes.NOT_FOUND));
   }
 };
 
-const authWithGoogle = async (req: Request, res: Response) => {
+const authWithGoogle = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   //add middleware to check auth type
   const { user } = req;
-
   if (!user) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ status: "error", message: "auth error, try later" });
+    return next(new HttpError("Permission denied", StatusCodes.BAD_REQUEST));
   }
 
   const checkUser = await prisma.user.findFirst({
