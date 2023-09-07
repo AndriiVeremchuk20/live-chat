@@ -32,52 +32,20 @@ account posts (currently only photos)
 <hr/>
 
 ## Project Scope
-<div style="display:flex; flex-direction:column">
-<label>
-<input type="checkbox" disabled checked>
-Reply to a specific message 
-</label>
-<label>
-<input type="checkbox" disabled checked>
- Send images to chat
-</label>
-<label>
-<input type="checkbox" disabled checked>
-Deleting messages
-</label>
-<label>
-<input type="checkbox" disabled checked>
- User online status
-</label>
-<label>
-<input type="checkbox" disabled checked>
- Show when the other person is typing a message
-</label>
-<label>
-<input type="checkbox" disabled checked>
- New message notification
-</label>
-<label>
-<input type="checkbox" disabled checked>
- Update user profile
-</label>
-</div>
+ 
+- [X] Reply to a specific message 
+- [X] Send images to chat
+- [X] Deleting messages
+- [X] User online status
+- [X] Show when the other person is typing a message
+- [X] New message notification
+- [X] Update user profile
 
 ## Nice to have
-<div style="display:flex; flex-direction:column">
-<label>
-<input type="checkbox" disabled>
- User subscriptions
-</label>
-<label>
-<input type="checkbox" disabled>
- Сomments under posts
-</label>
-<label>
-<input type="checkbox" disabled>
-Adding videos to posts
-</label>
-</div>
+
+- [ ] User subscriptions
+- [ ] Сomments under posts
+- [ ] Adding videos to posts
 
 ## Dependencies
 
